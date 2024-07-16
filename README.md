@@ -2,6 +2,10 @@
 
 Go interface for the RLBot v5 socket api
 
+## Examples
+
+see `examples` folder
+
 ## Todo
 
 * Nicer way to handle flatbuffers? (ideally we dont want the T suffix for the object api)
