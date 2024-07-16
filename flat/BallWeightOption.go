@@ -7,24 +7,30 @@ import "strconv"
 type BallWeightOption byte
 
 const (
-	BallWeightOptionDefault     BallWeightOption = 0
-	BallWeightOptionLight       BallWeightOption = 1
-	BallWeightOptionHeavy       BallWeightOption = 2
-	BallWeightOptionSuper_Light BallWeightOption = 3
+	BallWeightOptionDefault          BallWeightOption = 0
+	BallWeightOptionLight            BallWeightOption = 1
+	BallWeightOptionHeavy            BallWeightOption = 2
+	BallWeightOptionSuper_Light      BallWeightOption = 3
+	BallWeightOptionCurve_Ball       BallWeightOption = 4
+	BallWeightOptionBeach_Ball_Curve BallWeightOption = 5
 )
 
 var EnumNamesBallWeightOption = map[BallWeightOption]string{
-	BallWeightOptionDefault:     "Default",
-	BallWeightOptionLight:       "Light",
-	BallWeightOptionHeavy:       "Heavy",
-	BallWeightOptionSuper_Light: "Super_Light",
+	BallWeightOptionDefault:          "Default",
+	BallWeightOptionLight:            "Light",
+	BallWeightOptionHeavy:            "Heavy",
+	BallWeightOptionSuper_Light:      "Super_Light",
+	BallWeightOptionCurve_Ball:       "Curve_Ball",
+	BallWeightOptionBeach_Ball_Curve: "Beach_Ball_Curve",
 }
 
 var EnumValuesBallWeightOption = map[string]BallWeightOption{
-	"Default":     BallWeightOptionDefault,
-	"Light":       BallWeightOptionLight,
-	"Heavy":       BallWeightOptionHeavy,
-	"Super_Light": BallWeightOptionSuper_Light,
+	"Default":          BallWeightOptionDefault,
+	"Light":            BallWeightOptionLight,
+	"Heavy":            BallWeightOptionHeavy,
+	"Super_Light":      BallWeightOptionSuper_Light,
+	"Curve_Ball":       BallWeightOptionCurve_Ball,
+	"Beach_Ball_Curve": BallWeightOptionBeach_Ball_Curve,
 }
 
 func (v BallWeightOption) String() string {

@@ -7,24 +7,33 @@ import "strconv"
 type BallTypeOption byte
 
 const (
-	BallTypeOptionDefault    BallTypeOption = 0
-	BallTypeOptionCube       BallTypeOption = 1
-	BallTypeOptionPuck       BallTypeOption = 2
-	BallTypeOptionBasketball BallTypeOption = 3
+	BallTypeOptionDefault     BallTypeOption = 0
+	BallTypeOptionCube        BallTypeOption = 1
+	BallTypeOptionPuck        BallTypeOption = 2
+	BallTypeOptionBasketball  BallTypeOption = 3
+	BallTypeOptionBeachball   BallTypeOption = 4
+	BallTypeOptionAnniversary BallTypeOption = 5
+	BallTypeOptionHaunted     BallTypeOption = 6
 )
 
 var EnumNamesBallTypeOption = map[BallTypeOption]string{
-	BallTypeOptionDefault:    "Default",
-	BallTypeOptionCube:       "Cube",
-	BallTypeOptionPuck:       "Puck",
-	BallTypeOptionBasketball: "Basketball",
+	BallTypeOptionDefault:     "Default",
+	BallTypeOptionCube:        "Cube",
+	BallTypeOptionPuck:        "Puck",
+	BallTypeOptionBasketball:  "Basketball",
+	BallTypeOptionBeachball:   "Beachball",
+	BallTypeOptionAnniversary: "Anniversary",
+	BallTypeOptionHaunted:     "Haunted",
 }
 
 var EnumValuesBallTypeOption = map[string]BallTypeOption{
-	"Default":    BallTypeOptionDefault,
-	"Cube":       BallTypeOptionCube,
-	"Puck":       BallTypeOptionPuck,
-	"Basketball": BallTypeOptionBasketball,
+	"Default":     BallTypeOptionDefault,
+	"Cube":        BallTypeOptionCube,
+	"Puck":        BallTypeOptionPuck,
+	"Basketball":  BallTypeOptionBasketball,
+	"Beachball":   BallTypeOptionBeachball,
+	"Anniversary": BallTypeOptionAnniversary,
+	"Haunted":     BallTypeOptionHaunted,
 }
 
 func (v BallTypeOption) String() string {

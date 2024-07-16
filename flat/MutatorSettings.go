@@ -9,6 +9,7 @@ import (
 type MutatorSettingsT struct {
 	MatchLength MatchLength `json:"match_length"`
 	MaxScore MaxScore `json:"max_score"`
+	MultiBall MultiBall `json:"multi_ball"`
 	OvertimeOption OvertimeOption `json:"overtime_option"`
 	SeriesLengthOption SeriesLengthOption `json:"series_length_option"`
 	GameSpeedOption GameSpeedOption `json:"game_speed_option"`
@@ -32,6 +33,7 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 	MutatorSettingsStart(builder)
 	MutatorSettingsAddMatchLength(builder, t.MatchLength)
 	MutatorSettingsAddMaxScore(builder, t.MaxScore)
+	MutatorSettingsAddMultiBall(builder, t.MultiBall)
 	MutatorSettingsAddOvertimeOption(builder, t.OvertimeOption)
 	MutatorSettingsAddSeriesLengthOption(builder, t.SeriesLengthOption)
 	MutatorSettingsAddGameSpeedOption(builder, t.GameSpeedOption)
@@ -52,6 +54,7 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 func (rcv *MutatorSettings) UnPackTo(t *MutatorSettingsT) {
 	t.MatchLength = rcv.MatchLength()
 	t.MaxScore = rcv.MaxScore()
+	t.MultiBall = rcv.MultiBall()
 	t.OvertimeOption = rcv.OvertimeOption()
 	t.SeriesLengthOption = rcv.SeriesLengthOption()
 	t.GameSpeedOption = rcv.GameSpeedOption()
@@ -136,8 +139,20 @@ func (rcv *MutatorSettings) MutateMaxScore(n MaxScore) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
-func (rcv *MutatorSettings) OvertimeOption() OvertimeOption {
+func (rcv *MutatorSettings) MultiBall() MultiBall {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return MultiBall(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MutatorSettings) MutateMultiBall(n MultiBall) bool {
+	return rcv._tab.MutateByteSlot(8, byte(n))
+}
+
+func (rcv *MutatorSettings) OvertimeOption() OvertimeOption {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return OvertimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -145,11 +160,11 @@ func (rcv *MutatorSettings) OvertimeOption() OvertimeOption {
 }
 
 func (rcv *MutatorSettings) MutateOvertimeOption(n OvertimeOption) bool {
-	return rcv._tab.MutateByteSlot(8, byte(n))
+	return rcv._tab.MutateByteSlot(10, byte(n))
 }
 
 func (rcv *MutatorSettings) SeriesLengthOption() SeriesLengthOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return SeriesLengthOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -157,11 +172,11 @@ func (rcv *MutatorSettings) SeriesLengthOption() SeriesLengthOption {
 }
 
 func (rcv *MutatorSettings) MutateSeriesLengthOption(n SeriesLengthOption) bool {
-	return rcv._tab.MutateByteSlot(10, byte(n))
+	return rcv._tab.MutateByteSlot(12, byte(n))
 }
 
 func (rcv *MutatorSettings) GameSpeedOption() GameSpeedOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return GameSpeedOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -169,11 +184,11 @@ func (rcv *MutatorSettings) GameSpeedOption() GameSpeedOption {
 }
 
 func (rcv *MutatorSettings) MutateGameSpeedOption(n GameSpeedOption) bool {
-	return rcv._tab.MutateByteSlot(12, byte(n))
+	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
 func (rcv *MutatorSettings) BallMaxSpeedOption() BallMaxSpeedOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return BallMaxSpeedOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -181,11 +196,11 @@ func (rcv *MutatorSettings) BallMaxSpeedOption() BallMaxSpeedOption {
 }
 
 func (rcv *MutatorSettings) MutateBallMaxSpeedOption(n BallMaxSpeedOption) bool {
-	return rcv._tab.MutateByteSlot(14, byte(n))
+	return rcv._tab.MutateByteSlot(16, byte(n))
 }
 
 func (rcv *MutatorSettings) BallTypeOption() BallTypeOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return BallTypeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -193,11 +208,11 @@ func (rcv *MutatorSettings) BallTypeOption() BallTypeOption {
 }
 
 func (rcv *MutatorSettings) MutateBallTypeOption(n BallTypeOption) bool {
-	return rcv._tab.MutateByteSlot(16, byte(n))
+	return rcv._tab.MutateByteSlot(18, byte(n))
 }
 
 func (rcv *MutatorSettings) BallWeightOption() BallWeightOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return BallWeightOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -205,11 +220,11 @@ func (rcv *MutatorSettings) BallWeightOption() BallWeightOption {
 }
 
 func (rcv *MutatorSettings) MutateBallWeightOption(n BallWeightOption) bool {
-	return rcv._tab.MutateByteSlot(18, byte(n))
+	return rcv._tab.MutateByteSlot(20, byte(n))
 }
 
 func (rcv *MutatorSettings) BallSizeOption() BallSizeOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return BallSizeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -217,11 +232,11 @@ func (rcv *MutatorSettings) BallSizeOption() BallSizeOption {
 }
 
 func (rcv *MutatorSettings) MutateBallSizeOption(n BallSizeOption) bool {
-	return rcv._tab.MutateByteSlot(20, byte(n))
+	return rcv._tab.MutateByteSlot(22, byte(n))
 }
 
 func (rcv *MutatorSettings) BallBouncinessOption() BallBouncinessOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return BallBouncinessOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -229,11 +244,11 @@ func (rcv *MutatorSettings) BallBouncinessOption() BallBouncinessOption {
 }
 
 func (rcv *MutatorSettings) MutateBallBouncinessOption(n BallBouncinessOption) bool {
-	return rcv._tab.MutateByteSlot(22, byte(n))
+	return rcv._tab.MutateByteSlot(24, byte(n))
 }
 
 func (rcv *MutatorSettings) BoostOption() BoostOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return BoostOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -241,11 +256,11 @@ func (rcv *MutatorSettings) BoostOption() BoostOption {
 }
 
 func (rcv *MutatorSettings) MutateBoostOption(n BoostOption) bool {
-	return rcv._tab.MutateByteSlot(24, byte(n))
+	return rcv._tab.MutateByteSlot(26, byte(n))
 }
 
 func (rcv *MutatorSettings) RumbleOption() RumbleOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return RumbleOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -253,11 +268,11 @@ func (rcv *MutatorSettings) RumbleOption() RumbleOption {
 }
 
 func (rcv *MutatorSettings) MutateRumbleOption(n RumbleOption) bool {
-	return rcv._tab.MutateByteSlot(26, byte(n))
+	return rcv._tab.MutateByteSlot(28, byte(n))
 }
 
 func (rcv *MutatorSettings) BoostStrengthOption() BoostStrengthOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return BoostStrengthOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -265,11 +280,11 @@ func (rcv *MutatorSettings) BoostStrengthOption() BoostStrengthOption {
 }
 
 func (rcv *MutatorSettings) MutateBoostStrengthOption(n BoostStrengthOption) bool {
-	return rcv._tab.MutateByteSlot(28, byte(n))
+	return rcv._tab.MutateByteSlot(30, byte(n))
 }
 
 func (rcv *MutatorSettings) GravityOption() GravityOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return GravityOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -277,11 +292,11 @@ func (rcv *MutatorSettings) GravityOption() GravityOption {
 }
 
 func (rcv *MutatorSettings) MutateGravityOption(n GravityOption) bool {
-	return rcv._tab.MutateByteSlot(30, byte(n))
+	return rcv._tab.MutateByteSlot(32, byte(n))
 }
 
 func (rcv *MutatorSettings) DemolishOption() DemolishOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return DemolishOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -289,11 +304,11 @@ func (rcv *MutatorSettings) DemolishOption() DemolishOption {
 }
 
 func (rcv *MutatorSettings) MutateDemolishOption(n DemolishOption) bool {
-	return rcv._tab.MutateByteSlot(32, byte(n))
+	return rcv._tab.MutateByteSlot(34, byte(n))
 }
 
 func (rcv *MutatorSettings) RespawnTimeOption() RespawnTimeOption {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return RespawnTimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -301,11 +316,11 @@ func (rcv *MutatorSettings) RespawnTimeOption() RespawnTimeOption {
 }
 
 func (rcv *MutatorSettings) MutateRespawnTimeOption(n RespawnTimeOption) bool {
-	return rcv._tab.MutateByteSlot(34, byte(n))
+	return rcv._tab.MutateByteSlot(36, byte(n))
 }
 
 func MutatorSettingsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength MatchLength) {
 	builder.PrependByteSlot(0, byte(matchLength), 0)
@@ -313,47 +328,50 @@ func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength Mat
 func MutatorSettingsAddMaxScore(builder *flatbuffers.Builder, maxScore MaxScore) {
 	builder.PrependByteSlot(1, byte(maxScore), 0)
 }
+func MutatorSettingsAddMultiBall(builder *flatbuffers.Builder, multiBall MultiBall) {
+	builder.PrependByteSlot(2, byte(multiBall), 0)
+}
 func MutatorSettingsAddOvertimeOption(builder *flatbuffers.Builder, overtimeOption OvertimeOption) {
-	builder.PrependByteSlot(2, byte(overtimeOption), 0)
+	builder.PrependByteSlot(3, byte(overtimeOption), 0)
 }
 func MutatorSettingsAddSeriesLengthOption(builder *flatbuffers.Builder, seriesLengthOption SeriesLengthOption) {
-	builder.PrependByteSlot(3, byte(seriesLengthOption), 0)
+	builder.PrependByteSlot(4, byte(seriesLengthOption), 0)
 }
 func MutatorSettingsAddGameSpeedOption(builder *flatbuffers.Builder, gameSpeedOption GameSpeedOption) {
-	builder.PrependByteSlot(4, byte(gameSpeedOption), 0)
+	builder.PrependByteSlot(5, byte(gameSpeedOption), 0)
 }
 func MutatorSettingsAddBallMaxSpeedOption(builder *flatbuffers.Builder, ballMaxSpeedOption BallMaxSpeedOption) {
-	builder.PrependByteSlot(5, byte(ballMaxSpeedOption), 0)
+	builder.PrependByteSlot(6, byte(ballMaxSpeedOption), 0)
 }
 func MutatorSettingsAddBallTypeOption(builder *flatbuffers.Builder, ballTypeOption BallTypeOption) {
-	builder.PrependByteSlot(6, byte(ballTypeOption), 0)
+	builder.PrependByteSlot(7, byte(ballTypeOption), 0)
 }
 func MutatorSettingsAddBallWeightOption(builder *flatbuffers.Builder, ballWeightOption BallWeightOption) {
-	builder.PrependByteSlot(7, byte(ballWeightOption), 0)
+	builder.PrependByteSlot(8, byte(ballWeightOption), 0)
 }
 func MutatorSettingsAddBallSizeOption(builder *flatbuffers.Builder, ballSizeOption BallSizeOption) {
-	builder.PrependByteSlot(8, byte(ballSizeOption), 0)
+	builder.PrependByteSlot(9, byte(ballSizeOption), 0)
 }
 func MutatorSettingsAddBallBouncinessOption(builder *flatbuffers.Builder, ballBouncinessOption BallBouncinessOption) {
-	builder.PrependByteSlot(9, byte(ballBouncinessOption), 0)
+	builder.PrependByteSlot(10, byte(ballBouncinessOption), 0)
 }
 func MutatorSettingsAddBoostOption(builder *flatbuffers.Builder, boostOption BoostOption) {
-	builder.PrependByteSlot(10, byte(boostOption), 0)
+	builder.PrependByteSlot(11, byte(boostOption), 0)
 }
 func MutatorSettingsAddRumbleOption(builder *flatbuffers.Builder, rumbleOption RumbleOption) {
-	builder.PrependByteSlot(11, byte(rumbleOption), 0)
+	builder.PrependByteSlot(12, byte(rumbleOption), 0)
 }
 func MutatorSettingsAddBoostStrengthOption(builder *flatbuffers.Builder, boostStrengthOption BoostStrengthOption) {
-	builder.PrependByteSlot(12, byte(boostStrengthOption), 0)
+	builder.PrependByteSlot(13, byte(boostStrengthOption), 0)
 }
 func MutatorSettingsAddGravityOption(builder *flatbuffers.Builder, gravityOption GravityOption) {
-	builder.PrependByteSlot(13, byte(gravityOption), 0)
+	builder.PrependByteSlot(14, byte(gravityOption), 0)
 }
 func MutatorSettingsAddDemolishOption(builder *flatbuffers.Builder, demolishOption DemolishOption) {
-	builder.PrependByteSlot(14, byte(demolishOption), 0)
+	builder.PrependByteSlot(15, byte(demolishOption), 0)
 }
 func MutatorSettingsAddRespawnTimeOption(builder *flatbuffers.Builder, respawnTimeOption RespawnTimeOption) {
-	builder.PrependByteSlot(15, byte(respawnTimeOption), 0)
+	builder.PrependByteSlot(16, byte(respawnTimeOption), 0)
 }
 func MutatorSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -15,6 +15,8 @@ const (
 	RumbleOptionSpring_Loaded     RumbleOption = 5
 	RumbleOptionSpikes_Only       RumbleOption = 6
 	RumbleOptionSpike_Rush        RumbleOption = 7
+	RumbleOptionHaunted_Ball_Beam RumbleOption = 8
+	RumbleOptionTactical          RumbleOption = 9
 )
 
 var EnumNamesRumbleOption = map[RumbleOption]string{
@@ -26,6 +28,8 @@ var EnumNamesRumbleOption = map[RumbleOption]string{
 	RumbleOptionSpring_Loaded:     "Spring_Loaded",
 	RumbleOptionSpikes_Only:       "Spikes_Only",
 	RumbleOptionSpike_Rush:        "Spike_Rush",
+	RumbleOptionHaunted_Ball_Beam: "Haunted_Ball_Beam",
+	RumbleOptionTactical:          "Tactical",
 }
 
 var EnumValuesRumbleOption = map[string]RumbleOption{
@@ -37,6 +41,8 @@ var EnumValuesRumbleOption = map[string]RumbleOption{
 	"Spring_Loaded":     RumbleOptionSpring_Loaded,
 	"Spikes_Only":       RumbleOptionSpikes_Only,
 	"Spike_Rush":        RumbleOptionSpike_Rush,
+	"Haunted_Ball_Beam": RumbleOptionHaunted_Ball_Beam,
+	"Tactical":          RumbleOptionTactical,
 }
 
 func (v RumbleOption) String() string {

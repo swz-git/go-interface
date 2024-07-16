@@ -8,7 +8,7 @@ import (
 
 type String3DT struct {
 	Text string `json:"text"`
-	Position *Vector3T `json:"position"`
+	Anchor *RenderAnchorT `json:"anchor"`
 	Scale float32 `json:"scale"`
 	Foreground *ColorT `json:"foreground"`
 	Background *ColorT `json:"background"`
@@ -24,12 +24,12 @@ func (t *String3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t.Text != "" {
 		textOffset = builder.CreateString(t.Text)
 	}
+	anchorOffset := t.Anchor.Pack(builder)
 	foregroundOffset := t.Foreground.Pack(builder)
 	backgroundOffset := t.Background.Pack(builder)
 	String3DStart(builder)
 	String3DAddText(builder, textOffset)
-	positionOffset := t.Position.Pack(builder)
-	String3DAddPosition(builder, positionOffset)
+	String3DAddAnchor(builder, anchorOffset)
 	String3DAddScale(builder, t.Scale)
 	String3DAddForeground(builder, foregroundOffset)
 	String3DAddBackground(builder, backgroundOffset)
@@ -40,7 +40,7 @@ func (t *String3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 func (rcv *String3D) UnPackTo(t *String3DT) {
 	t.Text = string(rcv.Text())
-	t.Position = rcv.Position(nil).UnPack()
+	t.Anchor = rcv.Anchor(nil).UnPack()
 	t.Scale = rcv.Scale()
 	t.Foreground = rcv.Foreground(nil).UnPack()
 	t.Background = rcv.Background(nil).UnPack()
@@ -100,12 +100,12 @@ func (rcv *String3D) Text() []byte {
 	return nil
 }
 
-func (rcv *String3D) Position(obj *Vector3) *Vector3 {
+func (rcv *String3D) Anchor(obj *RenderAnchor) *RenderAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := o + rcv._tab.Pos
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(Vector3)
+			obj = new(RenderAnchor)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -181,8 +181,8 @@ func String3DStart(builder *flatbuffers.Builder) {
 func String3DAddText(builder *flatbuffers.Builder, text flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(text), 0)
 }
-func String3DAddPosition(builder *flatbuffers.Builder, position flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(1, flatbuffers.UOffsetT(position), 0)
+func String3DAddAnchor(builder *flatbuffers.Builder, anchor flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(anchor), 0)
 }
 func String3DAddScale(builder *flatbuffers.Builder, scale float32) {
 	builder.PrependFloat32Slot(2, scale, 0.0)

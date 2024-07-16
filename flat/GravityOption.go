@@ -11,6 +11,7 @@ const (
 	GravityOptionLow        GravityOption = 1
 	GravityOptionHigh       GravityOption = 2
 	GravityOptionSuper_High GravityOption = 3
+	GravityOptionReverse    GravityOption = 4
 )
 
 var EnumNamesGravityOption = map[GravityOption]string{
@@ -18,6 +19,7 @@ var EnumNamesGravityOption = map[GravityOption]string{
 	GravityOptionLow:        "Low",
 	GravityOptionHigh:       "High",
 	GravityOptionSuper_High: "Super_High",
+	GravityOptionReverse:    "Reverse",
 }
 
 var EnumValuesGravityOption = map[string]GravityOption{
@@ -25,6 +27,7 @@ var EnumValuesGravityOption = map[string]GravityOption{
 	"Low":        GravityOptionLow,
 	"High":       GravityOptionHigh,
 	"Super_High": GravityOptionSuper_High,
+	"Reverse":    GravityOptionReverse,
 }
 
 func (v GravityOption) String() string {

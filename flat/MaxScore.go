@@ -7,24 +7,30 @@ import "strconv"
 type MaxScore byte
 
 const (
-	MaxScoreUnlimited   MaxScore = 0
+	MaxScoreDefault     MaxScore = 0
 	MaxScoreOne_Goal    MaxScore = 1
 	MaxScoreThree_Goals MaxScore = 2
 	MaxScoreFive_Goals  MaxScore = 3
+	MaxScoreSeven_Goals MaxScore = 4
+	MaxScoreUnlimited   MaxScore = 5
 )
 
 var EnumNamesMaxScore = map[MaxScore]string{
-	MaxScoreUnlimited:   "Unlimited",
+	MaxScoreDefault:     "Default",
 	MaxScoreOne_Goal:    "One_Goal",
 	MaxScoreThree_Goals: "Three_Goals",
 	MaxScoreFive_Goals:  "Five_Goals",
+	MaxScoreSeven_Goals: "Seven_Goals",
+	MaxScoreUnlimited:   "Unlimited",
 }
 
 var EnumValuesMaxScore = map[string]MaxScore{
-	"Unlimited":   MaxScoreUnlimited,
+	"Default":     MaxScoreDefault,
 	"One_Goal":    MaxScoreOne_Goal,
 	"Three_Goals": MaxScoreThree_Goals,
 	"Five_Goals":  MaxScoreFive_Goals,
+	"Seven_Goals": MaxScoreSeven_Goals,
+	"Unlimited":   MaxScoreUnlimited,
 }
 
 func (v MaxScore) String() string {

@@ -9,21 +9,21 @@ type RespawnTimeOption byte
 const (
 	RespawnTimeOptionThree_Seconds      RespawnTimeOption = 0
 	RespawnTimeOptionTwo_Seconds        RespawnTimeOption = 1
-	RespawnTimeOptionOne_Seconds        RespawnTimeOption = 2
+	RespawnTimeOptionOne_Second         RespawnTimeOption = 2
 	RespawnTimeOptionDisable_Goal_Reset RespawnTimeOption = 3
 )
 
 var EnumNamesRespawnTimeOption = map[RespawnTimeOption]string{
 	RespawnTimeOptionThree_Seconds:      "Three_Seconds",
 	RespawnTimeOptionTwo_Seconds:        "Two_Seconds",
-	RespawnTimeOptionOne_Seconds:        "One_Seconds",
+	RespawnTimeOptionOne_Second:         "One_Second",
 	RespawnTimeOptionDisable_Goal_Reset: "Disable_Goal_Reset",
 }
 
 var EnumValuesRespawnTimeOption = map[string]RespawnTimeOption{
 	"Three_Seconds":      RespawnTimeOptionThree_Seconds,
 	"Two_Seconds":        RespawnTimeOptionTwo_Seconds,
-	"One_Seconds":        RespawnTimeOptionOne_Seconds,
+	"One_Second":         RespawnTimeOptionOne_Second,
 	"Disable_Goal_Reset": RespawnTimeOptionDisable_Goal_Reset,
 }
 

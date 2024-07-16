@@ -12,7 +12,6 @@ import (
 type ReadyMessageT struct {
 	WantsBallPredictions bool `json:"wants_ball_predictions"`
 	WantsComms bool `json:"wants_comms"`
-	WantsGameMessages bool `json:"wants_game_messages"`
 	CloseAfterMatch bool `json:"close_after_match"`
 }
 
@@ -23,7 +22,6 @@ func (t *ReadyMessageT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT 
 	ReadyMessageStart(builder)
 	ReadyMessageAddWantsBallPredictions(builder, t.WantsBallPredictions)
 	ReadyMessageAddWantsComms(builder, t.WantsComms)
-	ReadyMessageAddWantsGameMessages(builder, t.WantsGameMessages)
 	ReadyMessageAddCloseAfterMatch(builder, t.CloseAfterMatch)
 	return ReadyMessageEnd(builder)
 }
@@ -31,7 +29,6 @@ func (t *ReadyMessageT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT 
 func (rcv *ReadyMessage) UnPackTo(t *ReadyMessageT) {
 	t.WantsBallPredictions = rcv.WantsBallPredictions()
 	t.WantsComms = rcv.WantsComms()
-	t.WantsGameMessages = rcv.WantsGameMessages()
 	t.CloseAfterMatch = rcv.CloseAfterMatch()
 }
 
@@ -103,7 +100,7 @@ func (rcv *ReadyMessage) MutateWantsComms(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
 }
 
-func (rcv *ReadyMessage) WantsGameMessages() bool {
+func (rcv *ReadyMessage) CloseAfterMatch() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -111,24 +108,12 @@ func (rcv *ReadyMessage) WantsGameMessages() bool {
 	return false
 }
 
-func (rcv *ReadyMessage) MutateWantsGameMessages(n bool) bool {
+func (rcv *ReadyMessage) MutateCloseAfterMatch(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }
 
-func (rcv *ReadyMessage) CloseAfterMatch() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
-	}
-	return false
-}
-
-func (rcv *ReadyMessage) MutateCloseAfterMatch(n bool) bool {
-	return rcv._tab.MutateBoolSlot(10, n)
-}
-
 func ReadyMessageStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(3)
 }
 func ReadyMessageAddWantsBallPredictions(builder *flatbuffers.Builder, wantsBallPredictions bool) {
 	builder.PrependBoolSlot(0, wantsBallPredictions, false)
@@ -136,11 +121,8 @@ func ReadyMessageAddWantsBallPredictions(builder *flatbuffers.Builder, wantsBall
 func ReadyMessageAddWantsComms(builder *flatbuffers.Builder, wantsComms bool) {
 	builder.PrependBoolSlot(1, wantsComms, false)
 }
-func ReadyMessageAddWantsGameMessages(builder *flatbuffers.Builder, wantsGameMessages bool) {
-	builder.PrependBoolSlot(2, wantsGameMessages, false)
-}
 func ReadyMessageAddCloseAfterMatch(builder *flatbuffers.Builder, closeAfterMatch bool) {
-	builder.PrependBoolSlot(3, closeAfterMatch, false)
+	builder.PrependBoolSlot(2, closeAfterMatch, false)
 }
 func ReadyMessageEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

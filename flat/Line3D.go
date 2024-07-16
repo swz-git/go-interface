@@ -7,8 +7,8 @@ import (
 )
 
 type Line3DT struct {
-	Start *Vector3T `json:"start"`
-	End *Vector3T `json:"end"`
+	Start *RenderAnchorT `json:"start"`
+	End *RenderAnchorT `json:"end"`
 	Color *ColorT `json:"color"`
 }
 
@@ -16,11 +16,11 @@ func (t *Line3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t == nil {
 		return 0
 	}
+	startOffset := t.Start.Pack(builder)
+	endOffset := t.End.Pack(builder)
 	colorOffset := t.Color.Pack(builder)
 	Line3DStart(builder)
-	startOffset := t.Start.Pack(builder)
 	Line3DAddStart(builder, startOffset)
-	endOffset := t.End.Pack(builder)
 	Line3DAddEnd(builder, endOffset)
 	Line3DAddColor(builder, colorOffset)
 	return Line3DEnd(builder)
@@ -76,12 +76,12 @@ func (rcv *Line3D) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *Line3D) Start(obj *Vector3) *Vector3 {
+func (rcv *Line3D) Start(obj *RenderAnchor) *RenderAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := o + rcv._tab.Pos
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(Vector3)
+			obj = new(RenderAnchor)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -89,12 +89,12 @@ func (rcv *Line3D) Start(obj *Vector3) *Vector3 {
 	return nil
 }
 
-func (rcv *Line3D) End(obj *Vector3) *Vector3 {
+func (rcv *Line3D) End(obj *RenderAnchor) *RenderAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := o + rcv._tab.Pos
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(Vector3)
+			obj = new(RenderAnchor)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -119,10 +119,10 @@ func Line3DStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
 func Line3DAddStart(builder *flatbuffers.Builder, start flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(0, flatbuffers.UOffsetT(start), 0)
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(start), 0)
 }
 func Line3DAddEnd(builder *flatbuffers.Builder, end flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(1, flatbuffers.UOffsetT(end), 0)
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(end), 0)
 }
 func Line3DAddColor(builder *flatbuffers.Builder, color flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(color), 0)

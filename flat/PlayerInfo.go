@@ -20,6 +20,9 @@ type PlayerInfoT struct {
 	Team uint32 `json:"team"`
 	Boost uint32 `json:"boost"`
 	SpawnId int32 `json:"spawn_id"`
+	Accolades []string `json:"accolades"`
+	LastInput *ControllerStateT `json:"last_input"`
+	LastSpectated bool `json:"last_spectated"`
 }
 
 func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -33,6 +36,20 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t.Name != "" {
 		nameOffset = builder.CreateString(t.Name)
 	}
+	accoladesOffset := flatbuffers.UOffsetT(0)
+	if t.Accolades != nil {
+		accoladesLength := len(t.Accolades)
+		accoladesOffsets := make([]flatbuffers.UOffsetT, accoladesLength)
+		for j := 0; j < accoladesLength; j++ {
+			accoladesOffsets[j] = builder.CreateString(t.Accolades[j])
+		}
+		PlayerInfoStartAccoladesVector(builder, accoladesLength)
+		for j := accoladesLength - 1; j >= 0; j-- {
+			builder.PrependUOffsetT(accoladesOffsets[j])
+		}
+		accoladesOffset = builder.EndVector(accoladesLength)
+	}
+	lastInputOffset := t.LastInput.Pack(builder)
 	PlayerInfoStart(builder)
 	PlayerInfoAddPhysics(builder, physicsOffset)
 	PlayerInfoAddScoreInfo(builder, scoreInfoOffset)
@@ -48,6 +65,9 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	PlayerInfoAddTeam(builder, t.Team)
 	PlayerInfoAddBoost(builder, t.Boost)
 	PlayerInfoAddSpawnId(builder, t.SpawnId)
+	PlayerInfoAddAccolades(builder, accoladesOffset)
+	PlayerInfoAddLastInput(builder, lastInputOffset)
+	PlayerInfoAddLastSpectated(builder, t.LastSpectated)
 	return PlayerInfoEnd(builder)
 }
 
@@ -65,6 +85,13 @@ func (rcv *PlayerInfo) UnPackTo(t *PlayerInfoT) {
 	t.Team = rcv.Team()
 	t.Boost = rcv.Boost()
 	t.SpawnId = rcv.SpawnId()
+	accoladesLength := rcv.AccoladesLength()
+	t.Accolades = make([]string, accoladesLength)
+	for j := 0; j < accoladesLength; j++ {
+		t.Accolades[j] = string(rcv.Accolades(j))
+	}
+	t.LastInput = rcv.LastInput(nil).UnPack()
+	t.LastSpectated = rcv.LastSpectated()
 }
 
 func (rcv *PlayerInfo) UnPack() *PlayerInfoT {
@@ -175,6 +202,7 @@ func (rcv *PlayerInfo) MutateAirState(n AirState) bool {
 	return rcv._tab.MutateByteSlot(12, byte(n))
 }
 
+/// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
 func (rcv *PlayerInfo) DodgeTimeout() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -183,10 +211,12 @@ func (rcv *PlayerInfo) DodgeTimeout() float32 {
 	return 0.0
 }
 
+/// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
 func (rcv *PlayerInfo) MutateDodgeTimeout(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(14, n)
 }
 
+/// How long until the bot is not demolished anymore, -1 if not demolished
 func (rcv *PlayerInfo) DemolishedTimeout() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -195,6 +225,7 @@ func (rcv *PlayerInfo) DemolishedTimeout() float32 {
 	return 0.0
 }
 
+/// How long until the bot is not demolished anymore, -1 if not demolished
 func (rcv *PlayerInfo) MutateDemolishedTimeout(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
 }
@@ -271,8 +302,78 @@ func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(28, n)
 }
 
+/// Notifications the player triggered by some in-game event, such as:
+///    Win, Loss, TimePlayed;
+///    Shot, Assist, Center, Clear, PoolShot;
+///    Goal, AerialGoal, BicycleGoal, BulletGoal, BackwardsGoal, LongGoal, OvertimeGoal, TurtleGoal;
+///    AerialHit, BicycleHit, BulletHit, JuggleHit, FirstTouch, BallHit;
+///    Save, EpicSave, FreezeSave;
+///    HatTrick, Savior, Playmaker, MVP;
+///    FastestGoal, SlowestGoal, FurthestGoal, OwnGoal;
+///    MostBallTouches, FewestBallTouches, MostBoostPickups, FewestBoostPickups, BoostPickups;
+///    CarTouches, Demolition, Demolish;
+///    LowFive, HighFive;
+/// Clears every tick.
+func (rcv *PlayerInfo) Accolades(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *PlayerInfo) AccoladesLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Notifications the player triggered by some in-game event, such as:
+///    Win, Loss, TimePlayed;
+///    Shot, Assist, Center, Clear, PoolShot;
+///    Goal, AerialGoal, BicycleGoal, BulletGoal, BackwardsGoal, LongGoal, OvertimeGoal, TurtleGoal;
+///    AerialHit, BicycleHit, BulletHit, JuggleHit, FirstTouch, BallHit;
+///    Save, EpicSave, FreezeSave;
+///    HatTrick, Savior, Playmaker, MVP;
+///    FastestGoal, SlowestGoal, FurthestGoal, OwnGoal;
+///    MostBallTouches, FewestBallTouches, MostBoostPickups, FewestBoostPickups, BoostPickups;
+///    CarTouches, Demolition, Demolish;
+///    LowFive, HighFive;
+/// Clears every tick.
+/// The last known controller input from this player
+func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ControllerState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// The last known controller input from this player
+/// If the player was the last one to be watched by a spectator
+func (rcv *PlayerInfo) LastSpectated() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// If the player was the last one to be watched by a spectator
+func (rcv *PlayerInfo) MutateLastSpectated(n bool) bool {
+	return rcv._tab.MutateBoolSlot(34, n)
+}
+
 func PlayerInfoStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(16)
 }
 func PlayerInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(physics), 0)
@@ -312,6 +413,18 @@ func PlayerInfoAddBoost(builder *flatbuffers.Builder, boost uint32) {
 }
 func PlayerInfoAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
 	builder.PrependInt32Slot(12, spawnId, 0)
+}
+func PlayerInfoAddAccolades(builder *flatbuffers.Builder, accolades flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(accolades), 0)
+}
+func PlayerInfoStartAccoladesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PlayerInfoAddLastInput(builder *flatbuffers.Builder, lastInput flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(lastInput), 0)
+}
+func PlayerInfoAddLastSpectated(builder *flatbuffers.Builder, lastSpectated bool) {
+	builder.PrependBoolSlot(15, lastSpectated, false)
 }
 func PlayerInfoEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

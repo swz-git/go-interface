@@ -21,6 +21,7 @@ type MatchSettingsT struct {
 	EnableRendering bool `json:"enable_rendering"`
 	EnableStateSetting bool `json:"enable_state_setting"`
 	AutoSaveReplay bool `json:"auto_save_replay"`
+	Freeplay bool `json:"freeplay"`
 }
 
 func (t *MatchSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -77,6 +78,7 @@ func (t *MatchSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT
 	MatchSettingsAddEnableRendering(builder, t.EnableRendering)
 	MatchSettingsAddEnableStateSetting(builder, t.EnableStateSetting)
 	MatchSettingsAddAutoSaveReplay(builder, t.AutoSaveReplay)
+	MatchSettingsAddFreeplay(builder, t.Freeplay)
 	return MatchSettingsEnd(builder)
 }
 
@@ -107,6 +109,7 @@ func (rcv *MatchSettings) UnPackTo(t *MatchSettingsT) {
 	t.EnableRendering = rcv.EnableRendering()
 	t.EnableStateSetting = rcv.EnableStateSetting()
 	t.AutoSaveReplay = rcv.AutoSaveReplay()
+	t.Freeplay = rcv.Freeplay()
 }
 
 func (rcv *MatchSettings) UnPack() *MatchSettingsT {
@@ -340,8 +343,20 @@ func (rcv *MatchSettings) MutateAutoSaveReplay(n bool) bool {
 	return rcv._tab.MutateBoolSlot(30, n)
 }
 
+func (rcv *MatchSettings) Freeplay() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *MatchSettings) MutateFreeplay(n bool) bool {
+	return rcv._tab.MutateBoolSlot(32, n)
+}
+
 func MatchSettingsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(15)
 }
 func MatchSettingsAddLauncher(builder *flatbuffers.Builder, launcher Launcher) {
 	builder.PrependByteSlot(0, byte(launcher), 0)
@@ -390,6 +405,9 @@ func MatchSettingsAddEnableStateSetting(builder *flatbuffers.Builder, enableStat
 }
 func MatchSettingsAddAutoSaveReplay(builder *flatbuffers.Builder, autoSaveReplay bool) {
 	builder.PrependBoolSlot(13, autoSaveReplay, false)
+}
+func MatchSettingsAddFreeplay(builder *flatbuffers.Builder, freeplay bool) {
+	builder.PrependBoolSlot(14, freeplay, false)
 }
 func MatchSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

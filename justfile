@@ -6,7 +6,5 @@ build:
     -o ./ ./flatbuffers-schema/rlbot.fbs
     # Generate flatbuffer files
 
-    go generate # Generate reexporting of flatbuffer files
-
     go fmt
     go build # Build
