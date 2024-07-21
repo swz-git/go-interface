@@ -30,14 +30,6 @@ func main() {
 		carIndex = 0
 	}
 
-	// err = conn.SendPacket(&RLBotFlat.MatchCommT{
-	// 	Index:    0,
-	// 	Team:     0,
-	// 	TeamOnly: false,
-	// 	Display:  "",
-	// 	Content:  []byte{},
-	// })
-
 	err = conn.SendPacket(&RLBotFlat.ReadyMessageT{
 		WantsBallPredictions: true,
 		WantsComms:           true,
@@ -48,7 +40,6 @@ func main() {
 	}
 
 	for {
-		// println("waiting")
 		packet, err := conn.RecvPacket()
 		if err != nil {
 			panic(err)
@@ -56,6 +47,9 @@ func main() {
 		gameTickPacket, ok := packet.(*RLBotFlat.GameTickPacketT)
 		if !ok { // if not gametickpacket
 			continue
+		}
+		if len(gameTickPacket.Balls) < 1 {
+			continue // no ball to chase :(
 		}
 
 		target := gameTickPacket.Balls[0].Physics
