@@ -84,14 +84,10 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAblilities) error {
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
 		packetType = 11
-	// case *flat.MessagePacketT:
-	// 	self.builder.Finish(v.Pack(&self.builder))
-	// 	packetPayload = self.builder.FinishedBytes()
-	// 	packetType = 12
 	case *flat.StopCommandT:
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
-		packetType = 13
+		packetType = 12
 	default:
 		return errors.New("Unsupported packet type")
 	}
@@ -168,9 +164,7 @@ func (self RLBotConnection) RecvPacket() (PacketAblilities, error) {
 		return flat.GetRootAsBallPrediction(buffer, 0).UnPack(), nil
 	case 11: //flat.ReadyMessageT:
 		return flat.GetRootAsReadyMessage(buffer, 0).UnPack(), nil
-	// case 12: //flat.MessagePacketT:
-	// 	return flat.GetRootAsMessagePacket(buffer, 0).UnPack(), nil
-	case 13: //flat.StopCommandT:
+	case 12: //flat.StopCommandT:
 		return flat.GetRootAsStopCommand(buffer, 0).UnPack(), nil
 	default:
 		return nil, errors.New("Unknown packet type: " + strconv.Itoa(int(packetType)))
