@@ -8,7 +8,7 @@ import (
 
 /// A psyonix bot, e.g. All Star bot
 type PsyonixT struct {
-	BotSkill float32 `json:"bot_skill"`
+	BotSkill PsyonixSkill `json:"bot_skill"`
 }
 
 func (t *PsyonixT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -68,23 +68,23 @@ func (rcv *Psyonix) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *Psyonix) BotSkill() float32 {
+func (rcv *Psyonix) BotSkill() PsyonixSkill {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+		return PsyonixSkill(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *Psyonix) MutateBotSkill(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(4, n)
+func (rcv *Psyonix) MutateBotSkill(n PsyonixSkill) bool {
+	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
 func PsyonixStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func PsyonixAddBotSkill(builder *flatbuffers.Builder, botSkill float32) {
-	builder.PrependFloat32Slot(0, botSkill, 0.0)
+func PsyonixAddBotSkill(builder *flatbuffers.Builder, botSkill PsyonixSkill) {
+	builder.PrependByteSlot(0, byte(botSkill), 0)
 }
 func PsyonixEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

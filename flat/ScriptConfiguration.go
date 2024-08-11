@@ -7,13 +7,19 @@ import (
 )
 
 type ScriptConfigurationT struct {
+	Name string `json:"name"`
 	Location string `json:"location"`
 	RunCommand string `json:"run_command"`
+	SpawnId int32 `json:"spawn_id"`
 }
 
 func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t == nil {
 		return 0
+	}
+	nameOffset := flatbuffers.UOffsetT(0)
+	if t.Name != "" {
+		nameOffset = builder.CreateString(t.Name)
 	}
 	locationOffset := flatbuffers.UOffsetT(0)
 	if t.Location != "" {
@@ -24,14 +30,18 @@ func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 		runCommandOffset = builder.CreateString(t.RunCommand)
 	}
 	ScriptConfigurationStart(builder)
+	ScriptConfigurationAddName(builder, nameOffset)
 	ScriptConfigurationAddLocation(builder, locationOffset)
 	ScriptConfigurationAddRunCommand(builder, runCommandOffset)
+	ScriptConfigurationAddSpawnId(builder, t.SpawnId)
 	return ScriptConfigurationEnd(builder)
 }
 
 func (rcv *ScriptConfiguration) UnPackTo(t *ScriptConfigurationT) {
+	t.Name = string(rcv.Name())
 	t.Location = string(rcv.Location())
 	t.RunCommand = string(rcv.RunCommand())
+	t.SpawnId = rcv.SpawnId()
 }
 
 func (rcv *ScriptConfiguration) UnPack() *ScriptConfigurationT {
@@ -78,7 +88,7 @@ func (rcv *ScriptConfiguration) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *ScriptConfiguration) Location() []byte {
+func (rcv *ScriptConfiguration) Name() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -86,7 +96,7 @@ func (rcv *ScriptConfiguration) Location() []byte {
 	return nil
 }
 
-func (rcv *ScriptConfiguration) RunCommand() []byte {
+func (rcv *ScriptConfiguration) Location() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -94,14 +104,40 @@ func (rcv *ScriptConfiguration) RunCommand() []byte {
 	return nil
 }
 
+func (rcv *ScriptConfiguration) RunCommand() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ScriptConfiguration) SpawnId() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ScriptConfiguration) MutateSpawnId(n int32) bool {
+	return rcv._tab.MutateInt32Slot(10, n)
+}
+
 func ScriptConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(4)
+}
+func ScriptConfigurationAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(name), 0)
 }
 func ScriptConfigurationAddLocation(builder *flatbuffers.Builder, location flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(location), 0)
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(location), 0)
 }
 func ScriptConfigurationAddRunCommand(builder *flatbuffers.Builder, runCommand flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(runCommand), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(runCommand), 0)
+}
+func ScriptConfigurationAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
+	builder.PrependInt32Slot(3, spawnId, 0)
 }
 func ScriptConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

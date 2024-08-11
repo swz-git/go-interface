@@ -14,6 +14,7 @@ type PlayerConfigurationT struct {
 	RunCommand string `json:"run_command"`
 	Loadout *PlayerLoadoutT `json:"loadout"`
 	SpawnId int32 `json:"spawn_id"`
+	Hivemind bool `json:"hivemind"`
 }
 
 func (t *PlayerConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -46,6 +47,7 @@ func (t *PlayerConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	PlayerConfigurationAddRunCommand(builder, runCommandOffset)
 	PlayerConfigurationAddLoadout(builder, loadoutOffset)
 	PlayerConfigurationAddSpawnId(builder, t.SpawnId)
+	PlayerConfigurationAddHivemind(builder, t.Hivemind)
 	return PlayerConfigurationEnd(builder)
 }
 
@@ -60,6 +62,7 @@ func (rcv *PlayerConfiguration) UnPackTo(t *PlayerConfigurationT) {
 	t.RunCommand = string(rcv.RunCommand())
 	t.Loadout = rcv.Loadout(nil).UnPack()
 	t.SpawnId = rcv.SpawnId()
+	t.Hivemind = rcv.Hivemind()
 }
 
 func (rcv *PlayerConfiguration) UnPack() *PlayerConfigurationT {
@@ -192,8 +195,20 @@ func (rcv *PlayerConfiguration) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
 }
 
+func (rcv *PlayerConfiguration) Hivemind() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PlayerConfiguration) MutateHivemind(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
 func PlayerConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(9)
 }
 func PlayerConfigurationAddVarietyType(builder *flatbuffers.Builder, varietyType PlayerClass) {
 	builder.PrependByteSlot(0, byte(varietyType), 0)
@@ -218,6 +233,9 @@ func PlayerConfigurationAddLoadout(builder *flatbuffers.Builder, loadout flatbuf
 }
 func PlayerConfigurationAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
 	builder.PrependInt32Slot(7, spawnId, 0)
+}
+func PlayerConfigurationAddHivemind(builder *flatbuffers.Builder, hivemind bool) {
+	builder.PrependBoolSlot(8, hivemind, false)
 }
 func PlayerConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

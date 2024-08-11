@@ -22,7 +22,7 @@ func main() {
 			Name:    "BOT1",
 			Team:    0,
 			Loadout: &RLBotFlat.PlayerLoadoutT{},
-			SpawnId: 0,
+			SpawnId: 1,
 		}, {
 			Variety: &RLBotFlat.PlayerClassT{
 				Type:  RLBotFlat.PlayerClassHuman,
@@ -31,7 +31,7 @@ func main() {
 			Name:    "Human", // Cannot be "" for some reason?
 			Team:    1,
 			Loadout: &RLBotFlat.PlayerLoadoutT{},
-			SpawnId: 1,
+			SpawnId: 2,
 		}},
 		GameMode:   RLBotFlat.GameModeSoccer,
 		GameMapUpk: "UtopiaStadium_P",

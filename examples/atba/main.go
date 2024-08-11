@@ -24,16 +24,22 @@ func main() {
 
 	println("Running!")
 
-	carIndex, err := strconv.Atoi(os.Getenv("RLBOT_INDEX"))
+	spawnId, err := strconv.Atoi(os.Getenv("RLBOT_SPAWN_IDS"))
 	if err != nil {
-		println("WARN: No RLBOT_INDEX found, assuming 0")
-		carIndex = 0
+		panic("ERR: RLBOT_SPAWN_IDS wasn't an integer")
 	}
 
-	err = conn.SendPacket(&RLBotFlat.ReadyMessageT{
+	err = conn.SendPacket(&RLBotFlat.ConnectionSettingsT{
 		WantsBallPredictions: true,
 		WantsComms:           true,
 		CloseAfterMatch:      true,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	err = conn.SendPacket(&RLBotFlat.InitCompleteT{
+		SpawnId: int32(spawnId),
 	})
 	if err != nil {
 		panic(err)
@@ -48,12 +54,24 @@ func main() {
 		if !ok { // if not gametickpacket
 			continue
 		}
+
+		var botIndex int
+		for i, player := range gameTickPacket.Players {
+			if player.SpawnId == int32(spawnId) {
+				botIndex = i
+			}
+		}
+		if botIndex == 0 {
+			// If we aren't in the game, don't do anything
+			continue
+		}
+
 		if len(gameTickPacket.Balls) < 1 {
 			continue // no ball to chase :(
 		}
 
 		target := gameTickPacket.Balls[0].Physics
-		car := gameTickPacket.Players[carIndex].Physics
+		car := gameTickPacket.Players[spawnId].Physics
 
 		botToTargetAngle := math.Atan2(float64(target.Location.Y-car.Location.Y), float64(target.Location.X-car.Location.X))
 		botFrontToTargetAngle := botToTargetAngle - float64(car.Rotation.Yaw)
@@ -76,7 +94,7 @@ func main() {
 		controller.Throttle = 1
 
 		conn.SendPacket(&RLBotFlat.PlayerInputT{
-			PlayerIndex:     uint32(carIndex),
+			PlayerIndex:     uint32(spawnId),
 			ControllerState: &controller,
 		})
 	}
