@@ -11,7 +11,7 @@ type PlayerInfoT struct {
 	ScoreInfo *ScoreInfoT `json:"score_info"`
 	Hitbox *BoxShapeT `json:"hitbox"`
 	HitboxOffset *Vector3T `json:"hitbox_offset"`
-	LastestTouch *TouchT `json:"lastest_touch"`
+	LatestTouch *TouchT `json:"latest_touch"`
 	AirState AirState `json:"air_state"`
 	DodgeTimeout float32 `json:"dodge_timeout"`
 	DemolishedTimeout float32 `json:"demolished_timeout"`
@@ -33,7 +33,7 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	physicsOffset := t.Physics.Pack(builder)
 	scoreInfoOffset := t.ScoreInfo.Pack(builder)
 	hitboxOffset := t.Hitbox.Pack(builder)
-	lastestTouchOffset := t.LastestTouch.Pack(builder)
+	latestTouchOffset := t.LatestTouch.Pack(builder)
 	nameOffset := flatbuffers.UOffsetT(0)
 	if t.Name != "" {
 		nameOffset = builder.CreateString(t.Name)
@@ -58,7 +58,7 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	PlayerInfoAddHitbox(builder, hitboxOffset)
 	hitboxOffsetOffset := t.HitboxOffset.Pack(builder)
 	PlayerInfoAddHitboxOffset(builder, hitboxOffsetOffset)
-	PlayerInfoAddLastestTouch(builder, lastestTouchOffset)
+	PlayerInfoAddLatestTouch(builder, latestTouchOffset)
 	PlayerInfoAddAirState(builder, t.AirState)
 	PlayerInfoAddDodgeTimeout(builder, t.DodgeTimeout)
 	PlayerInfoAddDemolishedTimeout(builder, t.DemolishedTimeout)
@@ -79,7 +79,7 @@ func (rcv *PlayerInfo) UnPackTo(t *PlayerInfoT) {
 	t.ScoreInfo = rcv.ScoreInfo(nil).UnPack()
 	t.Hitbox = rcv.Hitbox(nil).UnPack()
 	t.HitboxOffset = rcv.HitboxOffset(nil).UnPack()
-	t.LastestTouch = rcv.LastestTouch(nil).UnPack()
+	t.LatestTouch = rcv.LatestTouch(nil).UnPack()
 	t.AirState = rcv.AirState()
 	t.DodgeTimeout = rcv.DodgeTimeout()
 	t.DemolishedTimeout = rcv.DemolishedTimeout()
@@ -194,7 +194,7 @@ func (rcv *PlayerInfo) HitboxOffset(obj *Vector3) *Vector3 {
 	return nil
 }
 
-func (rcv *PlayerInfo) LastestTouch(obj *Touch) *Touch {
+func (rcv *PlayerInfo) LatestTouch(obj *Touch) *Touch {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
@@ -404,8 +404,8 @@ func PlayerInfoAddHitbox(builder *flatbuffers.Builder, hitbox flatbuffers.UOffse
 func PlayerInfoAddHitboxOffset(builder *flatbuffers.Builder, hitboxOffset flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(3, flatbuffers.UOffsetT(hitboxOffset), 0)
 }
-func PlayerInfoAddLastestTouch(builder *flatbuffers.Builder, lastestTouch flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(lastestTouch), 0)
+func PlayerInfoAddLatestTouch(builder *flatbuffers.Builder, latestTouch flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(latestTouch), 0)
 }
 func PlayerInfoAddAirState(builder *flatbuffers.Builder, airState AirState) {
 	builder.PrependByteSlot(5, byte(airState), 0)
