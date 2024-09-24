@@ -8,7 +8,6 @@ import (
 
 type BallInfoT struct {
 	Physics *PhysicsT `json:"physics"`
-	LatestTouch *TouchT `json:"latest_touch"`
 	Shape *CollisionShapeT `json:"shape"`
 }
 
@@ -17,12 +16,10 @@ func (t *BallInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		return 0
 	}
 	physicsOffset := t.Physics.Pack(builder)
-	latestTouchOffset := t.LatestTouch.Pack(builder)
 	shapeOffset := t.Shape.Pack(builder)
 
 	BallInfoStart(builder)
 	BallInfoAddPhysics(builder, physicsOffset)
-	BallInfoAddLatestTouch(builder, latestTouchOffset)
 	if t.Shape != nil {
 		BallInfoAddShapeType(builder, t.Shape.Type)
 	}
@@ -32,7 +29,6 @@ func (t *BallInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 func (rcv *BallInfo) UnPackTo(t *BallInfoT) {
 	t.Physics = rcv.Physics(nil).UnPack()
-	t.LatestTouch = rcv.LatestTouch(nil).UnPack()
 	shapeTable := flatbuffers.Table{}
 	if rcv.Shape(&shapeTable) {
 		t.Shape = rcv.ShapeType().UnPack(shapeTable)
@@ -96,21 +92,8 @@ func (rcv *BallInfo) Physics(obj *Physics) *Physics {
 	return nil
 }
 
-func (rcv *BallInfo) LatestTouch(obj *Touch) *Touch {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(Touch)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
 func (rcv *BallInfo) ShapeType() CollisionShape {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return CollisionShape(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -118,11 +101,11 @@ func (rcv *BallInfo) ShapeType() CollisionShape {
 }
 
 func (rcv *BallInfo) MutateShapeType(n CollisionShape) bool {
-	return rcv._tab.MutateByteSlot(8, byte(n))
+	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
 func (rcv *BallInfo) Shape(obj *flatbuffers.Table) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		rcv._tab.Union(obj, o)
 		return true
@@ -131,19 +114,16 @@ func (rcv *BallInfo) Shape(obj *flatbuffers.Table) bool {
 }
 
 func BallInfoStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(3)
 }
 func BallInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(physics), 0)
 }
-func BallInfoAddLatestTouch(builder *flatbuffers.Builder, latestTouch flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(latestTouch), 0)
-}
 func BallInfoAddShapeType(builder *flatbuffers.Builder, shapeType CollisionShape) {
-	builder.PrependByteSlot(2, byte(shapeType), 0)
+	builder.PrependByteSlot(1, byte(shapeType), 0)
 }
 func BallInfoAddShape(builder *flatbuffers.Builder, shape flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(shape), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(shape), 0)
 }
 func BallInfoEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

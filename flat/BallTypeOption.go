@@ -14,6 +14,8 @@ const (
 	BallTypeOptionBeachball   BallTypeOption = 4
 	BallTypeOptionAnniversary BallTypeOption = 5
 	BallTypeOptionHaunted     BallTypeOption = 6
+	BallTypeOptionEkin        BallTypeOption = 7
+	BallTypeOptionSpookyCube  BallTypeOption = 8
 )
 
 var EnumNamesBallTypeOption = map[BallTypeOption]string{
@@ -24,6 +26,8 @@ var EnumNamesBallTypeOption = map[BallTypeOption]string{
 	BallTypeOptionBeachball:   "Beachball",
 	BallTypeOptionAnniversary: "Anniversary",
 	BallTypeOptionHaunted:     "Haunted",
+	BallTypeOptionEkin:        "Ekin",
+	BallTypeOptionSpookyCube:  "SpookyCube",
 }
 
 var EnumValuesBallTypeOption = map[string]BallTypeOption{
@@ -34,6 +38,8 @@ var EnumValuesBallTypeOption = map[string]BallTypeOption{
 	"Beachball":   BallTypeOptionBeachball,
 	"Anniversary": BallTypeOptionAnniversary,
 	"Haunted":     BallTypeOptionHaunted,
+	"Ekin":        BallTypeOptionEkin,
+	"SpookyCube":  BallTypeOptionSpookyCube,
 }
 
 func (v BallTypeOption) String() string {

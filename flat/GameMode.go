@@ -14,6 +14,7 @@ const (
 	GameModeRumble     GameMode = 4
 	GameModeHeatseeker GameMode = 5
 	GameModeGridiron   GameMode = 6
+	GameModeKnockout   GameMode = 7
 )
 
 var EnumNamesGameMode = map[GameMode]string{
@@ -24,6 +25,7 @@ var EnumNamesGameMode = map[GameMode]string{
 	GameModeRumble:     "Rumble",
 	GameModeHeatseeker: "Heatseeker",
 	GameModeGridiron:   "Gridiron",
+	GameModeKnockout:   "Knockout",
 }
 
 var EnumValuesGameMode = map[string]GameMode{
@@ -34,6 +36,7 @@ var EnumValuesGameMode = map[string]GameMode{
 	"Rumble":     GameModeRumble,
 	"Heatseeker": GameModeHeatseeker,
 	"Gridiron":   GameModeGridiron,
+	"Knockout":   GameModeKnockout,
 }
 
 func (v GameMode) String() string {

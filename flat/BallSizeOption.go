@@ -9,13 +9,15 @@ type BallSizeOption byte
 const (
 	BallSizeOptionDefault  BallSizeOption = 0
 	BallSizeOptionSmall    BallSizeOption = 1
-	BallSizeOptionLarge    BallSizeOption = 2
-	BallSizeOptionGigantic BallSizeOption = 3
+	BallSizeOptionMedium   BallSizeOption = 2
+	BallSizeOptionLarge    BallSizeOption = 3
+	BallSizeOptionGigantic BallSizeOption = 4
 )
 
 var EnumNamesBallSizeOption = map[BallSizeOption]string{
 	BallSizeOptionDefault:  "Default",
 	BallSizeOptionSmall:    "Small",
+	BallSizeOptionMedium:   "Medium",
 	BallSizeOptionLarge:    "Large",
 	BallSizeOptionGigantic: "Gigantic",
 }
@@ -23,6 +25,7 @@ var EnumNamesBallSizeOption = map[BallSizeOption]string{
 var EnumValuesBallSizeOption = map[string]BallSizeOption{
 	"Default":  BallSizeOptionDefault,
 	"Small":    BallSizeOptionSmall,
+	"Medium":   BallSizeOptionMedium,
 	"Large":    BallSizeOptionLarge,
 	"Gigantic": BallSizeOptionGigantic,
 }

@@ -10,13 +10,15 @@ const (
 	BoostStrengthOptionOne         BoostStrengthOption = 0
 	BoostStrengthOptionOneAndAHalf BoostStrengthOption = 1
 	BoostStrengthOptionTwo         BoostStrengthOption = 2
-	BoostStrengthOptionTen         BoostStrengthOption = 3
+	BoostStrengthOptionFive        BoostStrengthOption = 3
+	BoostStrengthOptionTen         BoostStrengthOption = 4
 )
 
 var EnumNamesBoostStrengthOption = map[BoostStrengthOption]string{
 	BoostStrengthOptionOne:         "One",
 	BoostStrengthOptionOneAndAHalf: "OneAndAHalf",
 	BoostStrengthOptionTwo:         "Two",
+	BoostStrengthOptionFive:        "Five",
 	BoostStrengthOptionTen:         "Ten",
 }
 
@@ -24,6 +26,7 @@ var EnumValuesBoostStrengthOption = map[string]BoostStrengthOption{
 	"One":         BoostStrengthOptionOne,
 	"OneAndAHalf": BoostStrengthOptionOneAndAHalf,
 	"Two":         BoostStrengthOptionTwo,
+	"Five":        BoostStrengthOptionFive,
 	"Ten":         BoostStrengthOptionTen,
 }
 

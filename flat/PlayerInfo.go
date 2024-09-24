@@ -11,6 +11,7 @@ type PlayerInfoT struct {
 	ScoreInfo *ScoreInfoT `json:"score_info"`
 	Hitbox *BoxShapeT `json:"hitbox"`
 	HitboxOffset *Vector3T `json:"hitbox_offset"`
+	LastestTouch *TouchT `json:"lastest_touch"`
 	AirState AirState `json:"air_state"`
 	DodgeTimeout float32 `json:"dodge_timeout"`
 	DemolishedTimeout float32 `json:"demolished_timeout"`
@@ -32,6 +33,7 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	physicsOffset := t.Physics.Pack(builder)
 	scoreInfoOffset := t.ScoreInfo.Pack(builder)
 	hitboxOffset := t.Hitbox.Pack(builder)
+	lastestTouchOffset := t.LastestTouch.Pack(builder)
 	nameOffset := flatbuffers.UOffsetT(0)
 	if t.Name != "" {
 		nameOffset = builder.CreateString(t.Name)
@@ -56,6 +58,7 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	PlayerInfoAddHitbox(builder, hitboxOffset)
 	hitboxOffsetOffset := t.HitboxOffset.Pack(builder)
 	PlayerInfoAddHitboxOffset(builder, hitboxOffsetOffset)
+	PlayerInfoAddLastestTouch(builder, lastestTouchOffset)
 	PlayerInfoAddAirState(builder, t.AirState)
 	PlayerInfoAddDodgeTimeout(builder, t.DodgeTimeout)
 	PlayerInfoAddDemolishedTimeout(builder, t.DemolishedTimeout)
@@ -76,6 +79,7 @@ func (rcv *PlayerInfo) UnPackTo(t *PlayerInfoT) {
 	t.ScoreInfo = rcv.ScoreInfo(nil).UnPack()
 	t.Hitbox = rcv.Hitbox(nil).UnPack()
 	t.HitboxOffset = rcv.HitboxOffset(nil).UnPack()
+	t.LastestTouch = rcv.LastestTouch(nil).UnPack()
 	t.AirState = rcv.AirState()
 	t.DodgeTimeout = rcv.DodgeTimeout()
 	t.DemolishedTimeout = rcv.DemolishedTimeout()
@@ -190,8 +194,21 @@ func (rcv *PlayerInfo) HitboxOffset(obj *Vector3) *Vector3 {
 	return nil
 }
 
-func (rcv *PlayerInfo) AirState() AirState {
+func (rcv *PlayerInfo) LastestTouch(obj *Touch) *Touch {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(Touch)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PlayerInfo) AirState() AirState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return AirState(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -199,12 +216,12 @@ func (rcv *PlayerInfo) AirState() AirState {
 }
 
 func (rcv *PlayerInfo) MutateAirState(n AirState) bool {
-	return rcv._tab.MutateByteSlot(12, byte(n))
+	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
 /// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
 func (rcv *PlayerInfo) DodgeTimeout() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -213,12 +230,12 @@ func (rcv *PlayerInfo) DodgeTimeout() float32 {
 
 /// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
 func (rcv *PlayerInfo) MutateDodgeTimeout(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(14, n)
+	return rcv._tab.MutateFloat32Slot(16, n)
 }
 
 /// How long until the bot is not demolished anymore, -1 if not demolished
 func (rcv *PlayerInfo) DemolishedTimeout() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -227,22 +244,10 @@ func (rcv *PlayerInfo) DemolishedTimeout() float32 {
 
 /// How long until the bot is not demolished anymore, -1 if not demolished
 func (rcv *PlayerInfo) MutateDemolishedTimeout(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(16, n)
+	return rcv._tab.MutateFloat32Slot(18, n)
 }
 
 func (rcv *PlayerInfo) IsSupersonic() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
-	}
-	return false
-}
-
-func (rcv *PlayerInfo) MutateIsSupersonic(n bool) bool {
-	return rcv._tab.MutateBoolSlot(18, n)
-}
-
-func (rcv *PlayerInfo) IsBot() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -250,12 +255,24 @@ func (rcv *PlayerInfo) IsBot() bool {
 	return false
 }
 
-func (rcv *PlayerInfo) MutateIsBot(n bool) bool {
+func (rcv *PlayerInfo) MutateIsSupersonic(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
 }
 
-func (rcv *PlayerInfo) Name() []byte {
+func (rcv *PlayerInfo) IsBot() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PlayerInfo) MutateIsBot(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *PlayerInfo) Name() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -263,18 +280,6 @@ func (rcv *PlayerInfo) Name() []byte {
 }
 
 func (rcv *PlayerInfo) Team() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PlayerInfo) MutateTeam(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(24, n)
-}
-
-func (rcv *PlayerInfo) Boost() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
@@ -282,14 +287,26 @@ func (rcv *PlayerInfo) Boost() uint32 {
 	return 0
 }
 
-func (rcv *PlayerInfo) MutateBoost(n uint32) bool {
+func (rcv *PlayerInfo) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
+}
+
+func (rcv *PlayerInfo) Boost() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PlayerInfo) MutateBoost(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(28, n)
 }
 
 /// In the case where the requested player index is not available, spawnId will help
 /// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerInfo) SpawnId() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -299,7 +316,7 @@ func (rcv *PlayerInfo) SpawnId() int32 {
 /// In the case where the requested player index is not available, spawnId will help
 /// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
-	return rcv._tab.MutateInt32Slot(28, n)
+	return rcv._tab.MutateInt32Slot(30, n)
 }
 
 /// Notifications the player triggered by some in-game event, such as:
@@ -315,7 +332,7 @@ func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
 ///    LowFive, HighFive;
 /// Clears every tick.
 func (rcv *PlayerInfo) Accolades(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -324,7 +341,7 @@ func (rcv *PlayerInfo) Accolades(j int) []byte {
 }
 
 func (rcv *PlayerInfo) AccoladesLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -345,7 +362,7 @@ func (rcv *PlayerInfo) AccoladesLength() int {
 /// Clears every tick.
 /// The last known controller input from this player
 func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -360,7 +377,7 @@ func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
 /// The last known controller input from this player
 /// If the player was the last one to be watched by a spectator
 func (rcv *PlayerInfo) LastSpectated() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -369,11 +386,11 @@ func (rcv *PlayerInfo) LastSpectated() bool {
 
 /// If the player was the last one to be watched by a spectator
 func (rcv *PlayerInfo) MutateLastSpectated(n bool) bool {
-	return rcv._tab.MutateBoolSlot(34, n)
+	return rcv._tab.MutateBoolSlot(36, n)
 }
 
 func PlayerInfoStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func PlayerInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(physics), 0)
@@ -387,44 +404,47 @@ func PlayerInfoAddHitbox(builder *flatbuffers.Builder, hitbox flatbuffers.UOffse
 func PlayerInfoAddHitboxOffset(builder *flatbuffers.Builder, hitboxOffset flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(3, flatbuffers.UOffsetT(hitboxOffset), 0)
 }
+func PlayerInfoAddLastestTouch(builder *flatbuffers.Builder, lastestTouch flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(lastestTouch), 0)
+}
 func PlayerInfoAddAirState(builder *flatbuffers.Builder, airState AirState) {
-	builder.PrependByteSlot(4, byte(airState), 0)
+	builder.PrependByteSlot(5, byte(airState), 0)
 }
 func PlayerInfoAddDodgeTimeout(builder *flatbuffers.Builder, dodgeTimeout float32) {
-	builder.PrependFloat32Slot(5, dodgeTimeout, 0.0)
+	builder.PrependFloat32Slot(6, dodgeTimeout, 0.0)
 }
 func PlayerInfoAddDemolishedTimeout(builder *flatbuffers.Builder, demolishedTimeout float32) {
-	builder.PrependFloat32Slot(6, demolishedTimeout, 0.0)
+	builder.PrependFloat32Slot(7, demolishedTimeout, 0.0)
 }
 func PlayerInfoAddIsSupersonic(builder *flatbuffers.Builder, isSupersonic bool) {
-	builder.PrependBoolSlot(7, isSupersonic, false)
+	builder.PrependBoolSlot(8, isSupersonic, false)
 }
 func PlayerInfoAddIsBot(builder *flatbuffers.Builder, isBot bool) {
-	builder.PrependBoolSlot(8, isBot, false)
+	builder.PrependBoolSlot(9, isBot, false)
 }
 func PlayerInfoAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(name), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(name), 0)
 }
 func PlayerInfoAddTeam(builder *flatbuffers.Builder, team uint32) {
-	builder.PrependUint32Slot(10, team, 0)
+	builder.PrependUint32Slot(11, team, 0)
 }
 func PlayerInfoAddBoost(builder *flatbuffers.Builder, boost uint32) {
-	builder.PrependUint32Slot(11, boost, 0)
+	builder.PrependUint32Slot(12, boost, 0)
 }
 func PlayerInfoAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
-	builder.PrependInt32Slot(12, spawnId, 0)
+	builder.PrependInt32Slot(13, spawnId, 0)
 }
 func PlayerInfoAddAccolades(builder *flatbuffers.Builder, accolades flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(accolades), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(accolades), 0)
 }
 func PlayerInfoStartAccoladesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func PlayerInfoAddLastInput(builder *flatbuffers.Builder, lastInput flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(lastInput), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(lastInput), 0)
 }
 func PlayerInfoAddLastSpectated(builder *flatbuffers.Builder, lastSpectated bool) {
-	builder.PrependBoolSlot(15, lastSpectated, false)
+	builder.PrependBoolSlot(16, lastSpectated, false)
 }
 func PlayerInfoEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

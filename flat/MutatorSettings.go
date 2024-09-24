@@ -24,6 +24,9 @@ type MutatorSettingsT struct {
 	GravityOption GravityOption `json:"gravity_option"`
 	DemolishOption DemolishOption `json:"demolish_option"`
 	RespawnTimeOption RespawnTimeOption `json:"respawn_time_option"`
+	MaxTimeOption MaxTimeOption `json:"max_time_option"`
+	GameEventOption GameEventOption `json:"game_event_option"`
+	AudioOption AudioOption `json:"audio_option"`
 }
 
 func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -48,6 +51,9 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 	MutatorSettingsAddGravityOption(builder, t.GravityOption)
 	MutatorSettingsAddDemolishOption(builder, t.DemolishOption)
 	MutatorSettingsAddRespawnTimeOption(builder, t.RespawnTimeOption)
+	MutatorSettingsAddMaxTimeOption(builder, t.MaxTimeOption)
+	MutatorSettingsAddGameEventOption(builder, t.GameEventOption)
+	MutatorSettingsAddAudioOption(builder, t.AudioOption)
 	return MutatorSettingsEnd(builder)
 }
 
@@ -69,6 +75,9 @@ func (rcv *MutatorSettings) UnPackTo(t *MutatorSettingsT) {
 	t.GravityOption = rcv.GravityOption()
 	t.DemolishOption = rcv.DemolishOption()
 	t.RespawnTimeOption = rcv.RespawnTimeOption()
+	t.MaxTimeOption = rcv.MaxTimeOption()
+	t.GameEventOption = rcv.GameEventOption()
+	t.AudioOption = rcv.AudioOption()
 }
 
 func (rcv *MutatorSettings) UnPack() *MutatorSettingsT {
@@ -319,8 +328,44 @@ func (rcv *MutatorSettings) MutateRespawnTimeOption(n RespawnTimeOption) bool {
 	return rcv._tab.MutateByteSlot(36, byte(n))
 }
 
+func (rcv *MutatorSettings) MaxTimeOption() MaxTimeOption {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return MaxTimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MutatorSettings) MutateMaxTimeOption(n MaxTimeOption) bool {
+	return rcv._tab.MutateByteSlot(38, byte(n))
+}
+
+func (rcv *MutatorSettings) GameEventOption() GameEventOption {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return GameEventOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MutatorSettings) MutateGameEventOption(n GameEventOption) bool {
+	return rcv._tab.MutateByteSlot(40, byte(n))
+}
+
+func (rcv *MutatorSettings) AudioOption() AudioOption {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return AudioOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MutatorSettings) MutateAudioOption(n AudioOption) bool {
+	return rcv._tab.MutateByteSlot(42, byte(n))
+}
+
 func MutatorSettingsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(20)
 }
 func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength MatchLength) {
 	builder.PrependByteSlot(0, byte(matchLength), 0)
@@ -372,6 +417,15 @@ func MutatorSettingsAddDemolishOption(builder *flatbuffers.Builder, demolishOpti
 }
 func MutatorSettingsAddRespawnTimeOption(builder *flatbuffers.Builder, respawnTimeOption RespawnTimeOption) {
 	builder.PrependByteSlot(16, byte(respawnTimeOption), 0)
+}
+func MutatorSettingsAddMaxTimeOption(builder *flatbuffers.Builder, maxTimeOption MaxTimeOption) {
+	builder.PrependByteSlot(17, byte(maxTimeOption), 0)
+}
+func MutatorSettingsAddGameEventOption(builder *flatbuffers.Builder, gameEventOption GameEventOption) {
+	builder.PrependByteSlot(18, byte(gameEventOption), 0)
+}
+func MutatorSettingsAddAudioOption(builder *flatbuffers.Builder, audioOption AudioOption) {
+	builder.PrependByteSlot(19, byte(audioOption), 0)
 }
 func MutatorSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

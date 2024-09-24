@@ -8,7 +8,7 @@ import (
 
 type GameTickPacketT struct {
 	Players []*PlayerInfoT `json:"players"`
-	BoostPadStates []*BoostPadStateT `json:"boost_pad_states"`
+	BoostPads []*BoostPadStateT `json:"boost_pads"`
 	Balls []*BallInfoT `json:"balls"`
 	GameInfo *GameInfoT `json:"game_info"`
 	Teams []*TeamInfoT `json:"teams"`
@@ -31,18 +31,18 @@ func (t *GameTickPacketT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffset
 		}
 		playersOffset = builder.EndVector(playersLength)
 	}
-	boostPadStatesOffset := flatbuffers.UOffsetT(0)
-	if t.BoostPadStates != nil {
-		boostPadStatesLength := len(t.BoostPadStates)
-		boostPadStatesOffsets := make([]flatbuffers.UOffsetT, boostPadStatesLength)
-		for j := 0; j < boostPadStatesLength; j++ {
-			boostPadStatesOffsets[j] = t.BoostPadStates[j].Pack(builder)
+	boostPadsOffset := flatbuffers.UOffsetT(0)
+	if t.BoostPads != nil {
+		boostPadsLength := len(t.BoostPads)
+		boostPadsOffsets := make([]flatbuffers.UOffsetT, boostPadsLength)
+		for j := 0; j < boostPadsLength; j++ {
+			boostPadsOffsets[j] = t.BoostPads[j].Pack(builder)
 		}
-		GameTickPacketStartBoostPadStatesVector(builder, boostPadStatesLength)
-		for j := boostPadStatesLength - 1; j >= 0; j-- {
-			builder.PrependUOffsetT(boostPadStatesOffsets[j])
+		GameTickPacketStartBoostPadsVector(builder, boostPadsLength)
+		for j := boostPadsLength - 1; j >= 0; j-- {
+			builder.PrependUOffsetT(boostPadsOffsets[j])
 		}
-		boostPadStatesOffset = builder.EndVector(boostPadStatesLength)
+		boostPadsOffset = builder.EndVector(boostPadsLength)
 	}
 	ballsOffset := flatbuffers.UOffsetT(0)
 	if t.Balls != nil {
@@ -73,7 +73,7 @@ func (t *GameTickPacketT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffset
 	}
 	GameTickPacketStart(builder)
 	GameTickPacketAddPlayers(builder, playersOffset)
-	GameTickPacketAddBoostPadStates(builder, boostPadStatesOffset)
+	GameTickPacketAddBoostPads(builder, boostPadsOffset)
 	GameTickPacketAddBalls(builder, ballsOffset)
 	GameTickPacketAddGameInfo(builder, gameInfoOffset)
 	GameTickPacketAddTeams(builder, teamsOffset)
@@ -88,12 +88,12 @@ func (rcv *GameTickPacket) UnPackTo(t *GameTickPacketT) {
 		rcv.Players(&x, j)
 		t.Players[j] = x.UnPack()
 	}
-	boostPadStatesLength := rcv.BoostPadStatesLength()
-	t.BoostPadStates = make([]*BoostPadStateT, boostPadStatesLength)
-	for j := 0; j < boostPadStatesLength; j++ {
+	boostPadsLength := rcv.BoostPadsLength()
+	t.BoostPads = make([]*BoostPadStateT, boostPadsLength)
+	for j := 0; j < boostPadsLength; j++ {
 		x := BoostPadState{}
-		rcv.BoostPadStates(&x, j)
-		t.BoostPadStates[j] = x.UnPack()
+		rcv.BoostPads(&x, j)
+		t.BoostPads[j] = x.UnPack()
 	}
 	ballsLength := rcv.BallsLength()
 	t.Balls = make([]*BallInfoT, ballsLength)
@@ -176,7 +176,7 @@ func (rcv *GameTickPacket) PlayersLength() int {
 	return 0
 }
 
-func (rcv *GameTickPacket) BoostPadStates(obj *BoostPadState, j int) bool {
+func (rcv *GameTickPacket) BoostPads(obj *BoostPadState, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
@@ -188,7 +188,7 @@ func (rcv *GameTickPacket) BoostPadStates(obj *BoostPadState, j int) bool {
 	return false
 }
 
-func (rcv *GameTickPacket) BoostPadStatesLength() int {
+func (rcv *GameTickPacket) BoostPadsLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -258,10 +258,10 @@ func GameTickPacketAddPlayers(builder *flatbuffers.Builder, players flatbuffers.
 func GameTickPacketStartPlayersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func GameTickPacketAddBoostPadStates(builder *flatbuffers.Builder, boostPadStates flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(boostPadStates), 0)
+func GameTickPacketAddBoostPads(builder *flatbuffers.Builder, boostPads flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(boostPads), 0)
 }
-func GameTickPacketStartBoostPadStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func GameTickPacketStartBoostPadsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func GameTickPacketAddBalls(builder *flatbuffers.Builder, balls flatbuffers.UOffsetT) {
