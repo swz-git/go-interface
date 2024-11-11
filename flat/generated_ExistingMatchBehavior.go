@@ -7,25 +7,25 @@ import "strconv"
 type ExistingMatchBehavior byte
 
 const (
-	/// Restart the match if any match settings differ. This is the default because old RLBot always worked this way.
-	ExistingMatchBehaviorRestart_If_Different ExistingMatchBehavior = 0
-	/// Always restart the match, even if config is identical
-	ExistingMatchBehaviorRestart              ExistingMatchBehavior = 1
+	/// Always restart the match, even if config is identical.
+	ExistingMatchBehaviorRestart              ExistingMatchBehavior = 0
 	/// Never restart an existing match, just try to remove or spawn cars to match the configuration.
 	/// If we are not in the middle of a match, a match will be started. Handy for LAN matches.
-	ExistingMatchBehaviorContinue_And_Spawn   ExistingMatchBehavior = 2
+	ExistingMatchBehaviorContinue_And_Spawn   ExistingMatchBehavior = 1
+	/// Restart the match if any match settings differ.
+	ExistingMatchBehaviorRestart_If_Different ExistingMatchBehavior = 2
 )
 
 var EnumNamesExistingMatchBehavior = map[ExistingMatchBehavior]string{
-	ExistingMatchBehaviorRestart_If_Different: "Restart_If_Different",
 	ExistingMatchBehaviorRestart:              "Restart",
 	ExistingMatchBehaviorContinue_And_Spawn:   "Continue_And_Spawn",
+	ExistingMatchBehaviorRestart_If_Different: "Restart_If_Different",
 }
 
 var EnumValuesExistingMatchBehavior = map[string]ExistingMatchBehavior{
-	"Restart_If_Different": ExistingMatchBehaviorRestart_If_Different,
 	"Restart":              ExistingMatchBehaviorRestart,
 	"Continue_And_Spawn":   ExistingMatchBehaviorContinue_And_Spawn,
+	"Restart_If_Different": ExistingMatchBehaviorRestart_If_Different,
 }
 
 func (v ExistingMatchBehavior) String() string {

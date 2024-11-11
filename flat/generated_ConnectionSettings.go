@@ -10,6 +10,7 @@ import (
 /// This could be sent by a bot, or a bot manager governing several bots, an
 /// overlay, or any other utility that connects to the RLBot process.
 type ConnectionSettingsT struct {
+	AgentId string `json:"agent_id"`
 	WantsBallPredictions bool `json:"wants_ball_predictions"`
 	WantsComms bool `json:"wants_comms"`
 	CloseAfterMatch bool `json:"close_after_match"`
@@ -19,7 +20,12 @@ func (t *ConnectionSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOf
 	if t == nil {
 		return 0
 	}
+	agentIdOffset := flatbuffers.UOffsetT(0)
+	if t.AgentId != "" {
+		agentIdOffset = builder.CreateString(t.AgentId)
+	}
 	ConnectionSettingsStart(builder)
+	ConnectionSettingsAddAgentId(builder, agentIdOffset)
 	ConnectionSettingsAddWantsBallPredictions(builder, t.WantsBallPredictions)
 	ConnectionSettingsAddWantsComms(builder, t.WantsComms)
 	ConnectionSettingsAddCloseAfterMatch(builder, t.CloseAfterMatch)
@@ -27,6 +33,7 @@ func (t *ConnectionSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOf
 }
 
 func (rcv *ConnectionSettings) UnPackTo(t *ConnectionSettingsT) {
+	t.AgentId = string(rcv.AgentId())
 	t.WantsBallPredictions = rcv.WantsBallPredictions()
 	t.WantsComms = rcv.WantsComms()
 	t.CloseAfterMatch = rcv.CloseAfterMatch()
@@ -76,19 +83,18 @@ func (rcv *ConnectionSettings) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *ConnectionSettings) WantsBallPredictions() bool {
+/// The ID of the bot/script that is associated with the incoming connection.
+func (rcv *ConnectionSettings) AgentId() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *ConnectionSettings) MutateWantsBallPredictions(n bool) bool {
-	return rcv._tab.MutateBoolSlot(4, n)
-}
-
-func (rcv *ConnectionSettings) WantsComms() bool {
+/// The ID of the bot/script that is associated with the incoming connection.
+/// If this is set, RLBot will send BallPrediction data back to the client when available.
+func (rcv *ConnectionSettings) WantsBallPredictions() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -96,11 +102,13 @@ func (rcv *ConnectionSettings) WantsComms() bool {
 	return false
 }
 
-func (rcv *ConnectionSettings) MutateWantsComms(n bool) bool {
+/// If this is set, RLBot will send BallPrediction data back to the client when available.
+func (rcv *ConnectionSettings) MutateWantsBallPredictions(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
 }
 
-func (rcv *ConnectionSettings) CloseAfterMatch() bool {
+/// If this is set, RLBot will send MatchComms to the client when available.
+func (rcv *ConnectionSettings) WantsComms() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -108,21 +116,39 @@ func (rcv *ConnectionSettings) CloseAfterMatch() bool {
 	return false
 }
 
-func (rcv *ConnectionSettings) MutateCloseAfterMatch(n bool) bool {
+/// If this is set, RLBot will send MatchComms to the client when available.
+func (rcv *ConnectionSettings) MutateWantsComms(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }
 
+/// If this is set, RLBot will close the connection after the match ends. The GUI will not want this
+func (rcv *ConnectionSettings) CloseAfterMatch() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// If this is set, RLBot will close the connection after the match ends. The GUI will not want this
+func (rcv *ConnectionSettings) MutateCloseAfterMatch(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
 func ConnectionSettingsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
+}
+func ConnectionSettingsAddAgentId(builder *flatbuffers.Builder, agentId flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(agentId), 0)
 }
 func ConnectionSettingsAddWantsBallPredictions(builder *flatbuffers.Builder, wantsBallPredictions bool) {
-	builder.PrependBoolSlot(0, wantsBallPredictions, false)
+	builder.PrependBoolSlot(1, wantsBallPredictions, false)
 }
 func ConnectionSettingsAddWantsComms(builder *flatbuffers.Builder, wantsComms bool) {
-	builder.PrependBoolSlot(1, wantsComms, false)
+	builder.PrependBoolSlot(2, wantsComms, false)
 }
 func ConnectionSettingsAddCloseAfterMatch(builder *flatbuffers.Builder, closeAfterMatch bool) {
-	builder.PrependBoolSlot(2, closeAfterMatch, false)
+	builder.PrependBoolSlot(3, closeAfterMatch, false)
 }
 func ConnectionSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

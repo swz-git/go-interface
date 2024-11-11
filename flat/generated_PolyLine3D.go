@@ -24,9 +24,9 @@ func (t *PolyLine3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		}
 		pointsOffset = builder.EndVector(pointsLength)
 	}
-	colorOffset := t.Color.Pack(builder)
 	PolyLine3DStart(builder)
 	PolyLine3DAddPoints(builder, pointsOffset)
+	colorOffset := t.Color.Pack(builder)
 	PolyLine3DAddColor(builder, colorOffset)
 	return PolyLine3DEnd(builder)
 }
@@ -108,7 +108,7 @@ func (rcv *PolyLine3D) PointsLength() int {
 func (rcv *PolyLine3D) Color(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -128,7 +128,7 @@ func PolyLine3DStartPointsVector(builder *flatbuffers.Builder, numElems int) fla
 	return builder.StartVector(12, numElems, 4)
 }
 func PolyLine3DAddColor(builder *flatbuffers.Builder, color flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(color), 0)
+	builder.PrependStructSlot(1, flatbuffers.UOffsetT(color), 0)
 }
 func PolyLine3DEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

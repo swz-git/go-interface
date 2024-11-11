@@ -15,6 +15,8 @@ const (
 	RenderTypePolyLine3D RenderType = 2
 	RenderTypeString2D   RenderType = 3
 	RenderTypeString3D   RenderType = 4
+	RenderTypeRect2D     RenderType = 5
+	RenderTypeRect3D     RenderType = 6
 )
 
 var EnumNamesRenderType = map[RenderType]string{
@@ -23,6 +25,8 @@ var EnumNamesRenderType = map[RenderType]string{
 	RenderTypePolyLine3D: "PolyLine3D",
 	RenderTypeString2D:   "String2D",
 	RenderTypeString3D:   "String3D",
+	RenderTypeRect2D:     "Rect2D",
+	RenderTypeRect3D:     "Rect3D",
 }
 
 var EnumValuesRenderType = map[string]RenderType{
@@ -31,6 +35,8 @@ var EnumValuesRenderType = map[string]RenderType{
 	"PolyLine3D": RenderTypePolyLine3D,
 	"String2D":   RenderTypeString2D,
 	"String3D":   RenderTypeString3D,
+	"Rect2D":     RenderTypeRect2D,
+	"Rect3D":     RenderTypeRect3D,
 }
 
 func (v RenderType) String() string {
@@ -58,6 +64,10 @@ func (t *RenderTypeT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		return t.Value.(*String2DT).Pack(builder)
 	case RenderTypeString3D:
 		return t.Value.(*String3DT).Pack(builder)
+	case RenderTypeRect2D:
+		return t.Value.(*Rect2DT).Pack(builder)
+	case RenderTypeRect3D:
+		return t.Value.(*Rect3DT).Pack(builder)
 	}
 	return 0
 }
@@ -80,6 +90,14 @@ func (rcv RenderType) UnPack(table flatbuffers.Table) *RenderTypeT {
 		var x String3D
 		x.Init(table.Bytes, table.Pos)
 		return &RenderTypeT{Type: RenderTypeString3D, Value: x.UnPack()}
+	case RenderTypeRect2D:
+		var x Rect2D
+		x.Init(table.Bytes, table.Pos)
+		return &RenderTypeT{Type: RenderTypeRect2D, Value: x.UnPack()}
+	case RenderTypeRect3D:
+		var x Rect3D
+		x.Init(table.Bytes, table.Pos)
+		return &RenderTypeT{Type: RenderTypeRect3D, Value: x.UnPack()}
 	}
 	return nil
 }

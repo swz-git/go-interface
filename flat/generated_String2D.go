@@ -25,14 +25,14 @@ func (t *String2DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t.Text != "" {
 		textOffset = builder.CreateString(t.Text)
 	}
-	foregroundOffset := t.Foreground.Pack(builder)
-	backgroundOffset := t.Background.Pack(builder)
 	String2DStart(builder)
 	String2DAddText(builder, textOffset)
 	String2DAddX(builder, t.X)
 	String2DAddY(builder, t.Y)
 	String2DAddScale(builder, t.Scale)
+	foregroundOffset := t.Foreground.Pack(builder)
 	String2DAddForeground(builder, foregroundOffset)
+	backgroundOffset := t.Background.Pack(builder)
 	String2DAddBackground(builder, backgroundOffset)
 	String2DAddHAlign(builder, t.HAlign)
 	String2DAddVAlign(builder, t.VAlign)
@@ -102,8 +102,7 @@ func (rcv *String2D) Text() []byte {
 	return nil
 }
 
-/// 0 = Left
-/// 1 = Right
+/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *String2D) X() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -112,14 +111,12 @@ func (rcv *String2D) X() float32 {
 	return 0.0
 }
 
-/// 0 = Left
-/// 1 = Right
+/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *String2D) MutateX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
 }
 
-/// 0 = Top
-/// 1 = Bottom
+/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *String2D) Y() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -128,8 +125,7 @@ func (rcv *String2D) Y() float32 {
 	return 0.0
 }
 
-/// 0 = Top
-/// 1 = Bottom
+/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *String2D) MutateY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
 }
@@ -149,7 +145,7 @@ func (rcv *String2D) MutateScale(n float32) bool {
 func (rcv *String2D) Foreground(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -162,7 +158,7 @@ func (rcv *String2D) Foreground(obj *Color) *Color {
 func (rcv *String2D) Background(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -212,10 +208,10 @@ func String2DAddScale(builder *flatbuffers.Builder, scale float32) {
 	builder.PrependFloat32Slot(3, scale, 0.0)
 }
 func String2DAddForeground(builder *flatbuffers.Builder, foreground flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(foreground), 0)
+	builder.PrependStructSlot(4, flatbuffers.UOffsetT(foreground), 0)
 }
 func String2DAddBackground(builder *flatbuffers.Builder, background flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(background), 0)
+	builder.PrependStructSlot(5, flatbuffers.UOffsetT(background), 0)
 }
 func String2DAddHAlign(builder *flatbuffers.Builder, hAlign TextHAlign) {
 	builder.PrependByteSlot(6, byte(hAlign), 0)

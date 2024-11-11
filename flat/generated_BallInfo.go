@@ -15,10 +15,10 @@ func (t *BallInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t == nil {
 		return 0
 	}
-	physicsOffset := t.Physics.Pack(builder)
 	shapeOffset := t.Shape.Pack(builder)
 
 	BallInfoStart(builder)
+	physicsOffset := t.Physics.Pack(builder)
 	BallInfoAddPhysics(builder, physicsOffset)
 	if t.Shape != nil {
 		BallInfoAddShapeType(builder, t.Shape.Type)
@@ -82,7 +82,7 @@ func (rcv *BallInfo) Table() flatbuffers.Table {
 func (rcv *BallInfo) Physics(obj *Physics) *Physics {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Physics)
 		}
@@ -117,7 +117,7 @@ func BallInfoStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
 func BallInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(physics), 0)
+	builder.PrependStructSlot(0, flatbuffers.UOffsetT(physics), 0)
 }
 func BallInfoAddShapeType(builder *flatbuffers.Builder, shapeType CollisionShape) {
 	builder.PrependByteSlot(1, byte(shapeType), 0)

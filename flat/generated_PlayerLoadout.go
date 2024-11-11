@@ -32,8 +32,6 @@ func (t *PlayerLoadoutT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT
 		return 0
 	}
 	loadoutPaintOffset := t.LoadoutPaint.Pack(builder)
-	primaryColorLookupOffset := t.PrimaryColorLookup.Pack(builder)
-	secondaryColorLookupOffset := t.SecondaryColorLookup.Pack(builder)
 	PlayerLoadoutStart(builder)
 	PlayerLoadoutAddTeamColorId(builder, t.TeamColorId)
 	PlayerLoadoutAddCustomColorId(builder, t.CustomColorId)
@@ -49,7 +47,9 @@ func (t *PlayerLoadoutT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT
 	PlayerLoadoutAddTrailsId(builder, t.TrailsId)
 	PlayerLoadoutAddGoalExplosionId(builder, t.GoalExplosionId)
 	PlayerLoadoutAddLoadoutPaint(builder, loadoutPaintOffset)
+	primaryColorLookupOffset := t.PrimaryColorLookup.Pack(builder)
 	PlayerLoadoutAddPrimaryColorLookup(builder, primaryColorLookupOffset)
+	secondaryColorLookupOffset := t.SecondaryColorLookup.Pack(builder)
 	PlayerLoadoutAddSecondaryColorLookup(builder, secondaryColorLookupOffset)
 	return PlayerLoadoutEnd(builder)
 }
@@ -291,7 +291,7 @@ func (rcv *PlayerLoadout) LoadoutPaint(obj *LoadoutPaint) *LoadoutPaint {
 func (rcv *PlayerLoadout) PrimaryColorLookup(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -308,7 +308,7 @@ func (rcv *PlayerLoadout) PrimaryColorLookup(obj *Color) *Color {
 func (rcv *PlayerLoadout) SecondaryColorLookup(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -366,10 +366,10 @@ func PlayerLoadoutAddLoadoutPaint(builder *flatbuffers.Builder, loadoutPaint fla
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(loadoutPaint), 0)
 }
 func PlayerLoadoutAddPrimaryColorLookup(builder *flatbuffers.Builder, primaryColorLookup flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(primaryColorLookup), 0)
+	builder.PrependStructSlot(14, flatbuffers.UOffsetT(primaryColorLookup), 0)
 }
 func PlayerLoadoutAddSecondaryColorLookup(builder *flatbuffers.Builder, secondaryColorLookup flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(secondaryColorLookup), 0)
+	builder.PrependStructSlot(15, flatbuffers.UOffsetT(secondaryColorLookup), 0)
 }
 func PlayerLoadoutEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

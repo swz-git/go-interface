@@ -10,10 +10,11 @@ type PlayerConfigurationT struct {
 	Variety *PlayerClassT `json:"variety"`
 	Name string `json:"name"`
 	Team uint32 `json:"team"`
-	Location string `json:"location"`
+	RootDir string `json:"root_dir"`
 	RunCommand string `json:"run_command"`
 	Loadout *PlayerLoadoutT `json:"loadout"`
 	SpawnId int32 `json:"spawn_id"`
+	AgentId string `json:"agent_id"`
 	Hivemind bool `json:"hivemind"`
 }
 
@@ -27,15 +28,19 @@ func (t *PlayerConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	if t.Name != "" {
 		nameOffset = builder.CreateString(t.Name)
 	}
-	locationOffset := flatbuffers.UOffsetT(0)
-	if t.Location != "" {
-		locationOffset = builder.CreateString(t.Location)
+	rootDirOffset := flatbuffers.UOffsetT(0)
+	if t.RootDir != "" {
+		rootDirOffset = builder.CreateString(t.RootDir)
 	}
 	runCommandOffset := flatbuffers.UOffsetT(0)
 	if t.RunCommand != "" {
 		runCommandOffset = builder.CreateString(t.RunCommand)
 	}
 	loadoutOffset := t.Loadout.Pack(builder)
+	agentIdOffset := flatbuffers.UOffsetT(0)
+	if t.AgentId != "" {
+		agentIdOffset = builder.CreateString(t.AgentId)
+	}
 	PlayerConfigurationStart(builder)
 	if t.Variety != nil {
 		PlayerConfigurationAddVarietyType(builder, t.Variety.Type)
@@ -43,10 +48,11 @@ func (t *PlayerConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	PlayerConfigurationAddVariety(builder, varietyOffset)
 	PlayerConfigurationAddName(builder, nameOffset)
 	PlayerConfigurationAddTeam(builder, t.Team)
-	PlayerConfigurationAddLocation(builder, locationOffset)
+	PlayerConfigurationAddRootDir(builder, rootDirOffset)
 	PlayerConfigurationAddRunCommand(builder, runCommandOffset)
 	PlayerConfigurationAddLoadout(builder, loadoutOffset)
 	PlayerConfigurationAddSpawnId(builder, t.SpawnId)
+	PlayerConfigurationAddAgentId(builder, agentIdOffset)
 	PlayerConfigurationAddHivemind(builder, t.Hivemind)
 	return PlayerConfigurationEnd(builder)
 }
@@ -58,10 +64,11 @@ func (rcv *PlayerConfiguration) UnPackTo(t *PlayerConfigurationT) {
 	}
 	t.Name = string(rcv.Name())
 	t.Team = rcv.Team()
-	t.Location = string(rcv.Location())
+	t.RootDir = string(rcv.RootDir())
 	t.RunCommand = string(rcv.RunCommand())
 	t.Loadout = rcv.Loadout(nil).UnPack()
 	t.SpawnId = rcv.SpawnId()
+	t.AgentId = string(rcv.AgentId())
 	t.Hivemind = rcv.Hivemind()
 }
 
@@ -150,7 +157,7 @@ func (rcv *PlayerConfiguration) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
 }
 
-func (rcv *PlayerConfiguration) Location() []byte {
+func (rcv *PlayerConfiguration) RootDir() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -179,8 +186,6 @@ func (rcv *PlayerConfiguration) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 	return nil
 }
 
-/// In the case where the requested player index is not available, spawnId will help
-/// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerConfiguration) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -189,14 +194,20 @@ func (rcv *PlayerConfiguration) SpawnId() int32 {
 	return 0
 }
 
-/// In the case where the requested player index is not available, spawnId will help
-/// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerConfiguration) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
 }
 
-func (rcv *PlayerConfiguration) Hivemind() bool {
+func (rcv *PlayerConfiguration) AgentId() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PlayerConfiguration) Hivemind() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -204,11 +215,11 @@ func (rcv *PlayerConfiguration) Hivemind() bool {
 }
 
 func (rcv *PlayerConfiguration) MutateHivemind(n bool) bool {
-	return rcv._tab.MutateBoolSlot(20, n)
+	return rcv._tab.MutateBoolSlot(22, n)
 }
 
 func PlayerConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(10)
 }
 func PlayerConfigurationAddVarietyType(builder *flatbuffers.Builder, varietyType PlayerClass) {
 	builder.PrependByteSlot(0, byte(varietyType), 0)
@@ -222,8 +233,8 @@ func PlayerConfigurationAddName(builder *flatbuffers.Builder, name flatbuffers.U
 func PlayerConfigurationAddTeam(builder *flatbuffers.Builder, team uint32) {
 	builder.PrependUint32Slot(3, team, 0)
 }
-func PlayerConfigurationAddLocation(builder *flatbuffers.Builder, location flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(location), 0)
+func PlayerConfigurationAddRootDir(builder *flatbuffers.Builder, rootDir flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(rootDir), 0)
 }
 func PlayerConfigurationAddRunCommand(builder *flatbuffers.Builder, runCommand flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(runCommand), 0)
@@ -234,8 +245,11 @@ func PlayerConfigurationAddLoadout(builder *flatbuffers.Builder, loadout flatbuf
 func PlayerConfigurationAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
 	builder.PrependInt32Slot(7, spawnId, 0)
 }
+func PlayerConfigurationAddAgentId(builder *flatbuffers.Builder, agentId flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(agentId), 0)
+}
 func PlayerConfigurationAddHivemind(builder *flatbuffers.Builder, hivemind bool) {
-	builder.PrependBoolSlot(8, hivemind, false)
+	builder.PrependBoolSlot(9, hivemind, false)
 }
 func PlayerConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

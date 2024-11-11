@@ -15,9 +15,9 @@ func (t *PlayerInputT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t == nil {
 		return 0
 	}
-	controllerStateOffset := t.ControllerState.Pack(builder)
 	PlayerInputStart(builder)
 	PlayerInputAddPlayerIndex(builder, t.PlayerIndex)
+	controllerStateOffset := t.ControllerState.Pack(builder)
 	PlayerInputAddControllerState(builder, controllerStateOffset)
 	return PlayerInputEnd(builder)
 }
@@ -86,7 +86,7 @@ func (rcv *PlayerInput) MutatePlayerIndex(n uint32) bool {
 func (rcv *PlayerInput) ControllerState(obj *ControllerState) *ControllerState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(ControllerState)
 		}
@@ -103,7 +103,7 @@ func PlayerInputAddPlayerIndex(builder *flatbuffers.Builder, playerIndex uint32)
 	builder.PrependUint32Slot(0, playerIndex, 0)
 }
 func PlayerInputAddControllerState(builder *flatbuffers.Builder, controllerState flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(controllerState), 0)
+	builder.PrependStructSlot(1, flatbuffers.UOffsetT(controllerState), 0)
 }
 func PlayerInputEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

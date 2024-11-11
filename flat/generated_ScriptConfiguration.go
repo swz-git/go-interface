@@ -11,6 +11,7 @@ type ScriptConfigurationT struct {
 	Location string `json:"location"`
 	RunCommand string `json:"run_command"`
 	SpawnId int32 `json:"spawn_id"`
+	AgentId string `json:"agent_id"`
 }
 
 func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -29,11 +30,16 @@ func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	if t.RunCommand != "" {
 		runCommandOffset = builder.CreateString(t.RunCommand)
 	}
+	agentIdOffset := flatbuffers.UOffsetT(0)
+	if t.AgentId != "" {
+		agentIdOffset = builder.CreateString(t.AgentId)
+	}
 	ScriptConfigurationStart(builder)
 	ScriptConfigurationAddName(builder, nameOffset)
 	ScriptConfigurationAddLocation(builder, locationOffset)
 	ScriptConfigurationAddRunCommand(builder, runCommandOffset)
 	ScriptConfigurationAddSpawnId(builder, t.SpawnId)
+	ScriptConfigurationAddAgentId(builder, agentIdOffset)
 	return ScriptConfigurationEnd(builder)
 }
 
@@ -42,6 +48,7 @@ func (rcv *ScriptConfiguration) UnPackTo(t *ScriptConfigurationT) {
 	t.Location = string(rcv.Location())
 	t.RunCommand = string(rcv.RunCommand())
 	t.SpawnId = rcv.SpawnId()
+	t.AgentId = string(rcv.AgentId())
 }
 
 func (rcv *ScriptConfiguration) UnPack() *ScriptConfigurationT {
@@ -124,8 +131,16 @@ func (rcv *ScriptConfiguration) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
 }
 
+func (rcv *ScriptConfiguration) AgentId() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
 func ScriptConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(5)
 }
 func ScriptConfigurationAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(name), 0)
@@ -138,6 +153,9 @@ func ScriptConfigurationAddRunCommand(builder *flatbuffers.Builder, runCommand f
 }
 func ScriptConfigurationAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
 	builder.PrependInt32Slot(3, spawnId, 0)
+}
+func ScriptConfigurationAddAgentId(builder *flatbuffers.Builder, agentId flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(agentId), 0)
 }
 func ScriptConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

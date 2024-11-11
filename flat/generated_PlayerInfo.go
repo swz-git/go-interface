@@ -24,14 +24,17 @@ type PlayerInfoT struct {
 	Accolades []string `json:"accolades"`
 	LastInput *ControllerStateT `json:"last_input"`
 	LastSpectated bool `json:"last_spectated"`
+	HasJumped bool `json:"has_jumped"`
+	HasDoubleJumped bool `json:"has_double_jumped"`
+	HasDodged bool `json:"has_dodged"`
+	DodgeElapsed float32 `json:"dodge_elapsed"`
+	DodgeDir *Vector2T `json:"dodge_dir"`
 }
 
 func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	if t == nil {
 		return 0
 	}
-	physicsOffset := t.Physics.Pack(builder)
-	scoreInfoOffset := t.ScoreInfo.Pack(builder)
 	hitboxOffset := t.Hitbox.Pack(builder)
 	latestTouchOffset := t.LatestTouch.Pack(builder)
 	nameOffset := flatbuffers.UOffsetT(0)
@@ -51,9 +54,10 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		}
 		accoladesOffset = builder.EndVector(accoladesLength)
 	}
-	lastInputOffset := t.LastInput.Pack(builder)
 	PlayerInfoStart(builder)
+	physicsOffset := t.Physics.Pack(builder)
 	PlayerInfoAddPhysics(builder, physicsOffset)
+	scoreInfoOffset := t.ScoreInfo.Pack(builder)
 	PlayerInfoAddScoreInfo(builder, scoreInfoOffset)
 	PlayerInfoAddHitbox(builder, hitboxOffset)
 	hitboxOffsetOffset := t.HitboxOffset.Pack(builder)
@@ -69,8 +73,15 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	PlayerInfoAddBoost(builder, t.Boost)
 	PlayerInfoAddSpawnId(builder, t.SpawnId)
 	PlayerInfoAddAccolades(builder, accoladesOffset)
+	lastInputOffset := t.LastInput.Pack(builder)
 	PlayerInfoAddLastInput(builder, lastInputOffset)
 	PlayerInfoAddLastSpectated(builder, t.LastSpectated)
+	PlayerInfoAddHasJumped(builder, t.HasJumped)
+	PlayerInfoAddHasDoubleJumped(builder, t.HasDoubleJumped)
+	PlayerInfoAddHasDodged(builder, t.HasDodged)
+	PlayerInfoAddDodgeElapsed(builder, t.DodgeElapsed)
+	dodgeDirOffset := t.DodgeDir.Pack(builder)
+	PlayerInfoAddDodgeDir(builder, dodgeDirOffset)
 	return PlayerInfoEnd(builder)
 }
 
@@ -96,6 +107,11 @@ func (rcv *PlayerInfo) UnPackTo(t *PlayerInfoT) {
 	}
 	t.LastInput = rcv.LastInput(nil).UnPack()
 	t.LastSpectated = rcv.LastSpectated()
+	t.HasJumped = rcv.HasJumped()
+	t.HasDoubleJumped = rcv.HasDoubleJumped()
+	t.HasDodged = rcv.HasDodged()
+	t.DodgeElapsed = rcv.DodgeElapsed()
+	t.DodgeDir = rcv.DodgeDir(nil).UnPack()
 }
 
 func (rcv *PlayerInfo) UnPack() *PlayerInfoT {
@@ -145,7 +161,7 @@ func (rcv *PlayerInfo) Table() flatbuffers.Table {
 func (rcv *PlayerInfo) Physics(obj *Physics) *Physics {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Physics)
 		}
@@ -158,7 +174,7 @@ func (rcv *PlayerInfo) Physics(obj *Physics) *Physics {
 func (rcv *PlayerInfo) ScoreInfo(obj *ScoreInfo) *ScoreInfo {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(ScoreInfo)
 		}
@@ -303,8 +319,6 @@ func (rcv *PlayerInfo) MutateBoost(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(28, n)
 }
 
-/// In the case where the requested player index is not available, spawnId will help
-/// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerInfo) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -313,8 +327,6 @@ func (rcv *PlayerInfo) SpawnId() int32 {
 	return 0
 }
 
-/// In the case where the requested player index is not available, spawnId will help
-/// the framework figure out what index was actually assigned to this player instead.
 func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(30, n)
 }
@@ -364,7 +376,7 @@ func (rcv *PlayerInfo) AccoladesLength() int {
 func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(ControllerState)
 		}
@@ -389,14 +401,79 @@ func (rcv *PlayerInfo) MutateLastSpectated(n bool) bool {
 	return rcv._tab.MutateBoolSlot(36, n)
 }
 
+func (rcv *PlayerInfo) HasJumped() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PlayerInfo) MutateHasJumped(n bool) bool {
+	return rcv._tab.MutateBoolSlot(38, n)
+}
+
+func (rcv *PlayerInfo) HasDoubleJumped() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PlayerInfo) MutateHasDoubleJumped(n bool) bool {
+	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *PlayerInfo) HasDodged() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PlayerInfo) MutateHasDodged(n bool) bool {
+	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+/// The time in seconds since the last dodge was initiated.
+/// Resets to 0 when the player lands on the ground.
+func (rcv *PlayerInfo) DodgeElapsed() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// The time in seconds since the last dodge was initiated.
+/// Resets to 0 when the player lands on the ground.
+func (rcv *PlayerInfo) MutateDodgeElapsed(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(44, n)
+}
+
+func (rcv *PlayerInfo) DodgeDir(obj *Vector2) *Vector2 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := o + rcv._tab.Pos
+		if obj == nil {
+			obj = new(Vector2)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
 func PlayerInfoStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(22)
 }
 func PlayerInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(physics), 0)
+	builder.PrependStructSlot(0, flatbuffers.UOffsetT(physics), 0)
 }
 func PlayerInfoAddScoreInfo(builder *flatbuffers.Builder, scoreInfo flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(scoreInfo), 0)
+	builder.PrependStructSlot(1, flatbuffers.UOffsetT(scoreInfo), 0)
 }
 func PlayerInfoAddHitbox(builder *flatbuffers.Builder, hitbox flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(hitbox), 0)
@@ -441,10 +518,25 @@ func PlayerInfoStartAccoladesVector(builder *flatbuffers.Builder, numElems int) 
 	return builder.StartVector(4, numElems, 4)
 }
 func PlayerInfoAddLastInput(builder *flatbuffers.Builder, lastInput flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(lastInput), 0)
+	builder.PrependStructSlot(15, flatbuffers.UOffsetT(lastInput), 0)
 }
 func PlayerInfoAddLastSpectated(builder *flatbuffers.Builder, lastSpectated bool) {
 	builder.PrependBoolSlot(16, lastSpectated, false)
+}
+func PlayerInfoAddHasJumped(builder *flatbuffers.Builder, hasJumped bool) {
+	builder.PrependBoolSlot(17, hasJumped, false)
+}
+func PlayerInfoAddHasDoubleJumped(builder *flatbuffers.Builder, hasDoubleJumped bool) {
+	builder.PrependBoolSlot(18, hasDoubleJumped, false)
+}
+func PlayerInfoAddHasDodged(builder *flatbuffers.Builder, hasDodged bool) {
+	builder.PrependBoolSlot(19, hasDodged, false)
+}
+func PlayerInfoAddDodgeElapsed(builder *flatbuffers.Builder, dodgeElapsed float32) {
+	builder.PrependFloat32Slot(20, dodgeElapsed, 0.0)
+}
+func PlayerInfoAddDodgeDir(builder *flatbuffers.Builder, dodgeDir flatbuffers.UOffsetT) {
+	builder.PrependStructSlot(21, flatbuffers.UOffsetT(dodgeDir), 0)
 }
 func PlayerInfoEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

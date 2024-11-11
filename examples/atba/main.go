@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"os"
 	"strconv"
@@ -12,9 +13,12 @@ import (
 func main() {
 	println("Connecting...")
 
-	addr := os.Getenv("RLBOT_CORE_ADDR")
-	if addr == "" {
+	rlbot_port := os.Getenv("RLBOT_SERVER_PORT")
+	var addr string
+	if rlbot_port == "" {
 		addr = "127.0.0.1:23234"
+	} else {
+		addr = fmt.Sprintf("127.0.0.1:%s", rlbot_port)
 	}
 
 	conn, err := RLBot.Connect(addr)
@@ -30,6 +34,7 @@ func main() {
 	}
 
 	err = conn.SendPacket(&RLBotFlat.ConnectionSettingsT{
+		AgentId:              "rlbot/go-example-bot",
 		WantsBallPredictions: true,
 		WantsComms:           true,
 		CloseAfterMatch:      true,
@@ -38,9 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	err = conn.SendPacket(&RLBotFlat.InitCompleteT{
-		SpawnId: int32(spawnId),
-	})
+	err = conn.SendPacket(&RLBotFlat.InitCompleteT{})
 	if err != nil {
 		panic(err)
 	}
@@ -50,7 +53,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		gameTickPacket, ok := packet.(*RLBotFlat.GameTickPacketT)
+		gameTickPacket, ok := packet.(*RLBotFlat.GamePacketT)
 		if !ok { // if not gametickpacket
 			continue
 		}

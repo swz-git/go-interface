@@ -18,10 +18,10 @@ func (t *Line3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	}
 	startOffset := t.Start.Pack(builder)
 	endOffset := t.End.Pack(builder)
-	colorOffset := t.Color.Pack(builder)
 	Line3DStart(builder)
 	Line3DAddStart(builder, startOffset)
 	Line3DAddEnd(builder, endOffset)
+	colorOffset := t.Color.Pack(builder)
 	Line3DAddColor(builder, colorOffset)
 	return Line3DEnd(builder)
 }
@@ -105,7 +105,7 @@ func (rcv *Line3D) End(obj *RenderAnchor) *RenderAnchor {
 func (rcv *Line3D) Color(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -125,7 +125,7 @@ func Line3DAddEnd(builder *flatbuffers.Builder, end flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(end), 0)
 }
 func Line3DAddColor(builder *flatbuffers.Builder, color flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(color), 0)
+	builder.PrependStructSlot(2, flatbuffers.UOffsetT(color), 0)
 }
 func Line3DEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

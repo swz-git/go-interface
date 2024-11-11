@@ -17,13 +17,9 @@ func (t *BallPredictionT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffset
 	slicesOffset := flatbuffers.UOffsetT(0)
 	if t.Slices != nil {
 		slicesLength := len(t.Slices)
-		slicesOffsets := make([]flatbuffers.UOffsetT, slicesLength)
-		for j := 0; j < slicesLength; j++ {
-			slicesOffsets[j] = t.Slices[j].Pack(builder)
-		}
 		BallPredictionStartSlicesVector(builder, slicesLength)
 		for j := slicesLength - 1; j >= 0; j-- {
-			builder.PrependUOffsetT(slicesOffsets[j])
+			t.Slices[j].Pack(builder)
 		}
 		slicesOffset = builder.EndVector(slicesLength)
 	}
@@ -93,8 +89,7 @@ func (rcv *BallPrediction) Slices(obj *PredictionSlice, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
+		x += flatbuffers.UOffsetT(j) * 52
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
@@ -119,7 +114,7 @@ func BallPredictionAddSlices(builder *flatbuffers.Builder, slices flatbuffers.UO
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(slices), 0)
 }
 func BallPredictionStartSlicesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(52, numElems, 4)
 }
 func BallPredictionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

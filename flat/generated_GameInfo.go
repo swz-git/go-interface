@@ -11,7 +11,7 @@ type GameInfoT struct {
 	GameTimeRemaining float32 `json:"game_time_remaining"`
 	IsOvertime bool `json:"is_overtime"`
 	IsUnlimitedTime bool `json:"is_unlimited_time"`
-	GameStateType GameStateType `json:"game_state_type"`
+	GameStatus GameStatus `json:"game_status"`
 	WorldGravityZ float32 `json:"world_gravity_z"`
 	GameSpeed float32 `json:"game_speed"`
 	FrameNum uint32 `json:"frame_num"`
@@ -26,7 +26,7 @@ func (t *GameInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	GameInfoAddGameTimeRemaining(builder, t.GameTimeRemaining)
 	GameInfoAddIsOvertime(builder, t.IsOvertime)
 	GameInfoAddIsUnlimitedTime(builder, t.IsUnlimitedTime)
-	GameInfoAddGameStateType(builder, t.GameStateType)
+	GameInfoAddGameStatus(builder, t.GameStatus)
 	GameInfoAddWorldGravityZ(builder, t.WorldGravityZ)
 	GameInfoAddGameSpeed(builder, t.GameSpeed)
 	GameInfoAddFrameNum(builder, t.FrameNum)
@@ -38,7 +38,7 @@ func (rcv *GameInfo) UnPackTo(t *GameInfoT) {
 	t.GameTimeRemaining = rcv.GameTimeRemaining()
 	t.IsOvertime = rcv.IsOvertime()
 	t.IsUnlimitedTime = rcv.IsUnlimitedTime()
-	t.GameStateType = rcv.GameStateType()
+	t.GameStatus = rcv.GameStatus()
 	t.WorldGravityZ = rcv.WorldGravityZ()
 	t.GameSpeed = rcv.GameSpeed()
 	t.FrameNum = rcv.FrameNum()
@@ -136,15 +136,15 @@ func (rcv *GameInfo) MutateIsUnlimitedTime(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
 
-func (rcv *GameInfo) GameStateType() GameStateType {
+func (rcv *GameInfo) GameStatus() GameStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return GameStateType(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return GameStatus(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *GameInfo) MutateGameStateType(n GameStateType) bool {
+func (rcv *GameInfo) MutateGameStatus(n GameStatus) bool {
 	return rcv._tab.MutateByteSlot(12, byte(n))
 }
 
@@ -207,8 +207,8 @@ func GameInfoAddIsOvertime(builder *flatbuffers.Builder, isOvertime bool) {
 func GameInfoAddIsUnlimitedTime(builder *flatbuffers.Builder, isUnlimitedTime bool) {
 	builder.PrependBoolSlot(3, isUnlimitedTime, false)
 }
-func GameInfoAddGameStateType(builder *flatbuffers.Builder, gameStateType GameStateType) {
-	builder.PrependByteSlot(4, byte(gameStateType), 0)
+func GameInfoAddGameStatus(builder *flatbuffers.Builder, gameStatus GameStatus) {
+	builder.PrependByteSlot(4, byte(gameStatus), 0)
 }
 func GameInfoAddWorldGravityZ(builder *flatbuffers.Builder, worldGravityZ float32) {
 	builder.PrependFloat32Slot(5, worldGravityZ, 0.0)

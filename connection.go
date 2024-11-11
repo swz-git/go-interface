@@ -24,13 +24,13 @@ func Connect(addr string) (RLBotConnection, error) {
 	return RLBotConnection{conn, *flatbuffers.NewBuilder(65536)}, err
 }
 
-type PacketAblilities interface {
+type PacketAbilities interface {
 	Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT
 }
 
 // TODO: Disallow sending and recving packets that shouldn't be
 
-func (self RLBotConnection) SendPacket(packet_obj PacketAblilities) error {
+func (self RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
 	var packetPayload []byte
 	var packetType uint16
 
@@ -40,7 +40,7 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAblilities) error {
 	case nil:
 		packetPayload = []byte{0}
 		packetType = 0
-	case *flat.GameTickPacketT:
+	case *flat.GamePacketT:
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
 		packetType = 1
@@ -93,9 +93,12 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAblilities) error {
 		packetPayload = self.builder.FinishedBytes()
 		packetType = 13
 	case *flat.InitCompleteT:
+		packetPayload = []byte{0}
+		packetType = 14
+	case *flat.ControllableTeamInfoT:
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
-		packetType = 14
+		packetType = 15
 	default:
 		return errors.New("Unsupported packet type")
 	}
@@ -120,13 +123,13 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAblilities) error {
 	return nil
 }
 
-func (self RLBotConnection) RecvPacket() (PacketAblilities, error) {
+func (self RLBotConnection) RecvPacket() (PacketAbilities, error) {
 	buffer := make([]byte, 2)
 
 	// Read packetType
 	_, err := io.ReadFull(self.conn, buffer)
 	if err != nil {
-		println("1")
+		// println("1")
 		return nil, err
 	}
 	packetType := binary.BigEndian.Uint16(buffer)
@@ -134,7 +137,7 @@ func (self RLBotConnection) RecvPacket() (PacketAblilities, error) {
 	// Read packetLen
 	_, err = io.ReadFull(self.conn, buffer)
 	if err != nil {
-		println("2")
+		// println("2")
 		return nil, err
 	}
 	packetLen := binary.BigEndian.Uint16(buffer)
@@ -143,15 +146,15 @@ func (self RLBotConnection) RecvPacket() (PacketAblilities, error) {
 	buffer = make([]byte, packetLen)
 	_, err = io.ReadFull(self.conn, buffer)
 	if err != nil {
-		println("3")
+		// println("3")
 		return nil, err
 	}
 
 	switch packetType {
 	case 0:
 		return nil, nil
-	case 1: //flat.GameTickPacketT:
-		return flat.GetRootAsGameTickPacket(buffer, 0).UnPack(), nil
+	case 1: //flat.GamePacketT:
+		return flat.GetRootAsGamePacket(buffer, 0).UnPack(), nil
 	case 2: //flat.FieldInfoT:
 		return flat.GetRootAsFieldInfo(buffer, 0).UnPack(), nil
 	case 3: //flat.StartCommandT:
@@ -177,7 +180,9 @@ func (self RLBotConnection) RecvPacket() (PacketAblilities, error) {
 	case 13: //flat.SetLoadoutT:
 		return flat.GetRootAsSetLoadout(buffer, 0).UnPack(), nil
 	case 14: //flat.InitCompleteT:
-		return flat.GetRootAsInitComplete(buffer, 0).UnPack(), nil
+		return flat.InitCompleteT{}, nil
+	case 15: //flat.ControllableTeamInfoT:
+		return flat.GetRootAsControllableTeamInfo(buffer, 0).UnPack(), nil
 	default:
 		return nil, errors.New("Unknown packet type: " + strconv.Itoa(int(packetType)))
 	}

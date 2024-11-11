@@ -7,7 +7,7 @@ import (
 )
 
 type SetLoadoutT struct {
-	SpawnId int32 `json:"spawn_id"`
+	Index uint32 `json:"index"`
 	Loadout *PlayerLoadoutT `json:"loadout"`
 }
 
@@ -17,13 +17,13 @@ func (t *SetLoadoutT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	}
 	loadoutOffset := t.Loadout.Pack(builder)
 	SetLoadoutStart(builder)
-	SetLoadoutAddSpawnId(builder, t.SpawnId)
+	SetLoadoutAddIndex(builder, t.Index)
 	SetLoadoutAddLoadout(builder, loadoutOffset)
 	return SetLoadoutEnd(builder)
 }
 
 func (rcv *SetLoadout) UnPackTo(t *SetLoadoutT) {
-	t.SpawnId = rcv.SpawnId()
+	t.Index = rcv.Index()
 	t.Loadout = rcv.Loadout(nil).UnPack()
 }
 
@@ -71,16 +71,16 @@ func (rcv *SetLoadout) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *SetLoadout) SpawnId() int32 {
+func (rcv *SetLoadout) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SetLoadout) MutateSpawnId(n int32) bool {
-	return rcv._tab.MutateInt32Slot(4, n)
+func (rcv *SetLoadout) MutateIndex(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(4, n)
 }
 
 func (rcv *SetLoadout) Loadout(obj *PlayerLoadout) *PlayerLoadout {
@@ -99,8 +99,8 @@ func (rcv *SetLoadout) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 func SetLoadoutStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
-func SetLoadoutAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
-	builder.PrependInt32Slot(0, spawnId, 0)
+func SetLoadoutAddIndex(builder *flatbuffers.Builder, index uint32) {
+	builder.PrependUint32Slot(0, index, 0)
 }
 func SetLoadoutAddLoadout(builder *flatbuffers.Builder, loadout flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(loadout), 0)

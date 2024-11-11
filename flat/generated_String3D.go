@@ -25,13 +25,13 @@ func (t *String3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		textOffset = builder.CreateString(t.Text)
 	}
 	anchorOffset := t.Anchor.Pack(builder)
-	foregroundOffset := t.Foreground.Pack(builder)
-	backgroundOffset := t.Background.Pack(builder)
 	String3DStart(builder)
 	String3DAddText(builder, textOffset)
 	String3DAddAnchor(builder, anchorOffset)
 	String3DAddScale(builder, t.Scale)
+	foregroundOffset := t.Foreground.Pack(builder)
 	String3DAddForeground(builder, foregroundOffset)
+	backgroundOffset := t.Background.Pack(builder)
 	String3DAddBackground(builder, backgroundOffset)
 	String3DAddHAlign(builder, t.HAlign)
 	String3DAddVAlign(builder, t.VAlign)
@@ -128,7 +128,7 @@ func (rcv *String3D) MutateScale(n float32) bool {
 func (rcv *String3D) Foreground(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -141,7 +141,7 @@ func (rcv *String3D) Foreground(obj *Color) *Color {
 func (rcv *String3D) Background(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
 		if obj == nil {
 			obj = new(Color)
 		}
@@ -188,10 +188,10 @@ func String3DAddScale(builder *flatbuffers.Builder, scale float32) {
 	builder.PrependFloat32Slot(2, scale, 0.0)
 }
 func String3DAddForeground(builder *flatbuffers.Builder, foreground flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(foreground), 0)
+	builder.PrependStructSlot(3, flatbuffers.UOffsetT(foreground), 0)
 }
 func String3DAddBackground(builder *flatbuffers.Builder, background flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(background), 0)
+	builder.PrependStructSlot(4, flatbuffers.UOffsetT(background), 0)
 }
 func String3DAddHAlign(builder *flatbuffers.Builder, hAlign TextHAlign) {
 	builder.PrependByteSlot(5, byte(hAlign), 0)
