@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for a rectangle in 3D space.
+/// Note that the size is given in screen-space sizes.
 type Rect3DT struct {
 	Anchor *RenderAnchorT `json:"anchor"`
 	Width float32 `json:"width"`
@@ -78,6 +80,7 @@ func (rcv *Rect3D) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The position of the rectangle.
 func (rcv *Rect3D) Anchor(obj *RenderAnchor) *RenderAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -91,6 +94,7 @@ func (rcv *Rect3D) Anchor(obj *RenderAnchor) *RenderAnchor {
 	return nil
 }
 
+/// The position of the rectangle.
 /// Screen-space size such that width=0.1 is 10% of window width.
 func (rcv *Rect3D) Width() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -119,6 +123,7 @@ func (rcv *Rect3D) MutateHeight(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
 }
 
+/// The color of the rectangle.
 func (rcv *Rect3D) Color(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -132,6 +137,7 @@ func (rcv *Rect3D) Color(obj *Color) *Color {
 	return nil
 }
 
+/// The color of the rectangle.
 func Rect3DStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }

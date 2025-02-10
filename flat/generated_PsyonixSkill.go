@@ -4,6 +4,7 @@ package flat
 
 import "strconv"
 
+/// Various skill levels of Psyonix bots.
 type PsyonixSkill byte
 
 const (

@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// The car type, color, and other aspects of the player's appearance.
+/// Defines the car type, color, and other aspects of the player's appearance.
 /// See https://wiki.rlbot.org/botmaking/bot-customization/
 type PlayerLoadoutT struct {
 	TeamColorId uint32 `json:"team_color_id"`

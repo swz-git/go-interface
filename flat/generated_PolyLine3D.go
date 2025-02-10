@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for a line in 3D space going through a series of points.
 type PolyLine3DT struct {
 	Points []*Vector3T `json:"points"`
 	Color *ColorT `json:"color"`

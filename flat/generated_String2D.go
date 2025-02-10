@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for text in 2D space.
+/// Note that the position is given in screen-space coordinates.
 type String2DT struct {
 	Text string `json:"text"`
 	X float32 `json:"x"`
@@ -94,6 +96,7 @@ func (rcv *String2D) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The text to be displayed.
 func (rcv *String2D) Text() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -102,7 +105,8 @@ func (rcv *String2D) Text() []byte {
 	return nil
 }
 
-/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
+/// The text to be displayed.
+/// Screen-space x coordinate such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *String2D) X() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -111,12 +115,12 @@ func (rcv *String2D) X() float32 {
 	return 0.0
 }
 
-/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
+/// Screen-space x coordinate such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *String2D) MutateX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
 }
 
-/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
+/// Screen-space y coordinate such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *String2D) Y() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -125,11 +129,13 @@ func (rcv *String2D) Y() float32 {
 	return 0.0
 }
 
-/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
+/// Screen-space y coordinate such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *String2D) MutateY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
 }
 
+/// Scale of the text.
+/// When scale is 1, the characters are 20 pixels tall and 10 pixels wide.
 func (rcv *String2D) Scale() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -138,10 +144,13 @@ func (rcv *String2D) Scale() float32 {
 	return 0.0
 }
 
+/// Scale of the text.
+/// When scale is 1, the characters are 20 pixels tall and 10 pixels wide.
 func (rcv *String2D) MutateScale(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
 }
 
+/// The color of the text.
 func (rcv *String2D) Foreground(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -155,6 +164,8 @@ func (rcv *String2D) Foreground(obj *Color) *Color {
 	return nil
 }
 
+/// The color of the text.
+/// The color of the background for the text.
 func (rcv *String2D) Background(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -168,6 +179,8 @@ func (rcv *String2D) Background(obj *Color) *Color {
 	return nil
 }
 
+/// The color of the background for the text.
+/// The horizontal alignment of the text.
 func (rcv *String2D) HAlign() TextHAlign {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -176,10 +189,12 @@ func (rcv *String2D) HAlign() TextHAlign {
 	return 0
 }
 
+/// The horizontal alignment of the text.
 func (rcv *String2D) MutateHAlign(n TextHAlign) bool {
 	return rcv._tab.MutateByteSlot(16, byte(n))
 }
 
+/// The vertical alignment of the text.
 func (rcv *String2D) VAlign() TextVAlign {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -188,6 +203,7 @@ func (rcv *String2D) VAlign() TextVAlign {
 	return 0
 }
 
+/// The vertical alignment of the text.
 func (rcv *String2D) MutateVAlign(n TextVAlign) bool {
 	return rcv._tab.MutateByteSlot(18, byte(n))
 }

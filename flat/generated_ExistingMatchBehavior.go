@@ -4,28 +4,30 @@ package flat
 
 import "strconv"
 
+/// Possible behaviours when a match is started while another match is in progress.
 type ExistingMatchBehavior byte
 
 const (
 	/// Always restart the match, even if config is identical.
-	ExistingMatchBehaviorRestart              ExistingMatchBehavior = 0
-	/// Never restart an existing match, just try to remove or spawn cars to match the configuration.
+	ExistingMatchBehaviorRestart            ExistingMatchBehavior = 0
+	/// Never restart an existing match if possible, just try to remove or spawn cars to match the configuration.
 	/// If we are not in the middle of a match, a match will be started. Handy for LAN matches.
-	ExistingMatchBehaviorContinue_And_Spawn   ExistingMatchBehavior = 1
+	ExistingMatchBehaviorContinueAndSpawn   ExistingMatchBehavior = 1
 	/// Restart the match if any match settings differ.
-	ExistingMatchBehaviorRestart_If_Different ExistingMatchBehavior = 2
+	/// No other otherwise.
+	ExistingMatchBehaviorRestartIfDifferent ExistingMatchBehavior = 2
 )
 
 var EnumNamesExistingMatchBehavior = map[ExistingMatchBehavior]string{
-	ExistingMatchBehaviorRestart:              "Restart",
-	ExistingMatchBehaviorContinue_And_Spawn:   "Continue_And_Spawn",
-	ExistingMatchBehaviorRestart_If_Different: "Restart_If_Different",
+	ExistingMatchBehaviorRestart:            "Restart",
+	ExistingMatchBehaviorContinueAndSpawn:   "ContinueAndSpawn",
+	ExistingMatchBehaviorRestartIfDifferent: "RestartIfDifferent",
 }
 
 var EnumValuesExistingMatchBehavior = map[string]ExistingMatchBehavior{
-	"Restart":              ExistingMatchBehaviorRestart,
-	"Continue_And_Spawn":   ExistingMatchBehaviorContinue_And_Spawn,
-	"Restart_If_Different": ExistingMatchBehaviorRestart_If_Different,
+	"Restart":            ExistingMatchBehaviorRestart,
+	"ContinueAndSpawn":   ExistingMatchBehaviorContinueAndSpawn,
+	"RestartIfDifferent": ExistingMatchBehaviorRestartIfDifferent,
 }
 
 func (v ExistingMatchBehavior) String() string {

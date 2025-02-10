@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Static information about the field.
+/// Sent to bots, scripts, etc. upon connecting.
+/// Dynamic information is found in the GamePacket.
 type FieldInfoT struct {
 	BoostPads []*BoostPadT `json:"boost_pads"`
 	Goals []*GoalInfoT `json:"goals"`
@@ -108,7 +111,9 @@ func (rcv *FieldInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// BoostInfo will be provided in the same order.
+/// Static information about boost pads on the field.
+/// The dynamic information is found in the GamePacket
+/// The boost pads are ordered by y-coordinate and then x-coordinate.
 func (rcv *FieldInfo) BoostPads(obj *BoostPad, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -129,7 +134,10 @@ func (rcv *FieldInfo) BoostPadsLength() int {
 	return 0
 }
 
-/// BoostInfo will be provided in the same order.
+/// Static information about boost pads on the field.
+/// The dynamic information is found in the GamePacket
+/// The boost pads are ordered by y-coordinate and then x-coordinate.
+/// Information about the goals on the field.
 func (rcv *FieldInfo) Goals(obj *GoalInfo, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -150,6 +158,7 @@ func (rcv *FieldInfo) GoalsLength() int {
 	return 0
 }
 
+/// Information about the goals on the field.
 func FieldInfoStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

@@ -52,7 +52,7 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
 		packetType = 3
-	case *flat.MatchSettingsT:
+	case *flat.MatchConfigurationT:
 		self.builder.Finish(v.Pack(&self.builder))
 		packetPayload = self.builder.FinishedBytes()
 		packetType = 4
@@ -160,7 +160,7 @@ func (self RLBotConnection) RecvPacket() (PacketAbilities, error) {
 	case 3: //flat.StartCommandT:
 		return flat.GetRootAsStartCommand(buffer, 0).UnPack(), nil
 	case 4: //flat.MatchSettingsT:
-		return flat.GetRootAsMatchSettings(buffer, 0).UnPack(), nil
+		return flat.GetRootAsMatchConfiguration(buffer, 0).UnPack(), nil
 	case 5: //flat.PlayerInputT:
 		return flat.GetRootAsPlayerInput(buffer, 0).UnPack(), nil
 	case 6: //flat.DesiredGameStateT:

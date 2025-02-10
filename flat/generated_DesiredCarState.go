@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A car state with nullable components.
+/// Used for game state setting to define which part of a car's state should change.
 type DesiredCarStateT struct {
 	Physics *DesiredPhysicsT `json:"physics"`
 	BoostAmount *FloatT `json:"boost_amount"`

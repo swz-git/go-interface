@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A collection of information about a player and their car.
 type PlayerInfoT struct {
 	Physics *PhysicsT `json:"physics"`
 	ScoreInfo *ScoreInfoT `json:"score_info"`
@@ -23,7 +24,6 @@ type PlayerInfoT struct {
 	SpawnId int32 `json:"spawn_id"`
 	Accolades []string `json:"accolades"`
 	LastInput *ControllerStateT `json:"last_input"`
-	LastSpectated bool `json:"last_spectated"`
 	HasJumped bool `json:"has_jumped"`
 	HasDoubleJumped bool `json:"has_double_jumped"`
 	HasDodged bool `json:"has_dodged"`
@@ -75,7 +75,6 @@ func (t *PlayerInfoT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	PlayerInfoAddAccolades(builder, accoladesOffset)
 	lastInputOffset := t.LastInput.Pack(builder)
 	PlayerInfoAddLastInput(builder, lastInputOffset)
-	PlayerInfoAddLastSpectated(builder, t.LastSpectated)
 	PlayerInfoAddHasJumped(builder, t.HasJumped)
 	PlayerInfoAddHasDoubleJumped(builder, t.HasDoubleJumped)
 	PlayerInfoAddHasDodged(builder, t.HasDodged)
@@ -106,7 +105,6 @@ func (rcv *PlayerInfo) UnPackTo(t *PlayerInfoT) {
 		t.Accolades[j] = string(rcv.Accolades(j))
 	}
 	t.LastInput = rcv.LastInput(nil).UnPack()
-	t.LastSpectated = rcv.LastSpectated()
 	t.HasJumped = rcv.HasJumped()
 	t.HasDoubleJumped = rcv.HasDoubleJumped()
 	t.HasDodged = rcv.HasDodged()
@@ -158,6 +156,7 @@ func (rcv *PlayerInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The physical state of the player's car.
 func (rcv *PlayerInfo) Physics(obj *Physics) *Physics {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -171,6 +170,8 @@ func (rcv *PlayerInfo) Physics(obj *Physics) *Physics {
 	return nil
 }
 
+/// The physical state of the player's car.
+/// The various scores of this player, e.g. those on the leaderboard.
 func (rcv *PlayerInfo) ScoreInfo(obj *ScoreInfo) *ScoreInfo {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -184,6 +185,10 @@ func (rcv *PlayerInfo) ScoreInfo(obj *ScoreInfo) *ScoreInfo {
 	return nil
 }
 
+/// The various scores of this player, e.g. those on the leaderboard.
+/// The hitbox of the player's car.
+/// Note that the hitbox is not centered at the cars location.
+/// See the hitbox offset.
 func (rcv *PlayerInfo) Hitbox(obj *BoxShape) *BoxShape {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -197,6 +202,10 @@ func (rcv *PlayerInfo) Hitbox(obj *BoxShape) *BoxShape {
 	return nil
 }
 
+/// The hitbox of the player's car.
+/// Note that the hitbox is not centered at the cars location.
+/// See the hitbox offset.
+/// The center of the hitbox in local coordinates.
 func (rcv *PlayerInfo) HitboxOffset(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -210,6 +219,9 @@ func (rcv *PlayerInfo) HitboxOffset(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// The center of the hitbox in local coordinates.
+/// Information about the latest touch with a ball.
+/// Is null if the player has yet to touch the ball.
 func (rcv *PlayerInfo) LatestTouch(obj *Touch) *Touch {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -223,6 +235,9 @@ func (rcv *PlayerInfo) LatestTouch(obj *Touch) *Touch {
 	return nil
 }
 
+/// Information about the latest touch with a ball.
+/// Is null if the player has yet to touch the ball.
+/// Whether the player's car is on the ground or in the air, and what jump/dodging forces currently affects the car.
 func (rcv *PlayerInfo) AirState() AirState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -231,11 +246,15 @@ func (rcv *PlayerInfo) AirState() AirState {
 	return 0
 }
 
+/// Whether the player's car is on the ground or in the air, and what jump/dodging forces currently affects the car.
 func (rcv *PlayerInfo) MutateAirState(n AirState) bool {
 	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
-/// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
+/// How long until the player cannot dodge/double jump anymore.
+/// The value is -1 while on ground or when airborne for too long after jumping.
+/// A dodge/double jump is possible for 1.25 seconds after the first jump plus
+/// up to an additional 0.2 seconds depending how long the jump button was pressed for the first jump.
 func (rcv *PlayerInfo) DodgeTimeout() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -244,12 +263,16 @@ func (rcv *PlayerInfo) DodgeTimeout() float32 {
 	return 0.0
 }
 
-/// How long until the bot cannot dodge anymore, -1 while on ground or when airborne for too long after jumping
+/// How long until the player cannot dodge/double jump anymore.
+/// The value is -1 while on ground or when airborne for too long after jumping.
+/// A dodge/double jump is possible for 1.25 seconds after the first jump plus
+/// up to an additional 0.2 seconds depending how long the jump button was pressed for the first jump.
 func (rcv *PlayerInfo) MutateDodgeTimeout(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
 }
 
-/// How long until the bot is not demolished anymore, -1 if not demolished
+/// How long until the player is not demolished anymore.
+/// The value is -1 if while not demolished.
 func (rcv *PlayerInfo) DemolishedTimeout() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -258,11 +281,13 @@ func (rcv *PlayerInfo) DemolishedTimeout() float32 {
 	return 0.0
 }
 
-/// How long until the bot is not demolished anymore, -1 if not demolished
+/// How long until the player is not demolished anymore.
+/// The value is -1 if while not demolished.
 func (rcv *PlayerInfo) MutateDemolishedTimeout(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
 }
 
+/// Whether the player's car is moving at supersonic speed and can demolish.
 func (rcv *PlayerInfo) IsSupersonic() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -271,10 +296,12 @@ func (rcv *PlayerInfo) IsSupersonic() bool {
 	return false
 }
 
+/// Whether the player's car is moving at supersonic speed and can demolish.
 func (rcv *PlayerInfo) MutateIsSupersonic(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
 }
 
+/// Whether the player is a bot or a human.
 func (rcv *PlayerInfo) IsBot() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -283,10 +310,13 @@ func (rcv *PlayerInfo) IsBot() bool {
 	return false
 }
 
+/// Whether the player is a bot or a human.
 func (rcv *PlayerInfo) MutateIsBot(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
 }
 
+/// The name of the player as it appears in game, i.e. possibly appended with "(2)".
+/// The original name can be found in the match configuration.
 func (rcv *PlayerInfo) Name() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -295,6 +325,9 @@ func (rcv *PlayerInfo) Name() []byte {
 	return nil
 }
 
+/// The name of the player as it appears in game, i.e. possibly appended with "(2)".
+/// The original name can be found in the match configuration.
+/// The team of the player.
 func (rcv *PlayerInfo) Team() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -303,10 +336,12 @@ func (rcv *PlayerInfo) Team() uint32 {
 	return 0
 }
 
+/// The team of the player.
 func (rcv *PlayerInfo) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
 }
 
+/// The current boost.
 func (rcv *PlayerInfo) Boost() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -315,10 +350,14 @@ func (rcv *PlayerInfo) Boost() uint32 {
 	return 0
 }
 
+/// The current boost.
 func (rcv *PlayerInfo) MutateBoost(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(28, n)
 }
 
+/// The spawn id of the player.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding PlayerConfiguration in the MatchConfiguration.
 func (rcv *PlayerInfo) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -327,11 +366,14 @@ func (rcv *PlayerInfo) SpawnId() int32 {
 	return 0
 }
 
+/// The spawn id of the player.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding PlayerConfiguration in the MatchConfiguration.
 func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(30, n)
 }
 
-/// Notifications the player triggered by some in-game event, such as:
+/// Events from the latest tick involving this player. Possible values include:
 ///    Win, Loss, TimePlayed;
 ///    Shot, Assist, Center, Clear, PoolShot;
 ///    Goal, AerialGoal, BicycleGoal, BulletGoal, BackwardsGoal, LongGoal, OvertimeGoal, TurtleGoal;
@@ -342,7 +384,7 @@ func (rcv *PlayerInfo) MutateSpawnId(n int32) bool {
 ///    MostBallTouches, FewestBallTouches, MostBoostPickups, FewestBoostPickups, BoostPickups;
 ///    CarTouches, Demolition, Demolish;
 ///    LowFive, HighFive;
-/// Clears every tick.
+/// Note that the list clears every tick.
 func (rcv *PlayerInfo) Accolades(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -360,7 +402,7 @@ func (rcv *PlayerInfo) AccoladesLength() int {
 	return 0
 }
 
-/// Notifications the player triggered by some in-game event, such as:
+/// Events from the latest tick involving this player. Possible values include:
 ///    Win, Loss, TimePlayed;
 ///    Shot, Assist, Center, Clear, PoolShot;
 ///    Goal, AerialGoal, BicycleGoal, BulletGoal, BackwardsGoal, LongGoal, OvertimeGoal, TurtleGoal;
@@ -371,8 +413,8 @@ func (rcv *PlayerInfo) AccoladesLength() int {
 ///    MostBallTouches, FewestBallTouches, MostBoostPickups, FewestBoostPickups, BoostPickups;
 ///    CarTouches, Demolition, Demolish;
 ///    LowFive, HighFive;
-/// Clears every tick.
-/// The last known controller input from this player
+/// Note that the list clears every tick.
+/// The last controller input from this player.
 func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -386,9 +428,9 @@ func (rcv *PlayerInfo) LastInput(obj *ControllerState) *ControllerState {
 	return nil
 }
 
-/// The last known controller input from this player
-/// If the player was the last one to be watched by a spectator
-func (rcv *PlayerInfo) LastSpectated() bool {
+/// The last controller input from this player.
+/// True if the player has jumped. See dodge_timeout to know if a dodge/secondary jump is available.
+func (rcv *PlayerInfo) HasJumped() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -396,12 +438,13 @@ func (rcv *PlayerInfo) LastSpectated() bool {
 	return false
 }
 
-/// If the player was the last one to be watched by a spectator
-func (rcv *PlayerInfo) MutateLastSpectated(n bool) bool {
+/// True if the player has jumped. See dodge_timeout to know if a dodge/secondary jump is available.
+func (rcv *PlayerInfo) MutateHasJumped(n bool) bool {
 	return rcv._tab.MutateBoolSlot(36, n)
 }
 
-func (rcv *PlayerInfo) HasJumped() bool {
+/// True if the player has doubled jumped.
+func (rcv *PlayerInfo) HasDoubleJumped() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -409,11 +452,13 @@ func (rcv *PlayerInfo) HasJumped() bool {
 	return false
 }
 
-func (rcv *PlayerInfo) MutateHasJumped(n bool) bool {
+/// True if the player has doubled jumped.
+func (rcv *PlayerInfo) MutateHasDoubleJumped(n bool) bool {
 	return rcv._tab.MutateBoolSlot(38, n)
 }
 
-func (rcv *PlayerInfo) HasDoubleJumped() bool {
+/// True if the player has dodged.
+func (rcv *PlayerInfo) HasDodged() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -421,26 +466,15 @@ func (rcv *PlayerInfo) HasDoubleJumped() bool {
 	return false
 }
 
-func (rcv *PlayerInfo) MutateHasDoubleJumped(n bool) bool {
-	return rcv._tab.MutateBoolSlot(40, n)
-}
-
-func (rcv *PlayerInfo) HasDodged() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
-	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
-	}
-	return false
-}
-
+/// True if the player has dodged.
 func (rcv *PlayerInfo) MutateHasDodged(n bool) bool {
-	return rcv._tab.MutateBoolSlot(42, n)
+	return rcv._tab.MutateBoolSlot(40, n)
 }
 
 /// The time in seconds since the last dodge was initiated.
 /// Resets to 0 when the player lands on the ground.
 func (rcv *PlayerInfo) DodgeElapsed() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -450,11 +484,13 @@ func (rcv *PlayerInfo) DodgeElapsed() float32 {
 /// The time in seconds since the last dodge was initiated.
 /// Resets to 0 when the player lands on the ground.
 func (rcv *PlayerInfo) MutateDodgeElapsed(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(44, n)
+	return rcv._tab.MutateFloat32Slot(42, n)
 }
 
+/// The unit direction of the latest dodge.
+/// The value will be (0,0) if it was a stall.
 func (rcv *PlayerInfo) DodgeDir(obj *Vector2) *Vector2 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -466,8 +502,10 @@ func (rcv *PlayerInfo) DodgeDir(obj *Vector2) *Vector2 {
 	return nil
 }
 
+/// The unit direction of the latest dodge.
+/// The value will be (0,0) if it was a stall.
 func PlayerInfoStart(builder *flatbuffers.Builder) {
-	builder.StartObject(22)
+	builder.StartObject(21)
 }
 func PlayerInfoAddPhysics(builder *flatbuffers.Builder, physics flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(0, flatbuffers.UOffsetT(physics), 0)
@@ -520,23 +558,20 @@ func PlayerInfoStartAccoladesVector(builder *flatbuffers.Builder, numElems int) 
 func PlayerInfoAddLastInput(builder *flatbuffers.Builder, lastInput flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(15, flatbuffers.UOffsetT(lastInput), 0)
 }
-func PlayerInfoAddLastSpectated(builder *flatbuffers.Builder, lastSpectated bool) {
-	builder.PrependBoolSlot(16, lastSpectated, false)
-}
 func PlayerInfoAddHasJumped(builder *flatbuffers.Builder, hasJumped bool) {
-	builder.PrependBoolSlot(17, hasJumped, false)
+	builder.PrependBoolSlot(16, hasJumped, false)
 }
 func PlayerInfoAddHasDoubleJumped(builder *flatbuffers.Builder, hasDoubleJumped bool) {
-	builder.PrependBoolSlot(18, hasDoubleJumped, false)
+	builder.PrependBoolSlot(17, hasDoubleJumped, false)
 }
 func PlayerInfoAddHasDodged(builder *flatbuffers.Builder, hasDodged bool) {
-	builder.PrependBoolSlot(19, hasDodged, false)
+	builder.PrependBoolSlot(18, hasDodged, false)
 }
 func PlayerInfoAddDodgeElapsed(builder *flatbuffers.Builder, dodgeElapsed float32) {
-	builder.PrependFloat32Slot(20, dodgeElapsed, 0.0)
+	builder.PrependFloat32Slot(19, dodgeElapsed, 0.0)
 }
 func PlayerInfoAddDodgeDir(builder *flatbuffers.Builder, dodgeDir flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(21, flatbuffers.UOffsetT(dodgeDir), 0)
+	builder.PrependStructSlot(20, flatbuffers.UOffsetT(dodgeDir), 0)
 }
 func PlayerInfoEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

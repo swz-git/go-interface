@@ -4,6 +4,7 @@ package flat
 
 import "strconv"
 
+/// Vertical text alignment.
 type TextVAlign byte
 
 const (

@@ -4,20 +4,26 @@ package flat
 
 import "strconv"
 
+/// Possible states of a car in regards to ground contact and jump/dodging forces.
+/// See more about jumping physics at https://wiki.rlbot.org/botmaking/jumping-physics/
 type AirState byte
 
 const (
-	/// All wheels are on the ground
+	/// All wheels are on the ground and the car is affected by wall-stickiness forces.
 	AirStateOnGround      AirState = 0
-	/// When the bot is jumping,
-	/// then InAir right after
+	/// The car is currently affected by jumping forces of an initial jump.
+	/// Lasts until the player lets go of jump button but at most for 0.2 seconds (240 ticks).
+	/// The following AirState is typically InAir.
 	AirStateJumping       AirState = 1
-	/// When the bot is double jumping,
-	/// then InAir right after
+	/// The car is currently affected by jumping forces of a secondary jump (just an impulse in practice).
+	/// Lasts for 13 ticks.
+	/// The following AirState is typically InAir.
 	AirStateDoubleJumping AirState = 2
-	/// When the bot is dodging,
-	/// then InAir right after
+	/// The car is currently affected by forces and torque of a dodges.
+	/// This lasts for 79 ticks.
+	/// The following AirState is typically InAir.
 	AirStateDodging       AirState = 3
+	/// The car is free falling.
 	AirStateInAir         AirState = 4
 )
 

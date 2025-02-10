@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A group of RenderMessages that are drawn and cleared together.
+/// A RenderGroup will stay rendered until it is overriden or cleared.
+/// The group is identified by a unique id.
+/// A client can only clear its own RenderGroups.
 type RenderGroupT struct {
 	RenderMessages []*RenderMessageT `json:"render_messages"`
 	Id int32 `json:"id"`
@@ -89,6 +93,7 @@ func (rcv *RenderGroup) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The content of the RenderGroup.
 func (rcv *RenderGroup) RenderMessages(obj *RenderMessage, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -109,7 +114,8 @@ func (rcv *RenderGroup) RenderMessagesLength() int {
 	return 0
 }
 
-/// The id of the render group
+/// The content of the RenderGroup.
+/// The id of the RenderGroup.
 func (rcv *RenderGroup) Id() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -118,7 +124,7 @@ func (rcv *RenderGroup) Id() int32 {
 	return 0
 }
 
-/// The id of the render group
+/// The id of the RenderGroup.
 func (rcv *RenderGroup) MutateId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
 }

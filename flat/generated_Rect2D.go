@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for a rectangle in 2D space.
+/// Note that the position and size is given in screen-space coordinates.
 type Rect2DT struct {
 	X float32 `json:"x"`
 	Y float32 `json:"y"`
@@ -83,7 +85,7 @@ func (rcv *Rect2D) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
+/// Screen-space x coordinate such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *Rect2D) X() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -92,12 +94,12 @@ func (rcv *Rect2D) X() float32 {
 	return 0.0
 }
 
-/// Screen-space coordinates such that x=0 is left edge and x=1 is right edge of window.
+/// Screen-space x coordinate such that x=0 is left edge and x=1 is right edge of window.
 func (rcv *Rect2D) MutateX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(4, n)
 }
 
-/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
+/// Screen-space y coordinate such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *Rect2D) Y() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -106,7 +108,7 @@ func (rcv *Rect2D) Y() float32 {
 	return 0.0
 }
 
-/// Screen-space coordinates such that y=0 is top edge and y=1 is bottom edge of window.
+/// Screen-space y coordinate such that y=0 is top edge and y=1 is bottom edge of window.
 func (rcv *Rect2D) MutateY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
 }
@@ -139,6 +141,7 @@ func (rcv *Rect2D) MutateHeight(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
 }
 
+/// Color of the rectangle.
 func (rcv *Rect2D) Color(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -152,6 +155,8 @@ func (rcv *Rect2D) Color(obj *Color) *Color {
 	return nil
 }
 
+/// Color of the rectangle.
+/// Whether the rectangle centered at (x,y). Otherwise, (x,y) is the top left of the rectangle.
 func (rcv *Rect2D) Centered() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -160,6 +165,7 @@ func (rcv *Rect2D) Centered() bool {
 	return false
 }
 
+/// Whether the rectangle centered at (x,y). Otherwise, (x,y) is the top left of the rectangle.
 func (rcv *Rect2D) MutateCentered(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
 }

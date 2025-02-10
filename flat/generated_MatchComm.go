@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A message sent to other bots and scripts through RLBot.
+/// Use the team_only field if the message should only be received by team mates.
+/// The message can also have a human-readable summary displayed in quick chat through the display field.
 type MatchCommT struct {
 	Index uint32 `json:"index"`
 	Team uint32 `json:"team"`
@@ -87,7 +90,8 @@ func (rcv *MatchComm) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// The index of the player that sent this
+/// The index of the player that sent this message.
+/// For scripts, this value is the index in the match configuration instead.
 func (rcv *MatchComm) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -96,12 +100,14 @@ func (rcv *MatchComm) Index() uint32 {
 	return 0
 }
 
-/// The index of the player that sent this
+/// The index of the player that sent this message.
+/// For scripts, this value is the index in the match configuration instead.
 func (rcv *MatchComm) MutateIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
-/// The team of the player that sent this
+/// The team of the player that sent this message.
+/// For scripts, this value is 2.
 func (rcv *MatchComm) Team() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -110,12 +116,13 @@ func (rcv *MatchComm) Team() uint32 {
 	return 0
 }
 
-/// The team of the player that sent this
+/// The team of the player that sent this message.
+/// For scripts, this value is 2.
 func (rcv *MatchComm) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
 }
 
-/// True if the chat is team only false if everyone can see it
+/// True if this message is team-only, false if everyone can see it
 func (rcv *MatchComm) TeamOnly() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -124,12 +131,14 @@ func (rcv *MatchComm) TeamOnly() bool {
 	return false
 }
 
-/// True if the chat is team only false if everyone can see it
+/// True if this message is team-only, false if everyone can see it
 func (rcv *MatchComm) MutateTeamOnly(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }
 
-/// The message that will be displayed on the screen
+/// The message that will be displayed on the screen in quick chat.
+/// This is intended for communication with humans.
+/// Use the content field for communication with bots and scripts.
 func (rcv *MatchComm) Display() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -138,8 +147,11 @@ func (rcv *MatchComm) Display() []byte {
 	return nil
 }
 
-/// The message that will be displayed on the screen
-/// The contents of the message
+/// The message that will be displayed on the screen in quick chat.
+/// This is intended for communication with humans.
+/// Use the content field for communication with bots and scripts.
+/// The contents of the message.
+/// Use the display field for messages in quick chat.
 func (rcv *MatchComm) Content(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -165,7 +177,8 @@ func (rcv *MatchComm) ContentBytes() []byte {
 	return nil
 }
 
-/// The contents of the message
+/// The contents of the message.
+/// Use the display field for messages in quick chat.
 func (rcv *MatchComm) MutateContent(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {

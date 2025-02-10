@@ -4,24 +4,30 @@ package flat
 
 import "strconv"
 
+/// Possible to launch Rocket League.
 type Launcher byte
 
 const (
-	LauncherSteam  Launcher = 0
-	LauncherEpic   Launcher = 1
-	LauncherCustom Launcher = 2
+	LauncherSteam    Launcher = 0
+	LauncherEpic     Launcher = 1
+	/// E.g. if you use Legendary.
+	/// The game path is specified in the MatchConfiguration.
+	LauncherCustom   Launcher = 2
+	LauncherNoLaunch Launcher = 3
 )
 
 var EnumNamesLauncher = map[Launcher]string{
-	LauncherSteam:  "Steam",
-	LauncherEpic:   "Epic",
-	LauncherCustom: "Custom",
+	LauncherSteam:    "Steam",
+	LauncherEpic:     "Epic",
+	LauncherCustom:   "Custom",
+	LauncherNoLaunch: "NoLaunch",
 }
 
 var EnumValuesLauncher = map[string]Launcher{
-	"Steam":  LauncherSteam,
-	"Epic":   LauncherEpic,
-	"Custom": LauncherCustom,
+	"Steam":    LauncherSteam,
+	"Epic":     LauncherEpic,
+	"Custom":   LauncherCustom,
+	"NoLaunch": LauncherNoLaunch,
 }
 
 func (v Launcher) String() string {

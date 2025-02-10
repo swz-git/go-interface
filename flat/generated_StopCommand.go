@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A client message to stop a match and optionally the RLBot server too.
 type StopCommandT struct {
 	ShutdownServer bool `json:"shutdown_server"`
 }

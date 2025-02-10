@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Information about teams. Currently only the number of goals scored.
 type TeamInfoT struct {
 	TeamIndex uint32 `json:"team_index"`
 	Score uint32 `json:"score"`
@@ -44,18 +45,24 @@ func (rcv *TeamInfo) Table() flatbuffers.Table {
 	return rcv._tab.Table
 }
 
+/// The index of the team. Blue is 0, orange is 1.
 func (rcv *TeamInfo) TeamIndex() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
+/// The index of the team. Blue is 0, orange is 1.
 func (rcv *TeamInfo) MutateTeamIndex(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }
 
-/// number of goals scored.
+/// Number of goals scored.
+/// Note, this value may be different than the sum of the goals scored by the current players on the team as player may join/leave the game or switch teams.
+/// This value is what is shown on the heads-up display.
 func (rcv *TeamInfo) Score() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
-/// number of goals scored.
+/// Number of goals scored.
+/// Note, this value may be different than the sum of the goals scored by the current players on the team as player may join/leave the game or switch teams.
+/// This value is what is shown on the heads-up display.
 func (rcv *TeamInfo) MutateScore(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
 }

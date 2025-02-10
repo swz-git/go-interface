@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A console command which we will try to execute inside Rocket League.
+/// A console command which will be executed inside Rocket League.
 /// See https://wiki.rlbot.org/framework/console-commands/ for a list of known commands.
 type ConsoleCommandT struct {
 	Command string `json:"command"`

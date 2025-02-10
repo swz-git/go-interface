@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Static information about a goal on the field such as dimensions and location.
+/// More values can be found on https://wiki.rlbot.org/botmaking/useful-game-values/
 type GoalInfoT struct {
 	TeamNum int32 `json:"team_num"`
 	Location *Vector3T `json:"location"`
@@ -81,6 +83,7 @@ func (rcv *GoalInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The index of the team that this goal belongs to.
 func (rcv *GoalInfo) TeamNum() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -89,10 +92,12 @@ func (rcv *GoalInfo) TeamNum() int32 {
 	return 0
 }
 
+/// The index of the team that this goal belongs to.
 func (rcv *GoalInfo) MutateTeamNum(n int32) bool {
 	return rcv._tab.MutateInt32Slot(4, n)
 }
 
+/// The center location of the goal.
 func (rcv *GoalInfo) Location(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -106,6 +111,8 @@ func (rcv *GoalInfo) Location(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// The center location of the goal.
+/// The unit direction point away from the opening of the goal.
 func (rcv *GoalInfo) Direction(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -119,6 +126,8 @@ func (rcv *GoalInfo) Direction(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// The unit direction point away from the opening of the goal.
+/// The width of the goal. 1785 uu wide on a standard field.
 func (rcv *GoalInfo) Width() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -127,10 +136,12 @@ func (rcv *GoalInfo) Width() float32 {
 	return 0.0
 }
 
+/// The width of the goal. 1785 uu wide on a standard field.
 func (rcv *GoalInfo) MutateWidth(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
 }
 
+/// The height of the goal. 643 uu tall on a standard field.
 func (rcv *GoalInfo) Height() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -139,6 +150,7 @@ func (rcv *GoalInfo) Height() float32 {
 	return 0.0
 }
 
+/// The height of the goal. 643 uu tall on a standard field.
 func (rcv *GoalInfo) MutateHeight(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(12, n)
 }

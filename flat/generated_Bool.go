@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A boolean value located in a separate struct allowing for optional floats elsewhere.
 type BoolT struct {
 	Val bool `json:"val"`
 }

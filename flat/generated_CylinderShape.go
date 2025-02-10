@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A cylinder with diameter and height.
+/// Used for balls with a cylindrical shape like the puck.
 type CylinderShapeT struct {
 	Diameter float32 `json:"diameter"`
 	Height float32 `json:"height"`

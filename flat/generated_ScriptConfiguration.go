@@ -6,9 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A ScriptConfiguration defines a script of a match.
 type ScriptConfigurationT struct {
 	Name string `json:"name"`
-	Location string `json:"location"`
+	RootDir string `json:"root_dir"`
 	RunCommand string `json:"run_command"`
 	SpawnId int32 `json:"spawn_id"`
 	AgentId string `json:"agent_id"`
@@ -22,9 +23,9 @@ func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	if t.Name != "" {
 		nameOffset = builder.CreateString(t.Name)
 	}
-	locationOffset := flatbuffers.UOffsetT(0)
-	if t.Location != "" {
-		locationOffset = builder.CreateString(t.Location)
+	rootDirOffset := flatbuffers.UOffsetT(0)
+	if t.RootDir != "" {
+		rootDirOffset = builder.CreateString(t.RootDir)
 	}
 	runCommandOffset := flatbuffers.UOffsetT(0)
 	if t.RunCommand != "" {
@@ -36,7 +37,7 @@ func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 	}
 	ScriptConfigurationStart(builder)
 	ScriptConfigurationAddName(builder, nameOffset)
-	ScriptConfigurationAddLocation(builder, locationOffset)
+	ScriptConfigurationAddRootDir(builder, rootDirOffset)
 	ScriptConfigurationAddRunCommand(builder, runCommandOffset)
 	ScriptConfigurationAddSpawnId(builder, t.SpawnId)
 	ScriptConfigurationAddAgentId(builder, agentIdOffset)
@@ -45,7 +46,7 @@ func (t *ScriptConfigurationT) Pack(builder *flatbuffers.Builder) flatbuffers.UO
 
 func (rcv *ScriptConfiguration) UnPackTo(t *ScriptConfigurationT) {
 	t.Name = string(rcv.Name())
-	t.Location = string(rcv.Location())
+	t.RootDir = string(rcv.RootDir())
 	t.RunCommand = string(rcv.RunCommand())
 	t.SpawnId = rcv.SpawnId()
 	t.AgentId = string(rcv.AgentId())
@@ -95,6 +96,7 @@ func (rcv *ScriptConfiguration) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The name of the script.
 func (rcv *ScriptConfiguration) Name() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -103,7 +105,9 @@ func (rcv *ScriptConfiguration) Name() []byte {
 	return nil
 }
 
-func (rcv *ScriptConfiguration) Location() []byte {
+/// The name of the script.
+/// The root directory of the script and the working directory for the run command.
+func (rcv *ScriptConfiguration) RootDir() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -111,6 +115,8 @@ func (rcv *ScriptConfiguration) Location() []byte {
 	return nil
 }
 
+/// The root directory of the script and the working directory for the run command.
+/// A console command that will start up the script.
 func (rcv *ScriptConfiguration) RunCommand() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -119,6 +125,9 @@ func (rcv *ScriptConfiguration) RunCommand() []byte {
 	return nil
 }
 
+/// A console command that will start up the script.
+/// The spawn id of the script.
+/// This value is mostly used internally to keep track of participants in the match.
 func (rcv *ScriptConfiguration) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -127,10 +136,16 @@ func (rcv *ScriptConfiguration) SpawnId() int32 {
 	return 0
 }
 
+/// The spawn id of the script.
+/// This value is mostly used internally to keep track of participants in the match.
 func (rcv *ScriptConfiguration) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
 }
 
+/// A unique user-defined string that is used to connect clients to the right players/scripts.
+/// If a bot/script has a run command, RLBot will pass this agent id to the process using an environment variable, RLBOT_AGENT_ID.
+/// Upon connecting the process announces that it is responsible for this agent id and RLBot will pair the two.
+/// The recommended format for agent ids is "developername/botname".
 func (rcv *ScriptConfiguration) AgentId() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -139,14 +154,18 @@ func (rcv *ScriptConfiguration) AgentId() []byte {
 	return nil
 }
 
+/// A unique user-defined string that is used to connect clients to the right players/scripts.
+/// If a bot/script has a run command, RLBot will pass this agent id to the process using an environment variable, RLBOT_AGENT_ID.
+/// Upon connecting the process announces that it is responsible for this agent id and RLBot will pair the two.
+/// The recommended format for agent ids is "developername/botname".
 func ScriptConfigurationStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
 }
 func ScriptConfigurationAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(name), 0)
 }
-func ScriptConfigurationAddLocation(builder *flatbuffers.Builder, location flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(location), 0)
+func ScriptConfigurationAddRootDir(builder *flatbuffers.Builder, rootDir flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(rootDir), 0)
 }
 func ScriptConfigurationAddRunCommand(builder *flatbuffers.Builder, runCommand flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(runCommand), 0)

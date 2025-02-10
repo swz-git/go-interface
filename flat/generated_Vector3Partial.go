@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A 3D vector where x, y, and z can be null.
+/// Used for game state setting to define which part of a vector should change.
+/// If a component is null, then the component will keep its current value.
 type Vector3PartialT struct {
 	X *FloatT `json:"x"`
 	Y *FloatT `json:"y"`

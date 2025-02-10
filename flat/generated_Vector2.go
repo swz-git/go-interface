@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A vector with an x and y component.
 type Vector2T struct {
 	X float32 `json:"x"`
 	Y float32 `json:"y"`

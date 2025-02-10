@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Information about a car that the client can control.
 type ControllableInfoT struct {
 	Index uint32 `json:"index"`
 	SpawnId int32 `json:"spawn_id"`
@@ -70,6 +71,7 @@ func (rcv *ControllableInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The index of the bot.
 func (rcv *ControllableInfo) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -78,10 +80,14 @@ func (rcv *ControllableInfo) Index() uint32 {
 	return 0
 }
 
+/// The index of the bot.
 func (rcv *ControllableInfo) MutateIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
+/// The spawn id of the bot.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding PlayerConfiguration in the MatchConfiguration.
 func (rcv *ControllableInfo) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -90,6 +96,9 @@ func (rcv *ControllableInfo) SpawnId() int32 {
 	return 0
 }
 
+/// The spawn id of the bot.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding PlayerConfiguration in the MatchConfiguration.
 func (rcv *ControllableInfo) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
 }

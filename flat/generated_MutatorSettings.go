@@ -6,27 +6,28 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// All mutators options.
 type MutatorSettingsT struct {
-	MatchLength MatchLength `json:"match_length"`
-	MaxScore MaxScore `json:"max_score"`
-	MultiBall MultiBall `json:"multi_ball"`
-	OvertimeOption OvertimeOption `json:"overtime_option"`
-	SeriesLengthOption SeriesLengthOption `json:"series_length_option"`
-	GameSpeedOption GameSpeedOption `json:"game_speed_option"`
-	BallMaxSpeedOption BallMaxSpeedOption `json:"ball_max_speed_option"`
-	BallTypeOption BallTypeOption `json:"ball_type_option"`
-	BallWeightOption BallWeightOption `json:"ball_weight_option"`
-	BallSizeOption BallSizeOption `json:"ball_size_option"`
-	BallBouncinessOption BallBouncinessOption `json:"ball_bounciness_option"`
-	BoostOption BoostOption `json:"boost_option"`
-	RumbleOption RumbleOption `json:"rumble_option"`
-	BoostStrengthOption BoostStrengthOption `json:"boost_strength_option"`
-	GravityOption GravityOption `json:"gravity_option"`
-	DemolishOption DemolishOption `json:"demolish_option"`
-	RespawnTimeOption RespawnTimeOption `json:"respawn_time_option"`
-	MaxTimeOption MaxTimeOption `json:"max_time_option"`
-	GameEventOption GameEventOption `json:"game_event_option"`
-	AudioOption AudioOption `json:"audio_option"`
+	MatchLength MatchLengthMutator `json:"match_length"`
+	MaxScore MaxScoreMutator `json:"max_score"`
+	MultiBall MultiBallMutator `json:"multi_ball"`
+	Overtime OvertimeMutator `json:"overtime"`
+	SeriesLength SeriesLengthMutator `json:"series_length"`
+	GameSpeed GameSpeedMutator `json:"game_speed"`
+	BallMaxSpeed BallMaxSpeedMutator `json:"ball_max_speed"`
+	BallType BallTypeMutator `json:"ball_type"`
+	BallWeight BallWeightMutator `json:"ball_weight"`
+	BallSize BallSizeMutator `json:"ball_size"`
+	BallBounciness BallBouncinessMutator `json:"ball_bounciness"`
+	Boost BoostMutator `json:"boost"`
+	Rumble RumbleMutator `json:"rumble"`
+	BoostStrength BoostStrengthMutator `json:"boost_strength"`
+	Gravity GravityMutator `json:"gravity"`
+	Demolish DemolishMutator `json:"demolish"`
+	RespawnTime RespawnTimeMutator `json:"respawn_time"`
+	MaxTime MaxTimeMutator `json:"max_time"`
+	GameEvent GameEventMutator `json:"game_event"`
+	Audio AudioMutator `json:"audio"`
 }
 
 func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -37,23 +38,23 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 	MutatorSettingsAddMatchLength(builder, t.MatchLength)
 	MutatorSettingsAddMaxScore(builder, t.MaxScore)
 	MutatorSettingsAddMultiBall(builder, t.MultiBall)
-	MutatorSettingsAddOvertimeOption(builder, t.OvertimeOption)
-	MutatorSettingsAddSeriesLengthOption(builder, t.SeriesLengthOption)
-	MutatorSettingsAddGameSpeedOption(builder, t.GameSpeedOption)
-	MutatorSettingsAddBallMaxSpeedOption(builder, t.BallMaxSpeedOption)
-	MutatorSettingsAddBallTypeOption(builder, t.BallTypeOption)
-	MutatorSettingsAddBallWeightOption(builder, t.BallWeightOption)
-	MutatorSettingsAddBallSizeOption(builder, t.BallSizeOption)
-	MutatorSettingsAddBallBouncinessOption(builder, t.BallBouncinessOption)
-	MutatorSettingsAddBoostOption(builder, t.BoostOption)
-	MutatorSettingsAddRumbleOption(builder, t.RumbleOption)
-	MutatorSettingsAddBoostStrengthOption(builder, t.BoostStrengthOption)
-	MutatorSettingsAddGravityOption(builder, t.GravityOption)
-	MutatorSettingsAddDemolishOption(builder, t.DemolishOption)
-	MutatorSettingsAddRespawnTimeOption(builder, t.RespawnTimeOption)
-	MutatorSettingsAddMaxTimeOption(builder, t.MaxTimeOption)
-	MutatorSettingsAddGameEventOption(builder, t.GameEventOption)
-	MutatorSettingsAddAudioOption(builder, t.AudioOption)
+	MutatorSettingsAddOvertime(builder, t.Overtime)
+	MutatorSettingsAddSeriesLength(builder, t.SeriesLength)
+	MutatorSettingsAddGameSpeed(builder, t.GameSpeed)
+	MutatorSettingsAddBallMaxSpeed(builder, t.BallMaxSpeed)
+	MutatorSettingsAddBallType(builder, t.BallType)
+	MutatorSettingsAddBallWeight(builder, t.BallWeight)
+	MutatorSettingsAddBallSize(builder, t.BallSize)
+	MutatorSettingsAddBallBounciness(builder, t.BallBounciness)
+	MutatorSettingsAddBoost(builder, t.Boost)
+	MutatorSettingsAddRumble(builder, t.Rumble)
+	MutatorSettingsAddBoostStrength(builder, t.BoostStrength)
+	MutatorSettingsAddGravity(builder, t.Gravity)
+	MutatorSettingsAddDemolish(builder, t.Demolish)
+	MutatorSettingsAddRespawnTime(builder, t.RespawnTime)
+	MutatorSettingsAddMaxTime(builder, t.MaxTime)
+	MutatorSettingsAddGameEvent(builder, t.GameEvent)
+	MutatorSettingsAddAudio(builder, t.Audio)
 	return MutatorSettingsEnd(builder)
 }
 
@@ -61,23 +62,23 @@ func (rcv *MutatorSettings) UnPackTo(t *MutatorSettingsT) {
 	t.MatchLength = rcv.MatchLength()
 	t.MaxScore = rcv.MaxScore()
 	t.MultiBall = rcv.MultiBall()
-	t.OvertimeOption = rcv.OvertimeOption()
-	t.SeriesLengthOption = rcv.SeriesLengthOption()
-	t.GameSpeedOption = rcv.GameSpeedOption()
-	t.BallMaxSpeedOption = rcv.BallMaxSpeedOption()
-	t.BallTypeOption = rcv.BallTypeOption()
-	t.BallWeightOption = rcv.BallWeightOption()
-	t.BallSizeOption = rcv.BallSizeOption()
-	t.BallBouncinessOption = rcv.BallBouncinessOption()
-	t.BoostOption = rcv.BoostOption()
-	t.RumbleOption = rcv.RumbleOption()
-	t.BoostStrengthOption = rcv.BoostStrengthOption()
-	t.GravityOption = rcv.GravityOption()
-	t.DemolishOption = rcv.DemolishOption()
-	t.RespawnTimeOption = rcv.RespawnTimeOption()
-	t.MaxTimeOption = rcv.MaxTimeOption()
-	t.GameEventOption = rcv.GameEventOption()
-	t.AudioOption = rcv.AudioOption()
+	t.Overtime = rcv.Overtime()
+	t.SeriesLength = rcv.SeriesLength()
+	t.GameSpeed = rcv.GameSpeed()
+	t.BallMaxSpeed = rcv.BallMaxSpeed()
+	t.BallType = rcv.BallType()
+	t.BallWeight = rcv.BallWeight()
+	t.BallSize = rcv.BallSize()
+	t.BallBounciness = rcv.BallBounciness()
+	t.Boost = rcv.Boost()
+	t.Rumble = rcv.Rumble()
+	t.BoostStrength = rcv.BoostStrength()
+	t.Gravity = rcv.Gravity()
+	t.Demolish = rcv.Demolish()
+	t.RespawnTime = rcv.RespawnTime()
+	t.MaxTime = rcv.MaxTime()
+	t.GameEvent = rcv.GameEvent()
+	t.Audio = rcv.Audio()
 }
 
 func (rcv *MutatorSettings) UnPack() *MutatorSettingsT {
@@ -124,308 +125,350 @@ func (rcv *MutatorSettings) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *MutatorSettings) MatchLength() MatchLength {
+/// Duration of the match.
+func (rcv *MutatorSettings) MatchLength() MatchLengthMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return MatchLength(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return MatchLengthMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateMatchLength(n MatchLength) bool {
+/// Duration of the match.
+func (rcv *MutatorSettings) MutateMatchLength(n MatchLengthMutator) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
-func (rcv *MutatorSettings) MaxScore() MaxScore {
+/// Max score of match. If this score is reached, the team immediately wins.
+func (rcv *MutatorSettings) MaxScore() MaxScoreMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return MaxScore(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return MaxScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateMaxScore(n MaxScore) bool {
+/// Max score of match. If this score is reached, the team immediately wins.
+func (rcv *MutatorSettings) MutateMaxScore(n MaxScoreMutator) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
-func (rcv *MutatorSettings) MultiBall() MultiBall {
+/// The number of balls.
+func (rcv *MutatorSettings) MultiBall() MultiBallMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
-		return MultiBall(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return MultiBallMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateMultiBall(n MultiBall) bool {
+/// The number of balls.
+func (rcv *MutatorSettings) MutateMultiBall(n MultiBallMutator) bool {
 	return rcv._tab.MutateByteSlot(8, byte(n))
 }
 
-func (rcv *MutatorSettings) OvertimeOption() OvertimeOption {
+/// The overtime rules and tiebreaker.
+func (rcv *MutatorSettings) Overtime() OvertimeMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return OvertimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return OvertimeMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateOvertimeOption(n OvertimeOption) bool {
+/// The overtime rules and tiebreaker.
+func (rcv *MutatorSettings) MutateOvertime(n OvertimeMutator) bool {
 	return rcv._tab.MutateByteSlot(10, byte(n))
 }
 
-func (rcv *MutatorSettings) SeriesLengthOption() SeriesLengthOption {
+/// The series length (unsupported).
+func (rcv *MutatorSettings) SeriesLength() SeriesLengthMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return SeriesLengthOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return SeriesLengthMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateSeriesLengthOption(n SeriesLengthOption) bool {
+/// The series length (unsupported).
+func (rcv *MutatorSettings) MutateSeriesLength(n SeriesLengthMutator) bool {
 	return rcv._tab.MutateByteSlot(12, byte(n))
 }
 
-func (rcv *MutatorSettings) GameSpeedOption() GameSpeedOption {
+/// A game speed multiplier.
+func (rcv *MutatorSettings) GameSpeed() GameSpeedMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return GameSpeedOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return GameSpeedMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateGameSpeedOption(n GameSpeedOption) bool {
+/// A game speed multiplier.
+func (rcv *MutatorSettings) MutateGameSpeed(n GameSpeedMutator) bool {
 	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
-func (rcv *MutatorSettings) BallMaxSpeedOption() BallMaxSpeedOption {
+/// Ball max speed.
+func (rcv *MutatorSettings) BallMaxSpeed() BallMaxSpeedMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return BallMaxSpeedOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BallMaxSpeedMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBallMaxSpeedOption(n BallMaxSpeedOption) bool {
+/// Ball max speed.
+func (rcv *MutatorSettings) MutateBallMaxSpeed(n BallMaxSpeedMutator) bool {
 	return rcv._tab.MutateByteSlot(16, byte(n))
 }
 
-func (rcv *MutatorSettings) BallTypeOption() BallTypeOption {
+/// Ball type and shape.
+func (rcv *MutatorSettings) BallType() BallTypeMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return BallTypeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BallTypeMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBallTypeOption(n BallTypeOption) bool {
+/// Ball type and shape.
+func (rcv *MutatorSettings) MutateBallType(n BallTypeMutator) bool {
 	return rcv._tab.MutateByteSlot(18, byte(n))
 }
 
-func (rcv *MutatorSettings) BallWeightOption() BallWeightOption {
+/// Ball weight and how much is curves.
+func (rcv *MutatorSettings) BallWeight() BallWeightMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return BallWeightOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BallWeightMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBallWeightOption(n BallWeightOption) bool {
+/// Ball weight and how much is curves.
+func (rcv *MutatorSettings) MutateBallWeight(n BallWeightMutator) bool {
 	return rcv._tab.MutateByteSlot(20, byte(n))
 }
 
-func (rcv *MutatorSettings) BallSizeOption() BallSizeOption {
+/// Ball size.
+func (rcv *MutatorSettings) BallSize() BallSizeMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return BallSizeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BallSizeMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBallSizeOption(n BallSizeOption) bool {
+/// Ball size.
+func (rcv *MutatorSettings) MutateBallSize(n BallSizeMutator) bool {
 	return rcv._tab.MutateByteSlot(22, byte(n))
 }
 
-func (rcv *MutatorSettings) BallBouncinessOption() BallBouncinessOption {
+/// Ball bounciness.
+func (rcv *MutatorSettings) BallBounciness() BallBouncinessMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return BallBouncinessOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BallBouncinessMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBallBouncinessOption(n BallBouncinessOption) bool {
+/// Ball bounciness.
+func (rcv *MutatorSettings) MutateBallBounciness(n BallBouncinessMutator) bool {
 	return rcv._tab.MutateByteSlot(24, byte(n))
 }
 
-func (rcv *MutatorSettings) BoostOption() BoostOption {
+/// Boost meter behaviour.
+func (rcv *MutatorSettings) Boost() BoostMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return BoostOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BoostMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBoostOption(n BoostOption) bool {
+/// Boost meter behaviour.
+func (rcv *MutatorSettings) MutateBoost(n BoostMutator) bool {
 	return rcv._tab.MutateByteSlot(26, byte(n))
 }
 
-func (rcv *MutatorSettings) RumbleOption() RumbleOption {
+/// Rumble item rules.
+func (rcv *MutatorSettings) Rumble() RumbleMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return RumbleOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return RumbleMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateRumbleOption(n RumbleOption) bool {
+/// Rumble item rules.
+func (rcv *MutatorSettings) MutateRumble(n RumbleMutator) bool {
 	return rcv._tab.MutateByteSlot(28, byte(n))
 }
 
-func (rcv *MutatorSettings) BoostStrengthOption() BoostStrengthOption {
+/// Boost strength multiplier.
+func (rcv *MutatorSettings) BoostStrength() BoostStrengthMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return BoostStrengthOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BoostStrengthMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateBoostStrengthOption(n BoostStrengthOption) bool {
+/// Boost strength multiplier.
+func (rcv *MutatorSettings) MutateBoostStrength(n BoostStrengthMutator) bool {
 	return rcv._tab.MutateByteSlot(30, byte(n))
 }
 
-func (rcv *MutatorSettings) GravityOption() GravityOption {
+/// Strength of gravity.
+func (rcv *MutatorSettings) Gravity() GravityMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
-		return GravityOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return GravityMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateGravityOption(n GravityOption) bool {
+/// Strength of gravity.
+func (rcv *MutatorSettings) MutateGravity(n GravityMutator) bool {
 	return rcv._tab.MutateByteSlot(32, byte(n))
 }
 
-func (rcv *MutatorSettings) DemolishOption() DemolishOption {
+/// Demolition conditions.
+func (rcv *MutatorSettings) Demolish() DemolishMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
-		return DemolishOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return DemolishMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateDemolishOption(n DemolishOption) bool {
+/// Demolition conditions.
+func (rcv *MutatorSettings) MutateDemolish(n DemolishMutator) bool {
 	return rcv._tab.MutateByteSlot(34, byte(n))
 }
 
-func (rcv *MutatorSettings) RespawnTimeOption() RespawnTimeOption {
+/// Demolition respawn time.
+func (rcv *MutatorSettings) RespawnTime() RespawnTimeMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return RespawnTimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return RespawnTimeMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateRespawnTimeOption(n RespawnTimeOption) bool {
+/// Demolition respawn time.
+func (rcv *MutatorSettings) MutateRespawnTime(n RespawnTimeMutator) bool {
 	return rcv._tab.MutateByteSlot(36, byte(n))
 }
 
-func (rcv *MutatorSettings) MaxTimeOption() MaxTimeOption {
+/// Max real-time duration of match including kickoff, replays, and more.
+/// If the score is tied upon time-out, the number of shots determine the winner.
+func (rcv *MutatorSettings) MaxTime() MaxTimeMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
-		return MaxTimeOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return MaxTimeMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateMaxTimeOption(n MaxTimeOption) bool {
+/// Max real-time duration of match including kickoff, replays, and more.
+/// If the score is tied upon time-out, the number of shots determine the winner.
+func (rcv *MutatorSettings) MutateMaxTime(n MaxTimeMutator) bool {
 	return rcv._tab.MutateByteSlot(38, byte(n))
 }
 
-func (rcv *MutatorSettings) GameEventOption() GameEventOption {
+/// Additional game behaviour for custom modes.
+func (rcv *MutatorSettings) GameEvent() GameEventMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
-		return GameEventOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return GameEventMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateGameEventOption(n GameEventOption) bool {
+/// Additional game behaviour for custom modes.
+func (rcv *MutatorSettings) MutateGameEvent(n GameEventMutator) bool {
 	return rcv._tab.MutateByteSlot(40, byte(n))
 }
 
-func (rcv *MutatorSettings) AudioOption() AudioOption {
+/// Additional audio options for custom modes.
+func (rcv *MutatorSettings) Audio() AudioMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
-		return AudioOption(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return AudioMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MutatorSettings) MutateAudioOption(n AudioOption) bool {
+/// Additional audio options for custom modes.
+func (rcv *MutatorSettings) MutateAudio(n AudioMutator) bool {
 	return rcv._tab.MutateByteSlot(42, byte(n))
 }
 
 func MutatorSettingsStart(builder *flatbuffers.Builder) {
 	builder.StartObject(20)
 }
-func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength MatchLength) {
+func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength MatchLengthMutator) {
 	builder.PrependByteSlot(0, byte(matchLength), 0)
 }
-func MutatorSettingsAddMaxScore(builder *flatbuffers.Builder, maxScore MaxScore) {
+func MutatorSettingsAddMaxScore(builder *flatbuffers.Builder, maxScore MaxScoreMutator) {
 	builder.PrependByteSlot(1, byte(maxScore), 0)
 }
-func MutatorSettingsAddMultiBall(builder *flatbuffers.Builder, multiBall MultiBall) {
+func MutatorSettingsAddMultiBall(builder *flatbuffers.Builder, multiBall MultiBallMutator) {
 	builder.PrependByteSlot(2, byte(multiBall), 0)
 }
-func MutatorSettingsAddOvertimeOption(builder *flatbuffers.Builder, overtimeOption OvertimeOption) {
-	builder.PrependByteSlot(3, byte(overtimeOption), 0)
+func MutatorSettingsAddOvertime(builder *flatbuffers.Builder, overtime OvertimeMutator) {
+	builder.PrependByteSlot(3, byte(overtime), 0)
 }
-func MutatorSettingsAddSeriesLengthOption(builder *flatbuffers.Builder, seriesLengthOption SeriesLengthOption) {
-	builder.PrependByteSlot(4, byte(seriesLengthOption), 0)
+func MutatorSettingsAddSeriesLength(builder *flatbuffers.Builder, seriesLength SeriesLengthMutator) {
+	builder.PrependByteSlot(4, byte(seriesLength), 0)
 }
-func MutatorSettingsAddGameSpeedOption(builder *flatbuffers.Builder, gameSpeedOption GameSpeedOption) {
-	builder.PrependByteSlot(5, byte(gameSpeedOption), 0)
+func MutatorSettingsAddGameSpeed(builder *flatbuffers.Builder, gameSpeed GameSpeedMutator) {
+	builder.PrependByteSlot(5, byte(gameSpeed), 0)
 }
-func MutatorSettingsAddBallMaxSpeedOption(builder *flatbuffers.Builder, ballMaxSpeedOption BallMaxSpeedOption) {
-	builder.PrependByteSlot(6, byte(ballMaxSpeedOption), 0)
+func MutatorSettingsAddBallMaxSpeed(builder *flatbuffers.Builder, ballMaxSpeed BallMaxSpeedMutator) {
+	builder.PrependByteSlot(6, byte(ballMaxSpeed), 0)
 }
-func MutatorSettingsAddBallTypeOption(builder *flatbuffers.Builder, ballTypeOption BallTypeOption) {
-	builder.PrependByteSlot(7, byte(ballTypeOption), 0)
+func MutatorSettingsAddBallType(builder *flatbuffers.Builder, ballType BallTypeMutator) {
+	builder.PrependByteSlot(7, byte(ballType), 0)
 }
-func MutatorSettingsAddBallWeightOption(builder *flatbuffers.Builder, ballWeightOption BallWeightOption) {
-	builder.PrependByteSlot(8, byte(ballWeightOption), 0)
+func MutatorSettingsAddBallWeight(builder *flatbuffers.Builder, ballWeight BallWeightMutator) {
+	builder.PrependByteSlot(8, byte(ballWeight), 0)
 }
-func MutatorSettingsAddBallSizeOption(builder *flatbuffers.Builder, ballSizeOption BallSizeOption) {
-	builder.PrependByteSlot(9, byte(ballSizeOption), 0)
+func MutatorSettingsAddBallSize(builder *flatbuffers.Builder, ballSize BallSizeMutator) {
+	builder.PrependByteSlot(9, byte(ballSize), 0)
 }
-func MutatorSettingsAddBallBouncinessOption(builder *flatbuffers.Builder, ballBouncinessOption BallBouncinessOption) {
-	builder.PrependByteSlot(10, byte(ballBouncinessOption), 0)
+func MutatorSettingsAddBallBounciness(builder *flatbuffers.Builder, ballBounciness BallBouncinessMutator) {
+	builder.PrependByteSlot(10, byte(ballBounciness), 0)
 }
-func MutatorSettingsAddBoostOption(builder *flatbuffers.Builder, boostOption BoostOption) {
-	builder.PrependByteSlot(11, byte(boostOption), 0)
+func MutatorSettingsAddBoost(builder *flatbuffers.Builder, boost BoostMutator) {
+	builder.PrependByteSlot(11, byte(boost), 0)
 }
-func MutatorSettingsAddRumbleOption(builder *flatbuffers.Builder, rumbleOption RumbleOption) {
-	builder.PrependByteSlot(12, byte(rumbleOption), 0)
+func MutatorSettingsAddRumble(builder *flatbuffers.Builder, rumble RumbleMutator) {
+	builder.PrependByteSlot(12, byte(rumble), 0)
 }
-func MutatorSettingsAddBoostStrengthOption(builder *flatbuffers.Builder, boostStrengthOption BoostStrengthOption) {
-	builder.PrependByteSlot(13, byte(boostStrengthOption), 0)
+func MutatorSettingsAddBoostStrength(builder *flatbuffers.Builder, boostStrength BoostStrengthMutator) {
+	builder.PrependByteSlot(13, byte(boostStrength), 0)
 }
-func MutatorSettingsAddGravityOption(builder *flatbuffers.Builder, gravityOption GravityOption) {
-	builder.PrependByteSlot(14, byte(gravityOption), 0)
+func MutatorSettingsAddGravity(builder *flatbuffers.Builder, gravity GravityMutator) {
+	builder.PrependByteSlot(14, byte(gravity), 0)
 }
-func MutatorSettingsAddDemolishOption(builder *flatbuffers.Builder, demolishOption DemolishOption) {
-	builder.PrependByteSlot(15, byte(demolishOption), 0)
+func MutatorSettingsAddDemolish(builder *flatbuffers.Builder, demolish DemolishMutator) {
+	builder.PrependByteSlot(15, byte(demolish), 0)
 }
-func MutatorSettingsAddRespawnTimeOption(builder *flatbuffers.Builder, respawnTimeOption RespawnTimeOption) {
-	builder.PrependByteSlot(16, byte(respawnTimeOption), 0)
+func MutatorSettingsAddRespawnTime(builder *flatbuffers.Builder, respawnTime RespawnTimeMutator) {
+	builder.PrependByteSlot(16, byte(respawnTime), 0)
 }
-func MutatorSettingsAddMaxTimeOption(builder *flatbuffers.Builder, maxTimeOption MaxTimeOption) {
-	builder.PrependByteSlot(17, byte(maxTimeOption), 0)
+func MutatorSettingsAddMaxTime(builder *flatbuffers.Builder, maxTime MaxTimeMutator) {
+	builder.PrependByteSlot(17, byte(maxTime), 0)
 }
-func MutatorSettingsAddGameEventOption(builder *flatbuffers.Builder, gameEventOption GameEventOption) {
-	builder.PrependByteSlot(18, byte(gameEventOption), 0)
+func MutatorSettingsAddGameEvent(builder *flatbuffers.Builder, gameEvent GameEventMutator) {
+	builder.PrependByteSlot(18, byte(gameEvent), 0)
 }
-func MutatorSettingsAddAudioOption(builder *flatbuffers.Builder, audioOption AudioOption) {
-	builder.PrependByteSlot(19, byte(audioOption), 0)
+func MutatorSettingsAddAudio(builder *flatbuffers.Builder, audio AudioMutator) {
+	builder.PrependByteSlot(19, byte(audio), 0)
 }
 func MutatorSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

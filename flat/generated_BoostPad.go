@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Static information about a boost pad such as location and size.
 type BoostPadT struct {
 	Location *Vector3T `json:"location"`
 	IsFullBoost bool `json:"is_full_boost"`
@@ -71,6 +72,7 @@ func (rcv *BoostPad) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The location of the boost pad.
 func (rcv *BoostPad) Location(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -84,6 +86,10 @@ func (rcv *BoostPad) Location(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// The location of the boost pad.
+/// Whether the boost pad provides a full tank of boost.
+/// A big boost pad provides 100 boost and respawns in 10 seconds.
+/// A small boost pad provides 12 boost and respawns in 4 seconds.
 func (rcv *BoostPad) IsFullBoost() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -92,6 +98,9 @@ func (rcv *BoostPad) IsFullBoost() bool {
 	return false
 }
 
+/// Whether the boost pad provides a full tank of boost.
+/// A big boost pad provides 100 boost and respawns in 10 seconds.
+/// A small boost pad provides 12 boost and respawns in 4 seconds.
 func (rcv *BoostPad) MutateIsFullBoost(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
 }

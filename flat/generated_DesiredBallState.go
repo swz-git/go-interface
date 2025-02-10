@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A ball state with nullable components.
+/// Used for game state setting to define which part of a ball's state should change.
 type DesiredBallStateT struct {
 	Physics *DesiredPhysicsT `json:"physics"`
 }

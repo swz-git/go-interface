@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderAnchor attached to a car.
+/// The local field allows for an offset in local coordinates taking the car's orientation into account.
 type CarAnchorT struct {
 	Index uint32 `json:"index"`
 	Local *Vector3T `json:"local"`
@@ -71,6 +73,7 @@ func (rcv *CarAnchor) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The index of the car.
 func (rcv *CarAnchor) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -79,10 +82,13 @@ func (rcv *CarAnchor) Index() uint32 {
 	return 0
 }
 
+/// The index of the car.
 func (rcv *CarAnchor) MutateIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
+/// An offset in local coordinates.
+/// x is forwards, y is left, and z is up.
 func (rcv *CarAnchor) Local(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -96,6 +102,8 @@ func (rcv *CarAnchor) Local(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// An offset in local coordinates.
+/// x is forwards, y is left, and z is up.
 func CarAnchorStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

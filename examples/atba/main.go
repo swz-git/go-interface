@@ -37,7 +37,7 @@ func main() {
 		AgentId:              "rlbot/go-example-bot",
 		WantsBallPredictions: true,
 		WantsComms:           true,
-		CloseAfterMatch:      true,
+		CloseBetweenMatches:  true,
 	})
 	if err != nil {
 		panic(err)

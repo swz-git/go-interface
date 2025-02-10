@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A player index and the controller state of that player.
+/// Used to indicate what the player is doing this tick.
 type PlayerInputT struct {
 	PlayerIndex uint32 `json:"player_index"`
 	ControllerState *ControllerStateT `json:"controller_state"`

@@ -7,11 +7,12 @@ import (
 	"strconv"
 )
 
+/// Possible player types.
 type PlayerClass byte
 
 const (
 	PlayerClassNONE        PlayerClass = 0
-	PlayerClassRLBot       PlayerClass = 1
+	PlayerClassCustomBot   PlayerClass = 1
 	PlayerClassHuman       PlayerClass = 2
 	PlayerClassPsyonix     PlayerClass = 3
 	PlayerClassPartyMember PlayerClass = 4
@@ -19,7 +20,7 @@ const (
 
 var EnumNamesPlayerClass = map[PlayerClass]string{
 	PlayerClassNONE:        "NONE",
-	PlayerClassRLBot:       "RLBot",
+	PlayerClassCustomBot:   "CustomBot",
 	PlayerClassHuman:       "Human",
 	PlayerClassPsyonix:     "Psyonix",
 	PlayerClassPartyMember: "PartyMember",
@@ -27,7 +28,7 @@ var EnumNamesPlayerClass = map[PlayerClass]string{
 
 var EnumValuesPlayerClass = map[string]PlayerClass{
 	"NONE":        PlayerClassNONE,
-	"RLBot":       PlayerClassRLBot,
+	"CustomBot":   PlayerClassCustomBot,
 	"Human":       PlayerClassHuman,
 	"Psyonix":     PlayerClassPsyonix,
 	"PartyMember": PlayerClassPartyMember,
@@ -50,8 +51,8 @@ func (t *PlayerClassT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		return 0
 	}
 	switch t.Type {
-	case PlayerClassRLBot:
-		return t.Value.(*RLBotT).Pack(builder)
+	case PlayerClassCustomBot:
+		return t.Value.(*CustomBotT).Pack(builder)
 	case PlayerClassHuman:
 		return t.Value.(*HumanT).Pack(builder)
 	case PlayerClassPsyonix:
@@ -64,10 +65,10 @@ func (t *PlayerClassT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 func (rcv PlayerClass) UnPack(table flatbuffers.Table) *PlayerClassT {
 	switch rcv {
-	case PlayerClassRLBot:
-		var x RLBot
+	case PlayerClassCustomBot:
+		var x CustomBot
 		x.Init(table.Bytes, table.Pos)
-		return &PlayerClassT{Type: PlayerClassRLBot, Value: x.UnPack()}
+		return &PlayerClassT{Type: PlayerClassCustomBot, Value: x.UnPack()}
 	case PlayerClassHuman:
 		var x Human
 		x.Init(table.Bytes, table.Pos)

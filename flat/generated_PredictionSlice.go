@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// An entry in the ball prediction describing where a ball will be at some future time.
 type PredictionSliceT struct {
 	GameSeconds float32 `json:"game_seconds"`
 	Physics *PhysicsT `json:"physics"`
@@ -45,12 +46,12 @@ func (rcv *PredictionSlice) Table() flatbuffers.Table {
 }
 
 /// The moment in game time that this prediction corresponds to.
-/// This corresponds to 'secondsElapsed' in the GameInfo table.
+/// This corresponds to 'seconds_elapsed' in the MatchInfo.
 func (rcv *PredictionSlice) GameSeconds() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
 /// The moment in game time that this prediction corresponds to.
-/// This corresponds to 'secondsElapsed' in the GameInfo table.
+/// This corresponds to 'seconds_elapsed' in the MatchInfo.
 func (rcv *PredictionSlice) MutateGameSeconds(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }

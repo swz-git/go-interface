@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+/// Anchors attached to objects.
 type RelativeAnchor byte
 
 const (

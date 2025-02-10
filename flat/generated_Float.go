@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A floating point value located in a separate struct allowing for optional floats elsewhere.
 type FloatT struct {
 	Val float32 `json:"val"`
 }

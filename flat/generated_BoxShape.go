@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A box with dimensions.
+/// Used for cars and balls with a box shapes.
 type BoxShapeT struct {
 	Length float32 `json:"length"`
 	Width float32 `json:"width"`

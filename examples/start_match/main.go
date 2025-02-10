@@ -13,11 +13,11 @@ func main() {
 	}
 
 	println("Sending MatchSettings packet...")
-	conn.SendPacket(&RLBotFlat.MatchSettingsT{
+	conn.SendPacket(&RLBotFlat.MatchConfigurationT{
 		PlayerConfigurations: []*RLBotFlat.PlayerConfigurationT{{
 			Variety: &RLBotFlat.PlayerClassT{
-				Type:  RLBotFlat.PlayerClassRLBot,
-				Value: &RLBotFlat.RLBotT{},
+				Type:  RLBotFlat.PlayerClassCustomBot,
+				Value: &RLBotFlat.CustomBotT{},
 			},
 			Name:    "BOT1",
 			Team:    0,
@@ -35,8 +35,8 @@ func main() {
 		}},
 		GameMode:   RLBotFlat.GameModeSoccer,
 		GameMapUpk: "UtopiaStadium_P",
-		MutatorSettings: &RLBotFlat.MutatorSettingsT{
-			MatchLength: RLBotFlat.MatchLengthUnlimited,
+		Mutators: &RLBotFlat.MutatorSettingsT{
+			MatchLength: RLBotFlat.MatchLengthMutatorUnlimited,
 		},
 		ExistingMatchBehavior: RLBotFlat.ExistingMatchBehaviorRestart,
 		EnableRendering:       true,

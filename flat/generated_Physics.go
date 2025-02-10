@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// The physical state of an object.
 type PhysicsT struct {
 	Location *Vector3T `json:"location"`
 	Rotation *RotatorT `json:"rotation"`

@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A collection of values shown on the scoreboard (and a few more).
 type ScoreInfoT struct {
 	Score uint32 `json:"score"`
 	Goals uint32 `json:"goals"`
@@ -54,51 +55,65 @@ func (rcv *ScoreInfo) Table() flatbuffers.Table {
 	return rcv._tab.Table
 }
 
+/// The accumulated score, roughly indicating how well a player performs.
 func (rcv *ScoreInfo) Score() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
+/// The accumulated score, roughly indicating how well a player performs.
 func (rcv *ScoreInfo) MutateScore(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }
 
+/// Number of goals scored.
 func (rcv *ScoreInfo) Goals() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
+/// Number of goals scored.
 func (rcv *ScoreInfo) MutateGoals(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
 }
 
+/// Number of own-goals scored.
 func (rcv *ScoreInfo) OwnGoals() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(8))
 }
+/// Number of own-goals scored.
 func (rcv *ScoreInfo) MutateOwnGoals(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(8), n)
 }
 
+/// Number of goals assisted.
 func (rcv *ScoreInfo) Assists() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(12))
 }
+/// Number of goals assisted.
 func (rcv *ScoreInfo) MutateAssists(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(12), n)
 }
 
+/// Number of shots saved.
 func (rcv *ScoreInfo) Saves() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(16))
 }
+/// Number of shots saved.
 func (rcv *ScoreInfo) MutateSaves(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(16), n)
 }
 
+/// Number of shots on opponent goal.
 func (rcv *ScoreInfo) Shots() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(20))
 }
+/// Number of shots on opponent goal.
 func (rcv *ScoreInfo) MutateShots(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(20), n)
 }
 
+/// Number of demolitions made.
 func (rcv *ScoreInfo) Demolitions() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(24))
 }
+/// Number of demolitions made.
 func (rcv *ScoreInfo) MutateDemolitions(n uint32) bool {
 	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(24), n)
 }

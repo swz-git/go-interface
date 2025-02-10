@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A psyonix bot, e.g. All Star bot
+/// A Psyonix bot, e.g. All Star bot.
 type PsyonixT struct {
 	BotSkill PsyonixSkill `json:"bot_skill"`
 }

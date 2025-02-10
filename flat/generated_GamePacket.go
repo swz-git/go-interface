@@ -6,11 +6,14 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A packet of data from the game.
+/// Is is sent every tick to bots, scripts, etc.
+/// Static data is found in the FieldInfo.
 type GamePacketT struct {
 	Players []*PlayerInfoT `json:"players"`
 	BoostPads []*BoostPadStateT `json:"boost_pads"`
 	Balls []*BallInfoT `json:"balls"`
-	GameInfo *GameInfoT `json:"game_info"`
+	MatchInfo *MatchInfoT `json:"match_info"`
 	Teams []*TeamInfoT `json:"teams"`
 }
 
@@ -53,7 +56,7 @@ func (t *GamePacketT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		}
 		ballsOffset = builder.EndVector(ballsLength)
 	}
-	gameInfoOffset := t.GameInfo.Pack(builder)
+	matchInfoOffset := t.MatchInfo.Pack(builder)
 	teamsOffset := flatbuffers.UOffsetT(0)
 	if t.Teams != nil {
 		teamsLength := len(t.Teams)
@@ -67,7 +70,7 @@ func (t *GamePacketT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	GamePacketAddPlayers(builder, playersOffset)
 	GamePacketAddBoostPads(builder, boostPadsOffset)
 	GamePacketAddBalls(builder, ballsOffset)
-	GamePacketAddGameInfo(builder, gameInfoOffset)
+	GamePacketAddMatchInfo(builder, matchInfoOffset)
 	GamePacketAddTeams(builder, teamsOffset)
 	return GamePacketEnd(builder)
 }
@@ -94,7 +97,7 @@ func (rcv *GamePacket) UnPackTo(t *GamePacketT) {
 		rcv.Balls(&x, j)
 		t.Balls[j] = x.UnPack()
 	}
-	t.GameInfo = rcv.GameInfo(nil).UnPack()
+	t.MatchInfo = rcv.MatchInfo(nil).UnPack()
 	teamsLength := rcv.TeamsLength()
 	t.Teams = make([]*TeamInfoT, teamsLength)
 	for j := 0; j < teamsLength; j++ {
@@ -148,6 +151,7 @@ func (rcv *GamePacket) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The current state of all players and their cars.
 func (rcv *GamePacket) Players(obj *PlayerInfo, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -168,6 +172,10 @@ func (rcv *GamePacket) PlayersLength() int {
 	return 0
 }
 
+/// The current state of all players and their cars.
+/// The current state of all boost pads.
+/// The static information about boost pads are found in the FieldInfo.
+/// The boost pads are ordered by y-coordinate and then x-coordinate.
 func (rcv *GamePacket) BoostPads(obj *BoostPadState, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -187,6 +195,10 @@ func (rcv *GamePacket) BoostPadsLength() int {
 	return 0
 }
 
+/// The current state of all boost pads.
+/// The static information about boost pads are found in the FieldInfo.
+/// The boost pads are ordered by y-coordinate and then x-coordinate.
+/// The current state of all balls.
 func (rcv *GamePacket) Balls(obj *BallInfo, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -207,12 +219,14 @@ func (rcv *GamePacket) BallsLength() int {
 	return 0
 }
 
-func (rcv *GamePacket) GameInfo(obj *GameInfo) *GameInfo {
+/// The current state of all balls.
+/// The current state of the match such as timers and gravity.
+func (rcv *GamePacket) MatchInfo(obj *MatchInfo) *MatchInfo {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(GameInfo)
+			obj = new(MatchInfo)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -220,6 +234,8 @@ func (rcv *GamePacket) GameInfo(obj *GameInfo) *GameInfo {
 	return nil
 }
 
+/// The current state of the match such as timers and gravity.
+/// The current state of teams, i.e. the team scores.
 func (rcv *GamePacket) Teams(obj *TeamInfo, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -239,6 +255,7 @@ func (rcv *GamePacket) TeamsLength() int {
 	return 0
 }
 
+/// The current state of teams, i.e. the team scores.
 func GamePacketStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
 }
@@ -260,8 +277,8 @@ func GamePacketAddBalls(builder *flatbuffers.Builder, balls flatbuffers.UOffsetT
 func GamePacketStartBallsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func GamePacketAddGameInfo(builder *flatbuffers.Builder, gameInfo flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(gameInfo), 0)
+func GamePacketAddMatchInfo(builder *flatbuffers.Builder, matchInfo flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(matchInfo), 0)
 }
 func GamePacketAddTeams(builder *flatbuffers.Builder, teams flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(teams), 0)

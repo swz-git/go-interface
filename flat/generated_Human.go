@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A normal human player
+/// A normal human player.
 type HumanT struct {
 }
 

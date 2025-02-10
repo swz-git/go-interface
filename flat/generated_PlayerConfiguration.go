@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A PlayerConfiguration defines a player of a match.
 type PlayerConfigurationT struct {
 	Variety *PlayerClassT `json:"variety"`
 	Name string `json:"name"`
@@ -128,6 +129,7 @@ func (rcv *PlayerConfiguration) MutateVarietyType(n PlayerClass) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
+/// The type of the player, i.e. human, Psyonix bot, or a custom bot.
 func (rcv *PlayerConfiguration) Variety(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -137,6 +139,10 @@ func (rcv *PlayerConfiguration) Variety(obj *flatbuffers.Table) bool {
 	return false
 }
 
+/// The type of the player, i.e. human, Psyonix bot, or a custom bot.
+/// The name of the player.
+/// When match start, RLBot will ensure each bot has a unique name.
+/// In other words, the MatchConfiguration sent upon match start may contain a "Nexto (2)" if there are two Nextos in the match.
 func (rcv *PlayerConfiguration) Name() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -145,6 +151,10 @@ func (rcv *PlayerConfiguration) Name() []byte {
 	return nil
 }
 
+/// The name of the player.
+/// When match start, RLBot will ensure each bot has a unique name.
+/// In other words, the MatchConfiguration sent upon match start may contain a "Nexto (2)" if there are two Nextos in the match.
+/// The team of the player. Blue is 0, orange is 1.
 func (rcv *PlayerConfiguration) Team() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -153,10 +163,12 @@ func (rcv *PlayerConfiguration) Team() uint32 {
 	return 0
 }
 
+/// The team of the player. Blue is 0, orange is 1.
 func (rcv *PlayerConfiguration) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
 }
 
+/// The root directory of the bot and the working directory for the run command.
 func (rcv *PlayerConfiguration) RootDir() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -165,6 +177,8 @@ func (rcv *PlayerConfiguration) RootDir() []byte {
 	return nil
 }
 
+/// The root directory of the bot and the working directory for the run command.
+/// The console command that starts this bot.
 func (rcv *PlayerConfiguration) RunCommand() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -173,6 +187,8 @@ func (rcv *PlayerConfiguration) RunCommand() []byte {
 	return nil
 }
 
+/// The console command that starts this bot.
+/// The loadout of the player.
 func (rcv *PlayerConfiguration) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -186,6 +202,11 @@ func (rcv *PlayerConfiguration) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 	return nil
 }
 
+/// The loadout of the player.
+/// The spawn id of the player.
+/// The value will be set by RLBot.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding player in the GamePacket.
 func (rcv *PlayerConfiguration) SpawnId() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -194,10 +215,18 @@ func (rcv *PlayerConfiguration) SpawnId() int32 {
 	return 0
 }
 
+/// The spawn id of the player.
+/// The value will be set by RLBot.
+/// This value is mostly used internally to keep track of participants in the match.
+/// The spawn id can be used to find the corresponding player in the GamePacket.
 func (rcv *PlayerConfiguration) MutateSpawnId(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
 }
 
+/// A unique user-defined string that is used to connect clients to the right players/scripts.
+/// If a bot/script has a run command, RLBot will pass this agent id to the process using an environment variable, RLBOT_AGENT_ID.
+/// Upon connecting the process announces that it is responsible for this agent id and RLBot will pair the two.
+/// The recommended format for agent ids is "developer_name/bot_name".
 func (rcv *PlayerConfiguration) AgentId() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -206,6 +235,12 @@ func (rcv *PlayerConfiguration) AgentId() []byte {
 	return nil
 }
 
+/// A unique user-defined string that is used to connect clients to the right players/scripts.
+/// If a bot/script has a run command, RLBot will pass this agent id to the process using an environment variable, RLBOT_AGENT_ID.
+/// Upon connecting the process announces that it is responsible for this agent id and RLBot will pair the two.
+/// The recommended format for agent ids is "developer_name/bot_name".
+/// Whether this player is part of a hivemind bot where all players/cars are controlled by the same process.
+/// Players in the hivemind must have the same name, team, run command, and agent id.
 func (rcv *PlayerConfiguration) Hivemind() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -214,6 +249,8 @@ func (rcv *PlayerConfiguration) Hivemind() bool {
 	return false
 }
 
+/// Whether this player is part of a hivemind bot where all players/cars are controlled by the same process.
+/// Players in the hivemind must have the same name, team, run command, and agent id.
 func (rcv *PlayerConfiguration) MutateHivemind(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
 }

@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// The state of a boost pad.
+/// Note, static properties of boost pads, such as their location and size, are found in the field info.
 type BoostPadStateT struct {
 	IsActive bool `json:"is_active"`
 	Timer float32 `json:"timer"`
@@ -44,20 +46,24 @@ func (rcv *BoostPadState) Table() flatbuffers.Table {
 	return rcv._tab.Table
 }
 
-/// True if the boost can be picked up
+/// True if the boost can be picked up right now.
 func (rcv *BoostPadState) IsActive() bool {
 	return rcv._tab.GetBool(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
-/// True if the boost can be picked up
+/// True if the boost can be picked up right now.
 func (rcv *BoostPadState) MutateIsActive(n bool) bool {
 	return rcv._tab.MutateBool(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }
 
-/// The number of seconds since the boost has been picked up, or 0.0 if the boost is active.
+/// The number of seconds since the boost has been picked up, or 0 if the boost is active.
+/// A big boost pad becomes active again after 10 seconds.
+/// A small boost pad becomes active again after 4 seconds.
 func (rcv *BoostPadState) Timer() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
-/// The number of seconds since the boost has been picked up, or 0.0 if the boost is active.
+/// The number of seconds since the boost has been picked up, or 0 if the boost is active.
+/// A big boost pad becomes active again after 10 seconds.
+/// A small boost pad becomes active again after 4 seconds.
 func (rcv *BoostPadState) MutateTimer(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
 }

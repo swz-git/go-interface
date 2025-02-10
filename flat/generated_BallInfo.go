@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Information about a ball.
 type BallInfoT struct {
 	Physics *PhysicsT `json:"physics"`
 	Shape *CollisionShapeT `json:"shape"`
@@ -79,6 +80,7 @@ func (rcv *BallInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The physical state of the ball.
 func (rcv *BallInfo) Physics(obj *Physics) *Physics {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -92,6 +94,7 @@ func (rcv *BallInfo) Physics(obj *Physics) *Physics {
 	return nil
 }
 
+/// The physical state of the ball.
 func (rcv *BallInfo) ShapeType() CollisionShape {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -104,6 +107,7 @@ func (rcv *BallInfo) MutateShapeType(n CollisionShape) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
+/// The collision shape of the ball.
 func (rcv *BallInfo) Shape(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -113,6 +117,7 @@ func (rcv *BallInfo) Shape(obj *flatbuffers.Table) bool {
 	return false
 }
 
+/// The collision shape of the ball.
 func BallInfoStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }

@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Information about a ball touch.
 type TouchT struct {
 	GameSeconds float32 `json:"game_seconds"`
 	Location *Vector3T `json:"location"`
@@ -107,7 +108,7 @@ func (rcv *Touch) Location(obj *Vector3) *Vector3 {
 }
 
 /// The point of contact for the touch.
-/// The direction of the touch.
+/// The direction of the touch as a unit vector pointing from the point of contact towards the center of the ball.
 func (rcv *Touch) Normal(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -121,8 +122,8 @@ func (rcv *Touch) Normal(obj *Vector3) *Vector3 {
 	return nil
 }
 
-/// The direction of the touch.
-/// The index of the ball that was touched.
+/// The direction of the touch as a unit vector pointing from the point of contact towards the center of the ball.
+/// The index of the ball that was touched (in case there are multiple balls).
 func (rcv *Touch) BallIndex() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -131,7 +132,7 @@ func (rcv *Touch) BallIndex() uint32 {
 	return 0
 }
 
-/// The index of the ball that was touched.
+/// The index of the ball that was touched (in case there are multiple balls).
 func (rcv *Touch) MutateBallIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
 }

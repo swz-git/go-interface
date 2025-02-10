@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderAnchor attached to a ball.
+/// The local field allows for an offset in local coordinates taking the ball's orientation into account.
 type BallAnchorT struct {
 	Index uint32 `json:"index"`
 	Local *Vector3T `json:"local"`
@@ -71,6 +73,7 @@ func (rcv *BallAnchor) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The index of the ball.
 func (rcv *BallAnchor) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -79,10 +82,13 @@ func (rcv *BallAnchor) Index() uint32 {
 	return 0
 }
 
+/// The index of the ball.
 func (rcv *BallAnchor) MutateIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
+/// An offset in local coordinates.
+/// x is forwards, y is left, and z is up.
 func (rcv *BallAnchor) Local(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -96,6 +102,8 @@ func (rcv *BallAnchor) Local(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// An offset in local coordinates.
+/// x is forwards, y is left, and z is up.
 func BallAnchorStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

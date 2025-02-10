@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A client message to start a match using a path to a match config file.
 type StartCommandT struct {
 	ConfigPath string `json:"config_path"`
 }

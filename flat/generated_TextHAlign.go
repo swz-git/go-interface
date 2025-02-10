@@ -4,6 +4,7 @@ package flat
 
 import "strconv"
 
+/// Horizontal text alignment.
 type TextHAlign byte
 
 const (

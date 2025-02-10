@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A rotator describing a rotation with nullable pith, yaw, and roll.
+/// Used for game state setting to define which part of a rotator should change.
+/// If a component is null, then the component will keep its current value.
+/// Values are in radians.
 type RotatorPartialT struct {
 	Pitch *FloatT `json:"pitch"`
 	Yaw *FloatT `json:"yaw"`
@@ -76,6 +80,7 @@ func (rcv *RotatorPartial) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// In radians with range (-pi/2,+pi/2) where 0 is flat, +pi/2 is nose straight up, -pi/2 is nose straight down.
 func (rcv *RotatorPartial) Pitch(obj *Float) *Float {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -89,6 +94,8 @@ func (rcv *RotatorPartial) Pitch(obj *Float) *Float {
 	return nil
 }
 
+/// In radians with range (-pi/2,+pi/2) where 0 is flat, +pi/2 is nose straight up, -pi/2 is nose straight down.
+/// In radians with range [-pi,+pi) where 0 is towards positive x, rotating clockwise as increased (when seen from above). 
 func (rcv *RotatorPartial) Yaw(obj *Float) *Float {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -102,6 +109,8 @@ func (rcv *RotatorPartial) Yaw(obj *Float) *Float {
 	return nil
 }
 
+/// In radians with range [-pi,+pi) where 0 is towards positive x, rotating clockwise as increased (when seen from above). 
+/// In radians with range (-pi,+pi) where 0 is upright, positive is tilted right, negative is tilted left.
 func (rcv *RotatorPartial) Roll(obj *Float) *Float {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -115,6 +124,7 @@ func (rcv *RotatorPartial) Roll(obj *Float) *Float {
 	return nil
 }
 
+/// In radians with range (-pi,+pi) where 0 is upright, positive is tilted right, negative is tilted left.
 func RotatorPartialStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }

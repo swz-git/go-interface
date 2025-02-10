@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+/// The different types of RenderMessages.
 type RenderType byte
 
 const (

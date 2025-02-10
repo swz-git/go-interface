@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage, describing a piece of debug rendering.
 type RenderMessageT struct {
 	Variety *RenderTypeT `json:"variety"`
 }

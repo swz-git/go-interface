@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A client message to change the loadout of a car.
+/// If sent before the ready message, this simply sets the loadout of the car.
+/// If sent after the ready message and if game state setting is enabled, this will respawn the car with the new loadout.
+/// Bots can only set the loadout of their own car(s).
 type SetLoadoutT struct {
 	Index uint32 `json:"index"`
 	Loadout *PlayerLoadoutT `json:"loadout"`
@@ -71,6 +75,7 @@ func (rcv *SetLoadout) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The index of the car to change loadout off.
 func (rcv *SetLoadout) Index() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -79,10 +84,12 @@ func (rcv *SetLoadout) Index() uint32 {
 	return 0
 }
 
+/// The index of the car to change loadout off.
 func (rcv *SetLoadout) MutateIndex(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
+/// The new loadout of the car.
 func (rcv *SetLoadout) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -96,6 +103,7 @@ func (rcv *SetLoadout) Loadout(obj *PlayerLoadout) *PlayerLoadout {
 	return nil
 }
 
+/// The new loadout of the car.
 func SetLoadoutStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

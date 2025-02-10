@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for text in 3D space.
 type String3DT struct {
 	Text string `json:"text"`
 	Anchor *RenderAnchorT `json:"anchor"`
@@ -92,6 +93,7 @@ func (rcv *String3D) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// The text to be displayed.
 func (rcv *String3D) Text() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -100,6 +102,8 @@ func (rcv *String3D) Text() []byte {
 	return nil
 }
 
+/// The text to be displayed.
+/// The position of the text.
 func (rcv *String3D) Anchor(obj *RenderAnchor) *RenderAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -113,6 +117,9 @@ func (rcv *String3D) Anchor(obj *RenderAnchor) *RenderAnchor {
 	return nil
 }
 
+/// The position of the text.
+/// The scale of the text.
+/// When scale is 1, the characters are 20 pixels tall and 10 pixels wide.
 func (rcv *String3D) Scale() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -121,10 +128,13 @@ func (rcv *String3D) Scale() float32 {
 	return 0.0
 }
 
+/// The scale of the text.
+/// When scale is 1, the characters are 20 pixels tall and 10 pixels wide.
 func (rcv *String3D) MutateScale(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
 }
 
+/// The color of the text.
 func (rcv *String3D) Foreground(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -138,6 +148,8 @@ func (rcv *String3D) Foreground(obj *Color) *Color {
 	return nil
 }
 
+/// The color of the text.
+/// The color of the background for the text.
 func (rcv *String3D) Background(obj *Color) *Color {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -151,6 +163,8 @@ func (rcv *String3D) Background(obj *Color) *Color {
 	return nil
 }
 
+/// The color of the background for the text.
+/// The horizontal alignment of the text.
 func (rcv *String3D) HAlign() TextHAlign {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -159,10 +173,12 @@ func (rcv *String3D) HAlign() TextHAlign {
 	return 0
 }
 
+/// The horizontal alignment of the text.
 func (rcv *String3D) MutateHAlign(n TextHAlign) bool {
 	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
+/// The vertical alignment of the text.
 func (rcv *String3D) VAlign() TextVAlign {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -171,6 +187,7 @@ func (rcv *String3D) VAlign() TextVAlign {
 	return 0
 }
 
+/// The vertical alignment of the text.
 func (rcv *String3D) MutateVAlign(n TextVAlign) bool {
 	return rcv._tab.MutateByteSlot(16, byte(n))
 }

@@ -6,11 +6,13 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A game state with nullable subcomponents.
+/// Used for game state setting to define which part of the game should change.
+/// Values not set will not be updated.
 type DesiredGameStateT struct {
 	BallStates []*DesiredBallStateT `json:"ball_states"`
 	CarStates []*DesiredCarStateT `json:"car_states"`
-	BoostStates []*DesiredBoostStateT `json:"boost_states"`
-	GameInfoState *DesiredGameInfoStateT `json:"game_info_state"`
+	MatchInfo *DesiredMatchInfoT `json:"match_info"`
 	ConsoleCommands []*ConsoleCommandT `json:"console_commands"`
 }
 
@@ -44,20 +46,7 @@ func (t *DesiredGameStateT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffs
 		}
 		carStatesOffset = builder.EndVector(carStatesLength)
 	}
-	boostStatesOffset := flatbuffers.UOffsetT(0)
-	if t.BoostStates != nil {
-		boostStatesLength := len(t.BoostStates)
-		boostStatesOffsets := make([]flatbuffers.UOffsetT, boostStatesLength)
-		for j := 0; j < boostStatesLength; j++ {
-			boostStatesOffsets[j] = t.BoostStates[j].Pack(builder)
-		}
-		DesiredGameStateStartBoostStatesVector(builder, boostStatesLength)
-		for j := boostStatesLength - 1; j >= 0; j-- {
-			builder.PrependUOffsetT(boostStatesOffsets[j])
-		}
-		boostStatesOffset = builder.EndVector(boostStatesLength)
-	}
-	gameInfoStateOffset := t.GameInfoState.Pack(builder)
+	matchInfoOffset := t.MatchInfo.Pack(builder)
 	consoleCommandsOffset := flatbuffers.UOffsetT(0)
 	if t.ConsoleCommands != nil {
 		consoleCommandsLength := len(t.ConsoleCommands)
@@ -74,8 +63,7 @@ func (t *DesiredGameStateT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffs
 	DesiredGameStateStart(builder)
 	DesiredGameStateAddBallStates(builder, ballStatesOffset)
 	DesiredGameStateAddCarStates(builder, carStatesOffset)
-	DesiredGameStateAddBoostStates(builder, boostStatesOffset)
-	DesiredGameStateAddGameInfoState(builder, gameInfoStateOffset)
+	DesiredGameStateAddMatchInfo(builder, matchInfoOffset)
 	DesiredGameStateAddConsoleCommands(builder, consoleCommandsOffset)
 	return DesiredGameStateEnd(builder)
 }
@@ -95,14 +83,7 @@ func (rcv *DesiredGameState) UnPackTo(t *DesiredGameStateT) {
 		rcv.CarStates(&x, j)
 		t.CarStates[j] = x.UnPack()
 	}
-	boostStatesLength := rcv.BoostStatesLength()
-	t.BoostStates = make([]*DesiredBoostStateT, boostStatesLength)
-	for j := 0; j < boostStatesLength; j++ {
-		x := DesiredBoostState{}
-		rcv.BoostStates(&x, j)
-		t.BoostStates[j] = x.UnPack()
-	}
-	t.GameInfoState = rcv.GameInfoState(nil).UnPack()
+	t.MatchInfo = rcv.MatchInfo(nil).UnPack()
 	consoleCommandsLength := rcv.ConsoleCommandsLength()
 	t.ConsoleCommands = make([]*ConsoleCommandT, consoleCommandsLength)
 	for j := 0; j < consoleCommandsLength; j++ {
@@ -156,6 +137,7 @@ func (rcv *DesiredGameState) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// A list of desired ball states.
 func (rcv *DesiredGameState) BallStates(obj *DesiredBallState, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -176,6 +158,8 @@ func (rcv *DesiredGameState) BallStatesLength() int {
 	return 0
 }
 
+/// A list of desired ball states.
+/// A list of desired car states.
 func (rcv *DesiredGameState) CarStates(obj *DesiredCarState, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -196,32 +180,14 @@ func (rcv *DesiredGameState) CarStatesLength() int {
 	return 0
 }
 
-func (rcv *DesiredGameState) BoostStates(obj *DesiredBoostState, j int) bool {
+/// A list of desired car states.
+/// The desired game info.
+func (rcv *DesiredGameState) MatchInfo(obj *DesiredMatchInfo) *DesiredMatchInfo {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *DesiredGameState) BoostStatesLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *DesiredGameState) GameInfoState(obj *DesiredGameInfoState) *DesiredGameInfoState {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(DesiredGameInfoState)
+			obj = new(DesiredMatchInfo)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -229,8 +195,11 @@ func (rcv *DesiredGameState) GameInfoState(obj *DesiredGameInfoState) *DesiredGa
 	return nil
 }
 
+/// The desired game info.
+/// A list of console commands to execute.
+/// See https://wiki.rlbot.org/framework/console-commands/ for a list of known commands.
 func (rcv *DesiredGameState) ConsoleCommands(obj *ConsoleCommand, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -242,15 +211,17 @@ func (rcv *DesiredGameState) ConsoleCommands(obj *ConsoleCommand, j int) bool {
 }
 
 func (rcv *DesiredGameState) ConsoleCommandsLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// A list of console commands to execute.
+/// See https://wiki.rlbot.org/framework/console-commands/ for a list of known commands.
 func DesiredGameStateStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(4)
 }
 func DesiredGameStateAddBallStates(builder *flatbuffers.Builder, ballStates flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ballStates), 0)
@@ -264,17 +235,11 @@ func DesiredGameStateAddCarStates(builder *flatbuffers.Builder, carStates flatbu
 func DesiredGameStateStartCarStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func DesiredGameStateAddBoostStates(builder *flatbuffers.Builder, boostStates flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(boostStates), 0)
-}
-func DesiredGameStateStartBoostStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func DesiredGameStateAddGameInfoState(builder *flatbuffers.Builder, gameInfoState flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(gameInfoState), 0)
+func DesiredGameStateAddMatchInfo(builder *flatbuffers.Builder, matchInfo flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(matchInfo), 0)
 }
 func DesiredGameStateAddConsoleCommands(builder *flatbuffers.Builder, consoleCommands flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(consoleCommands), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(consoleCommands), 0)
 }
 func DesiredGameStateStartConsoleCommandsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A client message request removal of a RenderGroup.
+/// A client can only clear its own RenderGroups.
 type RemoveRenderGroupT struct {
 	Id int32 `json:"id"`
 }

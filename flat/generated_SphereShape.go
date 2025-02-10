@@ -6,6 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A sphere with diameter.
+/// Used for balls with a spherical shapes.
 type SphereShapeT struct {
 	Diameter float32 `json:"diameter"`
 }

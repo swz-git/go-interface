@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A physical state of an object, with nullable components.
+/// Used for game state setting to define which part of a physics body should change.
+/// If a component is null, then the component will keep its current value.
 type DesiredPhysicsT struct {
 	Location *Vector3PartialT `json:"location"`
 	Rotation *RotatorPartialT `json:"rotation"`

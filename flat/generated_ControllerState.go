@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A combination of button presses and analog steering values like those produced by a physical controller or keyboard.
+/// This is sent by bots each tick to RLBot to indicate what they want to do that tick.
+/// For example, if you want to hold the jump button for 20 ticks, then you must send 20 controller states where jump is true.
+/// Remember to send controller states with jump set to false to let go of the jump button afterwards.
 type ControllerStateT struct {
 	Throttle float32 `json:"throttle"`
 	Steer float32 `json:"steer"`
@@ -58,83 +62,83 @@ func (rcv *ControllerState) Table() flatbuffers.Table {
 	return rcv._tab.Table
 }
 
-/// -1 for full reverse, 1 for full forward
+/// -1 for full reverse, 1 for full forward.
 func (rcv *ControllerState) Throttle() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
-/// -1 for full reverse, 1 for full forward
+/// -1 for full reverse, 1 for full forward.
 func (rcv *ControllerState) MutateThrottle(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }
 
-/// -1 for full left, 1 for full right
+/// -1 for full left, 1 for full right.
 func (rcv *ControllerState) Steer() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
-/// -1 for full left, 1 for full right
+/// -1 for full left, 1 for full right.
 func (rcv *ControllerState) MutateSteer(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
 }
 
-/// -1 for nose down, 1 for nose up
+/// -1 for nose down, 1 for nose up.
 func (rcv *ControllerState) Pitch() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(8))
 }
-/// -1 for nose down, 1 for nose up
+/// -1 for nose down, 1 for nose up.
 func (rcv *ControllerState) MutatePitch(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(8), n)
 }
 
-/// -1 for full left, 1 for full right
+/// -1 for full left, 1 for full right.
 func (rcv *ControllerState) Yaw() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(12))
 }
-/// -1 for full left, 1 for full right
+/// -1 for full left, 1 for full right.
 func (rcv *ControllerState) MutateYaw(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(12), n)
 }
 
-/// -1 for roll left, 1 for roll right
+/// -1 for roll left, 1 for roll right.
 func (rcv *ControllerState) Roll() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(16))
 }
-/// -1 for roll left, 1 for roll right
+/// -1 for roll left, 1 for roll right.
 func (rcv *ControllerState) MutateRoll(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(16), n)
 }
 
-/// true if you want to press the jump button
+/// True if you want to press the jump button.
 func (rcv *ControllerState) Jump() bool {
 	return rcv._tab.GetBool(rcv._tab.Pos + flatbuffers.UOffsetT(20))
 }
-/// true if you want to press the jump button
+/// True if you want to press the jump button.
 func (rcv *ControllerState) MutateJump(n bool) bool {
 	return rcv._tab.MutateBool(rcv._tab.Pos+flatbuffers.UOffsetT(20), n)
 }
 
-/// true if you want to press the boost button
+/// True if you want to press the boost button.
 func (rcv *ControllerState) Boost() bool {
 	return rcv._tab.GetBool(rcv._tab.Pos + flatbuffers.UOffsetT(21))
 }
-/// true if you want to press the boost button
+/// True if you want to press the boost button.
 func (rcv *ControllerState) MutateBoost(n bool) bool {
 	return rcv._tab.MutateBool(rcv._tab.Pos+flatbuffers.UOffsetT(21), n)
 }
 
-/// true if you want to press the handbrake button
+/// True if you want to press the handbrake button.
 func (rcv *ControllerState) Handbrake() bool {
 	return rcv._tab.GetBool(rcv._tab.Pos + flatbuffers.UOffsetT(22))
 }
-/// true if you want to press the handbrake button
+/// True if you want to press the handbrake button.
 func (rcv *ControllerState) MutateHandbrake(n bool) bool {
 	return rcv._tab.MutateBool(rcv._tab.Pos+flatbuffers.UOffsetT(22), n)
 }
 
-/// true if you want to press the 'use item' button, used in rumble etc.
+/// True if you want to press the 'use item' button. Used in Rumble and other game modes.
 func (rcv *ControllerState) UseItem() bool {
 	return rcv._tab.GetBool(rcv._tab.Pos + flatbuffers.UOffsetT(23))
 }
-/// true if you want to press the 'use item' button, used in rumble etc.
+/// True if you want to press the 'use item' button. Used in Rumble and other game modes.
 func (rcv *ControllerState) MutateUseItem(n bool) bool {
 	return rcv._tab.MutateBool(rcv._tab.Pos+flatbuffers.UOffsetT(23), n)
 }

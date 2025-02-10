@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// An RGBA color.
 type ColorT struct {
 	R byte `json:"r"`
 	G byte `json:"g"`

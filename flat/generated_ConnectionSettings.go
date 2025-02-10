@@ -6,14 +6,14 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Sent when connecting to RLBot to indicate what type of messages are desired.
+/// Sent by clients when connecting to RLBot to indicate what type of messages are desired.
 /// This could be sent by a bot, or a bot manager governing several bots, an
 /// overlay, or any other utility that connects to the RLBot process.
 type ConnectionSettingsT struct {
 	AgentId string `json:"agent_id"`
 	WantsBallPredictions bool `json:"wants_ball_predictions"`
 	WantsComms bool `json:"wants_comms"`
-	CloseAfterMatch bool `json:"close_after_match"`
+	CloseBetweenMatches bool `json:"close_between_matches"`
 }
 
 func (t *ConnectionSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -28,7 +28,7 @@ func (t *ConnectionSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOf
 	ConnectionSettingsAddAgentId(builder, agentIdOffset)
 	ConnectionSettingsAddWantsBallPredictions(builder, t.WantsBallPredictions)
 	ConnectionSettingsAddWantsComms(builder, t.WantsComms)
-	ConnectionSettingsAddCloseAfterMatch(builder, t.CloseAfterMatch)
+	ConnectionSettingsAddCloseBetweenMatches(builder, t.CloseBetweenMatches)
 	return ConnectionSettingsEnd(builder)
 }
 
@@ -36,7 +36,7 @@ func (rcv *ConnectionSettings) UnPackTo(t *ConnectionSettingsT) {
 	t.AgentId = string(rcv.AgentId())
 	t.WantsBallPredictions = rcv.WantsBallPredictions()
 	t.WantsComms = rcv.WantsComms()
-	t.CloseAfterMatch = rcv.CloseAfterMatch()
+	t.CloseBetweenMatches = rcv.CloseBetweenMatches()
 }
 
 func (rcv *ConnectionSettings) UnPack() *ConnectionSettingsT {
@@ -121,8 +121,9 @@ func (rcv *ConnectionSettings) MutateWantsComms(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }
 
-/// If this is set, RLBot will close the connection after the match ends. The GUI will not want this
-func (rcv *ConnectionSettings) CloseAfterMatch() bool {
+/// If this is set, RLBot will close the connection when a match is stopped or when a new
+/// match is started. The GUI and other match runners should likely not set this.
+func (rcv *ConnectionSettings) CloseBetweenMatches() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -130,8 +131,9 @@ func (rcv *ConnectionSettings) CloseAfterMatch() bool {
 	return false
 }
 
-/// If this is set, RLBot will close the connection after the match ends. The GUI will not want this
-func (rcv *ConnectionSettings) MutateCloseAfterMatch(n bool) bool {
+/// If this is set, RLBot will close the connection when a match is stopped or when a new
+/// match is started. The GUI and other match runners should likely not set this.
+func (rcv *ConnectionSettings) MutateCloseBetweenMatches(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
 
@@ -147,8 +149,8 @@ func ConnectionSettingsAddWantsBallPredictions(builder *flatbuffers.Builder, wan
 func ConnectionSettingsAddWantsComms(builder *flatbuffers.Builder, wantsComms bool) {
 	builder.PrependBoolSlot(2, wantsComms, false)
 }
-func ConnectionSettingsAddCloseAfterMatch(builder *flatbuffers.Builder, closeAfterMatch bool) {
-	builder.PrependBoolSlot(3, closeAfterMatch, false)
+func ConnectionSettingsAddCloseBetweenMatches(builder *flatbuffers.Builder, closeBetweenMatches bool) {
+	builder.PrependBoolSlot(3, closeBetweenMatches, false)
 }
 func ConnectionSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

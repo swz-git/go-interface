@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Server message with information about the cars that the client can control.
+/// Sent to bot clients as a response to ConnectionSettings.
+/// There may be more than one car in case the bot is a hivemind.
 type ControllableTeamInfoT struct {
 	Team uint32 `json:"team"`
 	Controllables []*ControllableInfoT `json:"controllables"`
@@ -89,7 +92,7 @@ func (rcv *ControllableTeamInfo) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// The assigned team for this connection
+/// The assigned team for this client.
 func (rcv *ControllableTeamInfo) Team() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -98,12 +101,12 @@ func (rcv *ControllableTeamInfo) Team() uint32 {
 	return 0
 }
 
-/// The assigned team for this connection
+/// The assigned team for this client.
 func (rcv *ControllableTeamInfo) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
 
-/// The bots that RLBot will allow this connection to control
+/// The bots that RLBot will allow this client to control.
 func (rcv *ControllableTeamInfo) Controllables(obj *ControllableInfo, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -124,7 +127,7 @@ func (rcv *ControllableTeamInfo) ControllablesLength() int {
 	return 0
 }
 
-/// The bots that RLBot will allow this connection to control
+/// The bots that RLBot will allow this client to control.
 func ControllableTeamInfoStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

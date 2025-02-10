@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A prediction of a ball's trajectory, assuming no collision with cars.
 type BallPredictionT struct {
 	Slices []*PredictionSliceT `json:"slices"`
 }
@@ -82,9 +83,9 @@ func (rcv *BallPrediction) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// A list of places the ball will be at specific times in the future.
-/// It is guaranteed to sorted so that time increases with each slice.
-/// It is NOT guaranteed to have a consistent amount of time between slices.
+/// A list of predicted states of the ball at specific times in the future, assuming no collision with cars.
+/// The beginning of the list is now, and the end is 6 seconds into the future.
+/// The prediction is made at 120 Hz, resulting in 720 entries.
 func (rcv *BallPrediction) Slices(obj *PredictionSlice, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -104,9 +105,9 @@ func (rcv *BallPrediction) SlicesLength() int {
 	return 0
 }
 
-/// A list of places the ball will be at specific times in the future.
-/// It is guaranteed to sorted so that time increases with each slice.
-/// It is NOT guaranteed to have a consistent amount of time between slices.
+/// A list of predicted states of the ball at specific times in the future, assuming no collision with cars.
+/// The beginning of the list is now, and the end is 6 seconds into the future.
+/// The prediction is made at 120 Hz, resulting in 720 entries.
 func BallPredictionStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }

@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Expresses the rotation state of an object in Euler angles, with values in radians.
+/// Expresses the rotation state of an object in Euler angles. Values are in radians.
 type RotatorT struct {
 	Pitch float32 `json:"pitch"`
 	Yaw float32 `json:"yaw"`
@@ -47,23 +47,29 @@ func (rcv *Rotator) Table() flatbuffers.Table {
 	return rcv._tab.Table
 }
 
+/// In radians with range (-pi/2,+pi/2) where 0 is flat, +pi/2 is nose straight up, -pi/2 is nose straight down.
 func (rcv *Rotator) Pitch() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
+/// In radians with range (-pi/2,+pi/2) where 0 is flat, +pi/2 is nose straight up, -pi/2 is nose straight down.
 func (rcv *Rotator) MutatePitch(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
 }
 
+/// In radians with range [-pi,+pi) where 0 is towards positive x, rotating clockwise as increased (when seen from above). 
 func (rcv *Rotator) Yaw() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
+/// In radians with range [-pi,+pi) where 0 is towards positive x, rotating clockwise as increased (when seen from above). 
 func (rcv *Rotator) MutateYaw(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
 }
 
+/// In radians with range (-pi,+pi) where 0 is upright, positive is tilted right, negative is tilted left.
 func (rcv *Rotator) Roll() float32 {
 	return rcv._tab.GetFloat32(rcv._tab.Pos + flatbuffers.UOffsetT(8))
 }
+/// In radians with range (-pi,+pi) where 0 is upright, positive is tilted right, negative is tilted left.
 func (rcv *Rotator) MutateRoll(n float32) bool {
 	return rcv._tab.MutateFloat32(rcv._tab.Pos+flatbuffers.UOffsetT(8), n)
 }

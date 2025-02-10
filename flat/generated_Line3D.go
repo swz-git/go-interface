@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderMessage for a line in 3D space between two RenderAnchors.
 type Line3DT struct {
 	Start *RenderAnchorT `json:"start"`
 	End *RenderAnchorT `json:"end"`

@@ -4,6 +4,7 @@ package flat
 
 import "strconv"
 
+/// Various game modes.
 type GameMode byte
 
 const (

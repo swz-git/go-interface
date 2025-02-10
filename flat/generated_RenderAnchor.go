@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// A RenderAnchor is a point in space consisting of a world component and optionally a relative component.
+/// The relative component is given by a car or ball and includes a local offset that takes the orientation of the object into account.
+/// The RenderAnchor stays attached to the object and does not have to be updated each tick.
+/// Rendering that uses a RenderAnchor attached to an object disappears if the object is destroyed, i.e. the car demolished or the ball is scored.
 type RenderAnchorT struct {
 	World *Vector3T `json:"world"`
 	Relative *RelativeAnchorT `json:"relative"`
@@ -79,6 +83,8 @@ func (rcv *RenderAnchor) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// An offset in global coordinates.
+/// If the relative component is null, then this simply a point in 3D space.
 func (rcv *RenderAnchor) World(obj *Vector3) *Vector3 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -92,6 +98,8 @@ func (rcv *RenderAnchor) World(obj *Vector3) *Vector3 {
 	return nil
 }
 
+/// An offset in global coordinates.
+/// If the relative component is null, then this simply a point in 3D space.
 func (rcv *RenderAnchor) RelativeType() RelativeAnchor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -104,6 +112,7 @@ func (rcv *RenderAnchor) MutateRelativeType(n RelativeAnchor) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
+/// An optional offset given by the position of an object and includes a local offset that takes the object's orientation into account.
 func (rcv *RenderAnchor) Relative(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -113,6 +122,7 @@ func (rcv *RenderAnchor) Relative(obj *flatbuffers.Table) bool {
 	return false
 }
 
+/// An optional offset given by the position of an object and includes a local offset that takes the object's orientation into account.
 func RenderAnchorStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
