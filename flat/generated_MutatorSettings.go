@@ -19,7 +19,7 @@ type MutatorSettingsT struct {
 	BallWeight BallWeightMutator `json:"ball_weight"`
 	BallSize BallSizeMutator `json:"ball_size"`
 	BallBounciness BallBouncinessMutator `json:"ball_bounciness"`
-	Boost BoostMutator `json:"boost"`
+	BoostAmount BoostAmountMutator `json:"boost_amount"`
 	Rumble RumbleMutator `json:"rumble"`
 	BoostStrength BoostStrengthMutator `json:"boost_strength"`
 	Gravity GravityMutator `json:"gravity"`
@@ -46,7 +46,7 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 	MutatorSettingsAddBallWeight(builder, t.BallWeight)
 	MutatorSettingsAddBallSize(builder, t.BallSize)
 	MutatorSettingsAddBallBounciness(builder, t.BallBounciness)
-	MutatorSettingsAddBoost(builder, t.Boost)
+	MutatorSettingsAddBoostAmount(builder, t.BoostAmount)
 	MutatorSettingsAddRumble(builder, t.Rumble)
 	MutatorSettingsAddBoostStrength(builder, t.BoostStrength)
 	MutatorSettingsAddGravity(builder, t.Gravity)
@@ -70,7 +70,7 @@ func (rcv *MutatorSettings) UnPackTo(t *MutatorSettingsT) {
 	t.BallWeight = rcv.BallWeight()
 	t.BallSize = rcv.BallSize()
 	t.BallBounciness = rcv.BallBounciness()
-	t.Boost = rcv.Boost()
+	t.BoostAmount = rcv.BoostAmount()
 	t.Rumble = rcv.Rumble()
 	t.BoostStrength = rcv.BoostStrength()
 	t.Gravity = rcv.Gravity()
@@ -279,17 +279,17 @@ func (rcv *MutatorSettings) MutateBallBounciness(n BallBouncinessMutator) bool {
 	return rcv._tab.MutateByteSlot(24, byte(n))
 }
 
-/// Boost meter behaviour.
-func (rcv *MutatorSettings) Boost() BoostMutator {
+/// Boost amount/recharge.
+func (rcv *MutatorSettings) BoostAmount() BoostAmountMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return BoostMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return BoostAmountMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-/// Boost meter behaviour.
-func (rcv *MutatorSettings) MutateBoost(n BoostMutator) bool {
+/// Boost amount/recharge.
+func (rcv *MutatorSettings) MutateBoostAmount(n BoostAmountMutator) bool {
 	return rcv._tab.MutateByteSlot(26, byte(n))
 }
 
@@ -443,8 +443,8 @@ func MutatorSettingsAddBallSize(builder *flatbuffers.Builder, ballSize BallSizeM
 func MutatorSettingsAddBallBounciness(builder *flatbuffers.Builder, ballBounciness BallBouncinessMutator) {
 	builder.PrependByteSlot(10, byte(ballBounciness), 0)
 }
-func MutatorSettingsAddBoost(builder *flatbuffers.Builder, boost BoostMutator) {
-	builder.PrependByteSlot(11, byte(boost), 0)
+func MutatorSettingsAddBoostAmount(builder *flatbuffers.Builder, boostAmount BoostAmountMutator) {
+	builder.PrependByteSlot(11, byte(boostAmount), 0)
 }
 func MutatorSettingsAddRumble(builder *flatbuffers.Builder, rumble RumbleMutator) {
 	builder.PrependByteSlot(12, byte(rumble), 0)

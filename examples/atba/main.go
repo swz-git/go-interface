@@ -4,49 +4,52 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"strconv"
 
 	RLBot "github.com/swz-git/go-interface"
 	RLBotFlat "github.com/swz-git/go-interface/flat"
 )
 
+const DEFAULT_AGENT_ID = "rlbot/go-example-bot"
+
 func main() {
 	println("Connecting...")
 
-	rlbot_port := os.Getenv("RLBOT_SERVER_PORT")
-	var addr string
-	if rlbot_port == "" {
-		addr = "127.0.0.1:23234"
-	} else {
-		addr = fmt.Sprintf("127.0.0.1:%s", rlbot_port)
+	rlbot_ip := os.Getenv("RLBOT_SERVER_IP")
+	if rlbot_ip == "" {
+		rlbot_ip = "127.0.0.1"
 	}
 
+	rlbot_port := os.Getenv("RLBOT_SERVER_PORT")
+	if rlbot_port == "" {
+		rlbot_port = "23234"
+	}
+
+	addr := fmt.Sprintf("%s:%s", rlbot_ip, rlbot_port)
 	conn, err := RLBot.Connect(addr)
 	if err != nil {
-		panic("could not connect to rlbot core")
+		panic(fmt.Sprintf("could not connect to rlbot core at %s: %s", addr, err))
 	}
 
-	println("Running!")
+	println("Connected, initializing...")
 
-	spawnId, err := strconv.Atoi(os.Getenv("RLBOT_SPAWN_IDS"))
-	if err != nil {
-		panic("ERR: RLBOT_SPAWN_IDS wasn't an integer")
-	}
-
-	err = conn.SendPacket(&RLBotFlat.ConnectionSettingsT{
-		AgentId:              "rlbot/go-example-bot",
-		WantsBallPredictions: true,
-		WantsComms:           true,
-		CloseBetweenMatches:  true,
-	})
+	match_config, _, controllables, err := conn.Initialize(DEFAULT_AGENT_ID, false, false)
 	if err != nil {
 		panic(err)
 	}
 
-	err = conn.SendPacket(&RLBotFlat.InitCompleteT{})
-	if err != nil {
-		panic(err)
+	team := controllables.Team
+	index := controllables.Controllables[0].Index
+	spawnId := controllables.Controllables[0].SpawnId
+
+	var name string
+	for _, player := range match_config.PlayerConfigurations {
+		if player.SpawnId == spawnId {
+			name = player.Name
+			break
+		}
 	}
+
+	fmt.Printf("Initialized, running as \"%s\" on team %d\n", name, team)
 
 	for {
 		packet, err := conn.RecvPacket()
@@ -58,15 +61,8 @@ func main() {
 			continue
 		}
 
-		var botIndex int
-		for i, player := range gameTickPacket.Players {
-			if player.SpawnId == int32(spawnId) {
-				botIndex = i
-			}
-		}
-		if botIndex == 0 {
-			// If we aren't in the game, don't do anything
-			continue
+		if len(gameTickPacket.Players) <= int(index) {
+			continue // we haven't been spawned in yet
 		}
 
 		if len(gameTickPacket.Balls) < 1 {
@@ -74,7 +70,7 @@ func main() {
 		}
 
 		target := gameTickPacket.Balls[0].Physics
-		car := gameTickPacket.Players[spawnId].Physics
+		car := gameTickPacket.Players[index].Physics
 
 		botToTargetAngle := math.Atan2(float64(target.Location.Y-car.Location.Y), float64(target.Location.X-car.Location.X))
 		botFrontToTargetAngle := botToTargetAngle - float64(car.Rotation.Yaw)
@@ -97,7 +93,7 @@ func main() {
 		controller.Throttle = 1
 
 		conn.SendPacket(&RLBotFlat.PlayerInputT{
-			PlayerIndex:     uint32(spawnId),
+			PlayerIndex:     index,
 			ControllerState: &controller,
 		})
 	}

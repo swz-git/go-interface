@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	RLBot "github.com/swz-git/go-interface"
 	RLBotFlat "github.com/swz-git/go-interface/flat"
 )
@@ -12,26 +14,32 @@ func main() {
 		panic("could not connect to rlbot core")
 	}
 
-	println("Sending MatchSettings packet...")
+	dir, err := os.Getwd()
+	if err != nil {
+		panic("could not get current working directory")
+	}
+
+	println("Sending MatchConfiguration packet...")
 	conn.SendPacket(&RLBotFlat.MatchConfigurationT{
 		PlayerConfigurations: []*RLBotFlat.PlayerConfigurationT{{
 			Variety: &RLBotFlat.PlayerClassT{
 				Type:  RLBotFlat.PlayerClassCustomBot,
 				Value: &RLBotFlat.CustomBotT{},
 			},
-			Name:    "BOT1",
+			RootDir: dir + "/examples/atba",
+			RunCommand: "go run main.go",
+			AgentId: "rlbot/go-example-bot",
+			Name:    "Go Example",
 			Team:    0,
 			Loadout: &RLBotFlat.PlayerLoadoutT{},
-			SpawnId: 1,
 		}, {
 			Variety: &RLBotFlat.PlayerClassT{
 				Type:  RLBotFlat.PlayerClassHuman,
 				Value: &RLBotFlat.HumanT{},
 			},
-			Name:    "Human", // Cannot be "" for some reason?
+			Name:    "",
 			Team:    1,
 			Loadout: &RLBotFlat.PlayerLoadoutT{},
-			SpawnId: 2,
 		}},
 		GameMode:   RLBotFlat.GameModeSoccer,
 		GameMapUpk: "UtopiaStadium_P",
@@ -40,6 +48,6 @@ func main() {
 		},
 		ExistingMatchBehavior: RLBotFlat.ExistingMatchBehaviorRestart,
 		EnableRendering:       true,
-		// AutoStartBots:         false,
+		AutoStartBots:         true,
 	})
 }

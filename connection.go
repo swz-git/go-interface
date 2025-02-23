@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net"
+	"os"
 	"strconv"
 
 	flatbuffers "github.com/google/flatbuffers/go"
@@ -24,83 +25,113 @@ func Connect(addr string) (RLBotConnection, error) {
 	return RLBotConnection{conn, *flatbuffers.NewBuilder(65536)}, err
 }
 
+func (conn RLBotConnection) Initialize(default_agent_id string, wants_ball_predictions bool, wants_comms bool) (*flat.MatchConfigurationT, *flat.FieldInfoT, *flat.ControllableTeamInfoT, error) {
+	agent_id := os.Getenv("RLBOT_AGENT_ID")
+	if agent_id == "" {
+		agent_id = default_agent_id
+	}
+
+	err := conn.SendPacket(&flat.ConnectionSettingsT{
+		AgentId:              agent_id,
+		WantsBallPredictions: wants_ball_predictions,
+		WantsComms:           wants_comms,
+		CloseBetweenMatches:  true,
+	})
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	err = conn.SendPacket(&flat.InitCompleteT{})
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	var match_config *flat.MatchConfigurationT
+	var field_info *flat.FieldInfoT
+	var controllables *flat.ControllableTeamInfoT
+
+	for {
+		packet, err := conn.RecvPacket()
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		switch packet := packet.(type) {
+		case *flat.MatchConfigurationT:
+			match_config = packet
+		case *flat.FieldInfoT:
+			field_info = packet
+		case *flat.ControllableTeamInfoT:
+			controllables = packet
+		}
+
+		if match_config != nil && field_info != nil && controllables != nil {
+			break
+		}
+	}
+
+	return match_config, field_info, controllables, nil
+}
+
 type PacketAbilities interface {
 	Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT
 }
 
-// TODO: Disallow sending and recving packets that shouldn't be
-
-func (self RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
+func (conn RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
 	var packetPayload []byte
 	var packetType uint16
 
-	self.builder.Reset()
+	conn.builder.Reset()
 
 	switch v := packet_obj.(type) {
 	case nil:
 		packetPayload = []byte{0}
 		packetType = 0
-	case *flat.GamePacketT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
-		packetType = 1
-	case *flat.FieldInfoT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
-		packetType = 2
 	case *flat.StartCommandT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 3
 	case *flat.MatchConfigurationT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 4
 	case *flat.PlayerInputT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 5
 	case *flat.DesiredGameStateT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 6
 	case *flat.RenderGroupT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 7
 	case *flat.RemoveRenderGroupT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 8
 	case *flat.MatchCommT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 9
-	case *flat.BallPredictionT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
-		packetType = 10
 	case *flat.ConnectionSettingsT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 11
 	case *flat.StopCommandT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 12
 	case *flat.SetLoadoutT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
+		conn.builder.Finish(v.Pack(&conn.builder))
+		packetPayload = conn.builder.FinishedBytes()
 		packetType = 13
 	case *flat.InitCompleteT:
 		packetPayload = []byte{0}
 		packetType = 14
-	case *flat.ControllableTeamInfoT:
-		self.builder.Finish(v.Pack(&self.builder))
-		packetPayload = self.builder.FinishedBytes()
-		packetType = 15
 	default:
-		return errors.New("Unsupported packet type")
+		return errors.New("unsupported packet type")
 	}
 
 	finalBuf := []byte{}
@@ -115,7 +146,7 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
 
 	finalBuf = append(finalBuf, packetPayload...)
 
-	_, err := self.conn.Write(finalBuf)
+	_, err := conn.conn.Write(finalBuf)
 	if err != nil {
 		return err
 	}
@@ -123,30 +154,27 @@ func (self RLBotConnection) SendPacket(packet_obj PacketAbilities) error {
 	return nil
 }
 
-func (self RLBotConnection) RecvPacket() (PacketAbilities, error) {
+func (conn RLBotConnection) RecvPacket() (PacketAbilities, error) {
 	buffer := make([]byte, 2)
 
 	// Read packetType
-	_, err := io.ReadFull(self.conn, buffer)
+	_, err := io.ReadFull(conn.conn, buffer)
 	if err != nil {
-		// println("1")
 		return nil, err
 	}
 	packetType := binary.BigEndian.Uint16(buffer)
 
 	// Read packetLen
-	_, err = io.ReadFull(self.conn, buffer)
+	_, err = io.ReadFull(conn.conn, buffer)
 	if err != nil {
-		// println("2")
 		return nil, err
 	}
 	packetLen := binary.BigEndian.Uint16(buffer)
 
 	// Read packetPayload
 	buffer = make([]byte, packetLen)
-	_, err = io.ReadFull(self.conn, buffer)
+	_, err = io.ReadFull(conn.conn, buffer)
 	if err != nil {
-		// println("3")
 		return nil, err
 	}
 
@@ -157,33 +185,17 @@ func (self RLBotConnection) RecvPacket() (PacketAbilities, error) {
 		return flat.GetRootAsGamePacket(buffer, 0).UnPack(), nil
 	case 2: //flat.FieldInfoT:
 		return flat.GetRootAsFieldInfo(buffer, 0).UnPack(), nil
-	case 3: //flat.StartCommandT:
-		return flat.GetRootAsStartCommand(buffer, 0).UnPack(), nil
-	case 4: //flat.MatchSettingsT:
+	case 4: //flat.MatchConfigurationT:
 		return flat.GetRootAsMatchConfiguration(buffer, 0).UnPack(), nil
 	case 5: //flat.PlayerInputT:
 		return flat.GetRootAsPlayerInput(buffer, 0).UnPack(), nil
-	case 6: //flat.DesiredGameStateT:
-		return flat.GetRootAsDesiredGameState(buffer, 0).UnPack(), nil
-	case 7: //flat.RenderGroupT:
-		return flat.GetRootAsRenderGroup(buffer, 0).UnPack(), nil
-	case 8: //flat.RemoveRenderGroupT:
-		return flat.GetRootAsRemoveRenderGroup(buffer, 0).UnPack(), nil
 	case 9: //flat.MatchCommT:
 		return flat.GetRootAsMatchComm(buffer, 0).UnPack(), nil
 	case 10: //flat.BallPredictionT:
 		return flat.GetRootAsBallPrediction(buffer, 0).UnPack(), nil
-	case 11: //flat.ConnectionSettingsT:
-		return flat.GetRootAsConnectionSettings(buffer, 0).UnPack(), nil
-	case 12: //flat.StopCommandT:
-		return flat.GetRootAsStopCommand(buffer, 0).UnPack(), nil
-	case 13: //flat.SetLoadoutT:
-		return flat.GetRootAsSetLoadout(buffer, 0).UnPack(), nil
-	case 14: //flat.InitCompleteT:
-		return flat.InitCompleteT{}, nil
 	case 15: //flat.ControllableTeamInfoT:
 		return flat.GetRootAsControllableTeamInfo(buffer, 0).UnPack(), nil
 	default:
-		return nil, errors.New("Unknown packet type: " + strconv.Itoa(int(packetType)))
+		return nil, errors.New("unknown packet type: " + strconv.Itoa(int(packetType)))
 	}
 }
