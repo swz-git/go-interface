@@ -8,27 +8,27 @@ import "strconv"
 type BallBouncinessMutator byte
 
 const (
-	BallBouncinessMutatorDefault          BallBouncinessMutator = 0
-	BallBouncinessMutatorLow              BallBouncinessMutator = 1
-	BallBouncinessMutatorHigh             BallBouncinessMutator = 2
-	BallBouncinessMutatorSuperHigh        BallBouncinessMutator = 3
-	BallBouncinessMutatorLowishBounciness BallBouncinessMutator = 4
+	BallBouncinessMutatorDefault   BallBouncinessMutator = 0
+	BallBouncinessMutatorLow       BallBouncinessMutator = 1
+	BallBouncinessMutatorHigh      BallBouncinessMutator = 2
+	BallBouncinessMutatorSuperHigh BallBouncinessMutator = 3
+	BallBouncinessMutatorLowish    BallBouncinessMutator = 4
 )
 
 var EnumNamesBallBouncinessMutator = map[BallBouncinessMutator]string{
-	BallBouncinessMutatorDefault:          "Default",
-	BallBouncinessMutatorLow:              "Low",
-	BallBouncinessMutatorHigh:             "High",
-	BallBouncinessMutatorSuperHigh:        "SuperHigh",
-	BallBouncinessMutatorLowishBounciness: "LowishBounciness",
+	BallBouncinessMutatorDefault:   "Default",
+	BallBouncinessMutatorLow:       "Low",
+	BallBouncinessMutatorHigh:      "High",
+	BallBouncinessMutatorSuperHigh: "SuperHigh",
+	BallBouncinessMutatorLowish:    "Lowish",
 }
 
 var EnumValuesBallBouncinessMutator = map[string]BallBouncinessMutator{
-	"Default":          BallBouncinessMutatorDefault,
-	"Low":              BallBouncinessMutatorLow,
-	"High":             BallBouncinessMutatorHigh,
-	"SuperHigh":        BallBouncinessMutatorSuperHigh,
-	"LowishBounciness": BallBouncinessMutatorLowishBounciness,
+	"Default":   BallBouncinessMutatorDefault,
+	"Low":       BallBouncinessMutatorLow,
+	"High":      BallBouncinessMutatorHigh,
+	"SuperHigh": BallBouncinessMutatorSuperHigh,
+	"Lowish":    BallBouncinessMutatorLowish,
 }
 
 func (v BallBouncinessMutator) String() string {

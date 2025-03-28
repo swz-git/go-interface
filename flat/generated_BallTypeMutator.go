@@ -8,39 +8,51 @@ import "strconv"
 type BallTypeMutator byte
 
 const (
-	BallTypeMutatorDefault     BallTypeMutator = 0
-	BallTypeMutatorCube        BallTypeMutator = 1
-	BallTypeMutatorPuck        BallTypeMutator = 2
-	BallTypeMutatorBasketball  BallTypeMutator = 3
-	BallTypeMutatorBeachball   BallTypeMutator = 4
-	BallTypeMutatorAnniversary BallTypeMutator = 5
-	BallTypeMutatorHaunted     BallTypeMutator = 6
-	BallTypeMutatorEkin        BallTypeMutator = 7
-	BallTypeMutatorSpookyCube  BallTypeMutator = 8
+	BallTypeMutatorDefault       BallTypeMutator = 0
+	BallTypeMutatorCube          BallTypeMutator = 1
+	BallTypeMutatorPuck          BallTypeMutator = 2
+	BallTypeMutatorBasketball    BallTypeMutator = 3
+	BallTypeMutatorBeachball     BallTypeMutator = 4
+	BallTypeMutatorAnniversary   BallTypeMutator = 5
+	BallTypeMutatorHaunted       BallTypeMutator = 6
+	BallTypeMutatorEkin          BallTypeMutator = 7
+	BallTypeMutatorSpookyCube    BallTypeMutator = 8
+	BallTypeMutatorEgg           BallTypeMutator = 9
+	BallTypeMutatorPlayerSeeking BallTypeMutator = 10
+	BallTypeMutatorDropshot      BallTypeMutator = 11
+	BallTypeMutatorScoreAbsorb   BallTypeMutator = 12
 )
 
 var EnumNamesBallTypeMutator = map[BallTypeMutator]string{
-	BallTypeMutatorDefault:     "Default",
-	BallTypeMutatorCube:        "Cube",
-	BallTypeMutatorPuck:        "Puck",
-	BallTypeMutatorBasketball:  "Basketball",
-	BallTypeMutatorBeachball:   "Beachball",
-	BallTypeMutatorAnniversary: "Anniversary",
-	BallTypeMutatorHaunted:     "Haunted",
-	BallTypeMutatorEkin:        "Ekin",
-	BallTypeMutatorSpookyCube:  "SpookyCube",
+	BallTypeMutatorDefault:       "Default",
+	BallTypeMutatorCube:          "Cube",
+	BallTypeMutatorPuck:          "Puck",
+	BallTypeMutatorBasketball:    "Basketball",
+	BallTypeMutatorBeachball:     "Beachball",
+	BallTypeMutatorAnniversary:   "Anniversary",
+	BallTypeMutatorHaunted:       "Haunted",
+	BallTypeMutatorEkin:          "Ekin",
+	BallTypeMutatorSpookyCube:    "SpookyCube",
+	BallTypeMutatorEgg:           "Egg",
+	BallTypeMutatorPlayerSeeking: "PlayerSeeking",
+	BallTypeMutatorDropshot:      "Dropshot",
+	BallTypeMutatorScoreAbsorb:   "ScoreAbsorb",
 }
 
 var EnumValuesBallTypeMutator = map[string]BallTypeMutator{
-	"Default":     BallTypeMutatorDefault,
-	"Cube":        BallTypeMutatorCube,
-	"Puck":        BallTypeMutatorPuck,
-	"Basketball":  BallTypeMutatorBasketball,
-	"Beachball":   BallTypeMutatorBeachball,
-	"Anniversary": BallTypeMutatorAnniversary,
-	"Haunted":     BallTypeMutatorHaunted,
-	"Ekin":        BallTypeMutatorEkin,
-	"SpookyCube":  BallTypeMutatorSpookyCube,
+	"Default":       BallTypeMutatorDefault,
+	"Cube":          BallTypeMutatorCube,
+	"Puck":          BallTypeMutatorPuck,
+	"Basketball":    BallTypeMutatorBasketball,
+	"Beachball":     BallTypeMutatorBeachball,
+	"Anniversary":   BallTypeMutatorAnniversary,
+	"Haunted":       BallTypeMutatorHaunted,
+	"Ekin":          BallTypeMutatorEkin,
+	"SpookyCube":    BallTypeMutatorSpookyCube,
+	"Egg":           BallTypeMutatorEgg,
+	"PlayerSeeking": BallTypeMutatorPlayerSeeking,
+	"Dropshot":      BallTypeMutatorDropshot,
+	"ScoreAbsorb":   BallTypeMutatorScoreAbsorb,
 }
 
 func (v BallTypeMutator) String() string {

@@ -28,6 +28,17 @@ type MutatorSettingsT struct {
 	MaxTime MaxTimeMutator `json:"max_time"`
 	GameEvent GameEventMutator `json:"game_event"`
 	Audio AudioMutator `json:"audio"`
+	BallGravity BallGravityMutator `json:"ball_gravity"`
+	Territory TerritoryMutator `json:"territory"`
+	StaleBall StaleBallMutator `json:"stale_ball"`
+	Jump JumpMutator `json:"jump"`
+	DodgeTimer DodgeTimerMutator `json:"dodge_timer"`
+	PossessionScore PossessionScoreMutator `json:"possession_score"`
+	DemolishScore DemolishScoreMutator `json:"demolish_score"`
+	NormalGoalScore NormalGoalScoreMutator `json:"normal_goal_score"`
+	AerialGoalScore AerialGoalScoreMutator `json:"aerial_goal_score"`
+	AssistGoalScore AssistGoalScoreMutator `json:"assist_goal_score"`
+	InputRestriction InputRestrictionMutator `json:"input_restriction"`
 }
 
 func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -55,6 +66,17 @@ func (t *MutatorSettingsT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffse
 	MutatorSettingsAddMaxTime(builder, t.MaxTime)
 	MutatorSettingsAddGameEvent(builder, t.GameEvent)
 	MutatorSettingsAddAudio(builder, t.Audio)
+	MutatorSettingsAddBallGravity(builder, t.BallGravity)
+	MutatorSettingsAddTerritory(builder, t.Territory)
+	MutatorSettingsAddStaleBall(builder, t.StaleBall)
+	MutatorSettingsAddJump(builder, t.Jump)
+	MutatorSettingsAddDodgeTimer(builder, t.DodgeTimer)
+	MutatorSettingsAddPossessionScore(builder, t.PossessionScore)
+	MutatorSettingsAddDemolishScore(builder, t.DemolishScore)
+	MutatorSettingsAddNormalGoalScore(builder, t.NormalGoalScore)
+	MutatorSettingsAddAerialGoalScore(builder, t.AerialGoalScore)
+	MutatorSettingsAddAssistGoalScore(builder, t.AssistGoalScore)
+	MutatorSettingsAddInputRestriction(builder, t.InputRestriction)
 	return MutatorSettingsEnd(builder)
 }
 
@@ -79,6 +101,17 @@ func (rcv *MutatorSettings) UnPackTo(t *MutatorSettingsT) {
 	t.MaxTime = rcv.MaxTime()
 	t.GameEvent = rcv.GameEvent()
 	t.Audio = rcv.Audio()
+	t.BallGravity = rcv.BallGravity()
+	t.Territory = rcv.Territory()
+	t.StaleBall = rcv.StaleBall()
+	t.Jump = rcv.Jump()
+	t.DodgeTimer = rcv.DodgeTimer()
+	t.PossessionScore = rcv.PossessionScore()
+	t.DemolishScore = rcv.DemolishScore()
+	t.NormalGoalScore = rcv.NormalGoalScore()
+	t.AerialGoalScore = rcv.AerialGoalScore()
+	t.AssistGoalScore = rcv.AssistGoalScore()
+	t.InputRestriction = rcv.InputRestriction()
 }
 
 func (rcv *MutatorSettings) UnPack() *MutatorSettingsT {
@@ -181,7 +214,7 @@ func (rcv *MutatorSettings) MutateOvertime(n OvertimeMutator) bool {
 	return rcv._tab.MutateByteSlot(10, byte(n))
 }
 
-/// The series length (unsupported).
+/// The series length.
 func (rcv *MutatorSettings) SeriesLength() SeriesLengthMutator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -190,7 +223,7 @@ func (rcv *MutatorSettings) SeriesLength() SeriesLengthMutator {
 	return 0
 }
 
-/// The series length (unsupported).
+/// The series length.
 func (rcv *MutatorSettings) MutateSeriesLength(n SeriesLengthMutator) bool {
 	return rcv._tab.MutateByteSlot(12, byte(n))
 }
@@ -407,8 +440,162 @@ func (rcv *MutatorSettings) MutateAudio(n AudioMutator) bool {
 	return rcv._tab.MutateByteSlot(42, byte(n))
 }
 
+/// Ball gravity.
+func (rcv *MutatorSettings) BallGravity() BallGravityMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return BallGravityMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Ball gravity.
+func (rcv *MutatorSettings) MutateBallGravity(n BallGravityMutator) bool {
+	return rcv._tab.MutateByteSlot(44, byte(n))
+}
+
+/// Territory mutator.
+func (rcv *MutatorSettings) Territory() TerritoryMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return TerritoryMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Territory mutator.
+func (rcv *MutatorSettings) MutateTerritory(n TerritoryMutator) bool {
+	return rcv._tab.MutateByteSlot(46, byte(n))
+}
+
+/// Stale ball mutator.
+func (rcv *MutatorSettings) StaleBall() StaleBallMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return StaleBallMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Stale ball mutator.
+func (rcv *MutatorSettings) MutateStaleBall(n StaleBallMutator) bool {
+	return rcv._tab.MutateByteSlot(48, byte(n))
+}
+
+/// Jumps mutator.
+func (rcv *MutatorSettings) Jump() JumpMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return JumpMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Jumps mutator.
+func (rcv *MutatorSettings) MutateJump(n JumpMutator) bool {
+	return rcv._tab.MutateByteSlot(50, byte(n))
+}
+
+/// Dodge timer mutator.
+func (rcv *MutatorSettings) DodgeTimer() DodgeTimerMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return DodgeTimerMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Dodge timer mutator.
+func (rcv *MutatorSettings) MutateDodgeTimer(n DodgeTimerMutator) bool {
+	return rcv._tab.MutateByteSlot(52, byte(n))
+}
+
+/// Possession score mutator.
+func (rcv *MutatorSettings) PossessionScore() PossessionScoreMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return PossessionScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Possession score mutator.
+func (rcv *MutatorSettings) MutatePossessionScore(n PossessionScoreMutator) bool {
+	return rcv._tab.MutateByteSlot(54, byte(n))
+}
+
+/// Demolish score mutator.
+func (rcv *MutatorSettings) DemolishScore() DemolishScoreMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return DemolishScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Demolish score mutator.
+func (rcv *MutatorSettings) MutateDemolishScore(n DemolishScoreMutator) bool {
+	return rcv._tab.MutateByteSlot(56, byte(n))
+}
+
+/// Normal goal score mutator.
+func (rcv *MutatorSettings) NormalGoalScore() NormalGoalScoreMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return NormalGoalScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Normal goal score mutator.
+func (rcv *MutatorSettings) MutateNormalGoalScore(n NormalGoalScoreMutator) bool {
+	return rcv._tab.MutateByteSlot(58, byte(n))
+}
+
+/// Aerial goal score mutator.
+func (rcv *MutatorSettings) AerialGoalScore() AerialGoalScoreMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return AerialGoalScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Aerial goal score mutator.
+func (rcv *MutatorSettings) MutateAerialGoalScore(n AerialGoalScoreMutator) bool {
+	return rcv._tab.MutateByteSlot(60, byte(n))
+}
+
+/// Assist goal score mutator.
+func (rcv *MutatorSettings) AssistGoalScore() AssistGoalScoreMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return AssistGoalScoreMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Assist goal score mutator.
+func (rcv *MutatorSettings) MutateAssistGoalScore(n AssistGoalScoreMutator) bool {
+	return rcv._tab.MutateByteSlot(62, byte(n))
+}
+
+/// Player input restriction mutator.
+func (rcv *MutatorSettings) InputRestriction() InputRestrictionMutator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return InputRestrictionMutator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Player input restriction mutator.
+func (rcv *MutatorSettings) MutateInputRestriction(n InputRestrictionMutator) bool {
+	return rcv._tab.MutateByteSlot(64, byte(n))
+}
+
 func MutatorSettingsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(31)
 }
 func MutatorSettingsAddMatchLength(builder *flatbuffers.Builder, matchLength MatchLengthMutator) {
 	builder.PrependByteSlot(0, byte(matchLength), 0)
@@ -469,6 +656,39 @@ func MutatorSettingsAddGameEvent(builder *flatbuffers.Builder, gameEvent GameEve
 }
 func MutatorSettingsAddAudio(builder *flatbuffers.Builder, audio AudioMutator) {
 	builder.PrependByteSlot(19, byte(audio), 0)
+}
+func MutatorSettingsAddBallGravity(builder *flatbuffers.Builder, ballGravity BallGravityMutator) {
+	builder.PrependByteSlot(20, byte(ballGravity), 0)
+}
+func MutatorSettingsAddTerritory(builder *flatbuffers.Builder, territory TerritoryMutator) {
+	builder.PrependByteSlot(21, byte(territory), 0)
+}
+func MutatorSettingsAddStaleBall(builder *flatbuffers.Builder, staleBall StaleBallMutator) {
+	builder.PrependByteSlot(22, byte(staleBall), 0)
+}
+func MutatorSettingsAddJump(builder *flatbuffers.Builder, jump JumpMutator) {
+	builder.PrependByteSlot(23, byte(jump), 0)
+}
+func MutatorSettingsAddDodgeTimer(builder *flatbuffers.Builder, dodgeTimer DodgeTimerMutator) {
+	builder.PrependByteSlot(24, byte(dodgeTimer), 0)
+}
+func MutatorSettingsAddPossessionScore(builder *flatbuffers.Builder, possessionScore PossessionScoreMutator) {
+	builder.PrependByteSlot(25, byte(possessionScore), 0)
+}
+func MutatorSettingsAddDemolishScore(builder *flatbuffers.Builder, demolishScore DemolishScoreMutator) {
+	builder.PrependByteSlot(26, byte(demolishScore), 0)
+}
+func MutatorSettingsAddNormalGoalScore(builder *flatbuffers.Builder, normalGoalScore NormalGoalScoreMutator) {
+	builder.PrependByteSlot(27, byte(normalGoalScore), 0)
+}
+func MutatorSettingsAddAerialGoalScore(builder *flatbuffers.Builder, aerialGoalScore AerialGoalScoreMutator) {
+	builder.PrependByteSlot(28, byte(aerialGoalScore), 0)
+}
+func MutatorSettingsAddAssistGoalScore(builder *flatbuffers.Builder, assistGoalScore AssistGoalScoreMutator) {
+	builder.PrependByteSlot(29, byte(assistGoalScore), 0)
+}
+func MutatorSettingsAddInputRestriction(builder *flatbuffers.Builder, inputRestriction InputRestrictionMutator) {
+	builder.PrependByteSlot(30, byte(inputRestriction), 0)
 }
 func MutatorSettingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
