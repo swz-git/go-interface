@@ -8,27 +8,33 @@ import "strconv"
 type DemolishMutator byte
 
 const (
-	DemolishMutatorDefault      DemolishMutator = 0
-	DemolishMutatorDisabled     DemolishMutator = 1
-	DemolishMutatorFriendlyFire DemolishMutator = 2
-	DemolishMutatorOnContact    DemolishMutator = 3
-	DemolishMutatorOnContactFF  DemolishMutator = 4
+	DemolishMutatorDefault         DemolishMutator = 0
+	DemolishMutatorDisabled        DemolishMutator = 1
+	DemolishMutatorFriendlyFire    DemolishMutator = 2
+	DemolishMutatorOnContact       DemolishMutator = 3
+	DemolishMutatorOnContactFF     DemolishMutator = 4
+	DemolishMutatorOnBallContact   DemolishMutator = 5
+	DemolishMutatorOnBallContactFF DemolishMutator = 6
 )
 
 var EnumNamesDemolishMutator = map[DemolishMutator]string{
-	DemolishMutatorDefault:      "Default",
-	DemolishMutatorDisabled:     "Disabled",
-	DemolishMutatorFriendlyFire: "FriendlyFire",
-	DemolishMutatorOnContact:    "OnContact",
-	DemolishMutatorOnContactFF:  "OnContactFF",
+	DemolishMutatorDefault:         "Default",
+	DemolishMutatorDisabled:        "Disabled",
+	DemolishMutatorFriendlyFire:    "FriendlyFire",
+	DemolishMutatorOnContact:       "OnContact",
+	DemolishMutatorOnContactFF:     "OnContactFF",
+	DemolishMutatorOnBallContact:   "OnBallContact",
+	DemolishMutatorOnBallContactFF: "OnBallContactFF",
 }
 
 var EnumValuesDemolishMutator = map[string]DemolishMutator{
-	"Default":      DemolishMutatorDefault,
-	"Disabled":     DemolishMutatorDisabled,
-	"FriendlyFire": DemolishMutatorFriendlyFire,
-	"OnContact":    DemolishMutatorOnContact,
-	"OnContactFF":  DemolishMutatorOnContactFF,
+	"Default":         DemolishMutatorDefault,
+	"Disabled":        DemolishMutatorDisabled,
+	"FriendlyFire":    DemolishMutatorFriendlyFire,
+	"OnContact":       DemolishMutatorOnContact,
+	"OnContactFF":     DemolishMutatorOnContactFF,
+	"OnBallContact":   DemolishMutatorOnBallContact,
+	"OnBallContactFF": DemolishMutatorOnBallContactFF,
 }
 
 func (v DemolishMutator) String() string {
