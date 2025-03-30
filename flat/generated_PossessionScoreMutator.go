@@ -7,21 +7,21 @@ import "strconv"
 type PossessionScoreMutator byte
 
 const (
-	PossessionScoreMutatorDefault      PossessionScoreMutator = 0
+	PossessionScoreMutatorOff          PossessionScoreMutator = 0
 	PossessionScoreMutatorOneSecond    PossessionScoreMutator = 1
 	PossessionScoreMutatorTwoSeconds   PossessionScoreMutator = 2
 	PossessionScoreMutatorThreeSeconds PossessionScoreMutator = 3
 )
 
 var EnumNamesPossessionScoreMutator = map[PossessionScoreMutator]string{
-	PossessionScoreMutatorDefault:      "Default",
+	PossessionScoreMutatorOff:          "Off",
 	PossessionScoreMutatorOneSecond:    "OneSecond",
 	PossessionScoreMutatorTwoSeconds:   "TwoSeconds",
 	PossessionScoreMutatorThreeSeconds: "ThreeSeconds",
 }
 
 var EnumValuesPossessionScoreMutator = map[string]PossessionScoreMutator{
-	"Default":      PossessionScoreMutatorDefault,
+	"Off":          PossessionScoreMutatorOff,
 	"OneSecond":    PossessionScoreMutatorOneSecond,
 	"TwoSeconds":   PossessionScoreMutatorTwoSeconds,
 	"ThreeSeconds": PossessionScoreMutatorThreeSeconds,

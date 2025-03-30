@@ -7,17 +7,17 @@ import "strconv"
 type TerritoryMutator byte
 
 const (
-	TerritoryMutatorDefault   TerritoryMutator = 0
+	TerritoryMutatorOff       TerritoryMutator = 0
 	TerritoryMutatorTerritory TerritoryMutator = 1
 )
 
 var EnumNamesTerritoryMutator = map[TerritoryMutator]string{
-	TerritoryMutatorDefault:   "Default",
+	TerritoryMutatorOff:       "Off",
 	TerritoryMutatorTerritory: "Territory",
 }
 
 var EnumValuesTerritoryMutator = map[string]TerritoryMutator{
-	"Default":   TerritoryMutatorDefault,
+	"Off":       TerritoryMutatorOff,
 	"Territory": TerritoryMutatorTerritory,
 }
 

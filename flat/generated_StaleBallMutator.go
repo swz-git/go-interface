@@ -7,17 +7,17 @@ import "strconv"
 type StaleBallMutator byte
 
 const (
-	StaleBallMutatorDefault       StaleBallMutator = 0
+	StaleBallMutatorUnlimited     StaleBallMutator = 0
 	StaleBallMutatorThirtySeconds StaleBallMutator = 1
 )
 
 var EnumNamesStaleBallMutator = map[StaleBallMutator]string{
-	StaleBallMutatorDefault:       "Default",
+	StaleBallMutatorUnlimited:     "Unlimited",
 	StaleBallMutatorThirtySeconds: "ThirtySeconds",
 }
 
 var EnumValuesStaleBallMutator = map[string]StaleBallMutator{
-	"Default":       StaleBallMutatorDefault,
+	"Unlimited":     StaleBallMutatorUnlimited,
 	"ThirtySeconds": StaleBallMutatorThirtySeconds,
 }
 

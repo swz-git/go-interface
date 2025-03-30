@@ -7,30 +7,30 @@ import "strconv"
 type AerialGoalScoreMutator byte
 
 const (
-	AerialGoalScoreMutatorDefault AerialGoalScoreMutator = 0
-	AerialGoalScoreMutatorZero    AerialGoalScoreMutator = 1
-	AerialGoalScoreMutatorTwo     AerialGoalScoreMutator = 2
-	AerialGoalScoreMutatorThree   AerialGoalScoreMutator = 3
-	AerialGoalScoreMutatorFive    AerialGoalScoreMutator = 4
-	AerialGoalScoreMutatorTen     AerialGoalScoreMutator = 5
+	AerialGoalScoreMutatorOne   AerialGoalScoreMutator = 0
+	AerialGoalScoreMutatorZero  AerialGoalScoreMutator = 1
+	AerialGoalScoreMutatorTwo   AerialGoalScoreMutator = 2
+	AerialGoalScoreMutatorThree AerialGoalScoreMutator = 3
+	AerialGoalScoreMutatorFive  AerialGoalScoreMutator = 4
+	AerialGoalScoreMutatorTen   AerialGoalScoreMutator = 5
 )
 
 var EnumNamesAerialGoalScoreMutator = map[AerialGoalScoreMutator]string{
-	AerialGoalScoreMutatorDefault: "Default",
-	AerialGoalScoreMutatorZero:    "Zero",
-	AerialGoalScoreMutatorTwo:     "Two",
-	AerialGoalScoreMutatorThree:   "Three",
-	AerialGoalScoreMutatorFive:    "Five",
-	AerialGoalScoreMutatorTen:     "Ten",
+	AerialGoalScoreMutatorOne:   "One",
+	AerialGoalScoreMutatorZero:  "Zero",
+	AerialGoalScoreMutatorTwo:   "Two",
+	AerialGoalScoreMutatorThree: "Three",
+	AerialGoalScoreMutatorFive:  "Five",
+	AerialGoalScoreMutatorTen:   "Ten",
 }
 
 var EnumValuesAerialGoalScoreMutator = map[string]AerialGoalScoreMutator{
-	"Default": AerialGoalScoreMutatorDefault,
-	"Zero":    AerialGoalScoreMutatorZero,
-	"Two":     AerialGoalScoreMutatorTwo,
-	"Three":   AerialGoalScoreMutatorThree,
-	"Five":    AerialGoalScoreMutatorFive,
-	"Ten":     AerialGoalScoreMutatorTen,
+	"One":   AerialGoalScoreMutatorOne,
+	"Zero":  AerialGoalScoreMutatorZero,
+	"Two":   AerialGoalScoreMutatorTwo,
+	"Three": AerialGoalScoreMutatorThree,
+	"Five":  AerialGoalScoreMutatorFive,
+	"Ten":   AerialGoalScoreMutatorTen,
 }
 
 func (v AerialGoalScoreMutator) String() string {

@@ -8,7 +8,7 @@ import "strconv"
 type MaxScoreMutator byte
 
 const (
-	MaxScoreMutatorDefault      MaxScoreMutator = 0
+	MaxScoreMutatorUnlimited    MaxScoreMutator = 0
 	MaxScoreMutatorOneGoal      MaxScoreMutator = 1
 	MaxScoreMutatorThreeGoals   MaxScoreMutator = 2
 	MaxScoreMutatorFiveGoals    MaxScoreMutator = 3
@@ -23,11 +23,10 @@ const (
 	MaxScoreMutatorEightyGoals  MaxScoreMutator = 12
 	MaxScoreMutatorNinetyGoals  MaxScoreMutator = 13
 	MaxScoreMutatorHundredGoals MaxScoreMutator = 14
-	MaxScoreMutatorUnlimited    MaxScoreMutator = 15
 )
 
 var EnumNamesMaxScoreMutator = map[MaxScoreMutator]string{
-	MaxScoreMutatorDefault:      "Default",
+	MaxScoreMutatorUnlimited:    "Unlimited",
 	MaxScoreMutatorOneGoal:      "OneGoal",
 	MaxScoreMutatorThreeGoals:   "ThreeGoals",
 	MaxScoreMutatorFiveGoals:    "FiveGoals",
@@ -42,11 +41,10 @@ var EnumNamesMaxScoreMutator = map[MaxScoreMutator]string{
 	MaxScoreMutatorEightyGoals:  "EightyGoals",
 	MaxScoreMutatorNinetyGoals:  "NinetyGoals",
 	MaxScoreMutatorHundredGoals: "HundredGoals",
-	MaxScoreMutatorUnlimited:    "Unlimited",
 }
 
 var EnumValuesMaxScoreMutator = map[string]MaxScoreMutator{
-	"Default":      MaxScoreMutatorDefault,
+	"Unlimited":    MaxScoreMutatorUnlimited,
 	"OneGoal":      MaxScoreMutatorOneGoal,
 	"ThreeGoals":   MaxScoreMutatorThreeGoals,
 	"FiveGoals":    MaxScoreMutatorFiveGoals,
@@ -61,7 +59,6 @@ var EnumValuesMaxScoreMutator = map[string]MaxScoreMutator{
 	"EightyGoals":  MaxScoreMutatorEightyGoals,
 	"NinetyGoals":  MaxScoreMutatorNinetyGoals,
 	"HundredGoals": MaxScoreMutatorHundredGoals,
-	"Unlimited":    MaxScoreMutatorUnlimited,
 }
 
 func (v MaxScoreMutator) String() string {

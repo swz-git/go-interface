@@ -14,7 +14,8 @@ type Rect2DT struct {
 	Width float32 `json:"width"`
 	Height float32 `json:"height"`
 	Color *ColorT `json:"color"`
-	Centered bool `json:"centered"`
+	HAlign TextHAlign `json:"h_align"`
+	VAlign TextVAlign `json:"v_align"`
 }
 
 func (t *Rect2DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -28,7 +29,8 @@ func (t *Rect2DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	Rect2DAddHeight(builder, t.Height)
 	colorOffset := t.Color.Pack(builder)
 	Rect2DAddColor(builder, colorOffset)
-	Rect2DAddCentered(builder, t.Centered)
+	Rect2DAddHAlign(builder, t.HAlign)
+	Rect2DAddVAlign(builder, t.VAlign)
 	return Rect2DEnd(builder)
 }
 
@@ -38,7 +40,8 @@ func (rcv *Rect2D) UnPackTo(t *Rect2DT) {
 	t.Width = rcv.Width()
 	t.Height = rcv.Height()
 	t.Color = rcv.Color(nil).UnPack()
-	t.Centered = rcv.Centered()
+	t.HAlign = rcv.HAlign()
+	t.VAlign = rcv.VAlign()
 }
 
 func (rcv *Rect2D) UnPack() *Rect2DT {
@@ -156,22 +159,36 @@ func (rcv *Rect2D) Color(obj *Color) *Color {
 }
 
 /// Color of the rectangle.
-/// Whether the rectangle centered at (x,y). Otherwise, (x,y) is the top left of the rectangle.
-func (rcv *Rect2D) Centered() bool {
+/// The horizontal alignment of the rectangle.
+func (rcv *Rect2D) HAlign() TextHAlign {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return TextHAlign(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return false
+	return 0
 }
 
-/// Whether the rectangle centered at (x,y). Otherwise, (x,y) is the top left of the rectangle.
-func (rcv *Rect2D) MutateCentered(n bool) bool {
-	return rcv._tab.MutateBoolSlot(14, n)
+/// The horizontal alignment of the rectangle.
+func (rcv *Rect2D) MutateHAlign(n TextHAlign) bool {
+	return rcv._tab.MutateByteSlot(14, byte(n))
+}
+
+/// The vertical alignment of the rectangle.
+func (rcv *Rect2D) VAlign() TextVAlign {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return TextVAlign(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// The vertical alignment of the rectangle.
+func (rcv *Rect2D) MutateVAlign(n TextVAlign) bool {
+	return rcv._tab.MutateByteSlot(16, byte(n))
 }
 
 func Rect2DStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func Rect2DAddX(builder *flatbuffers.Builder, x float32) {
 	builder.PrependFloat32Slot(0, x, 0.0)
@@ -188,8 +205,11 @@ func Rect2DAddHeight(builder *flatbuffers.Builder, height float32) {
 func Rect2DAddColor(builder *flatbuffers.Builder, color flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(4, flatbuffers.UOffsetT(color), 0)
 }
-func Rect2DAddCentered(builder *flatbuffers.Builder, centered bool) {
-	builder.PrependBoolSlot(5, centered, false)
+func Rect2DAddHAlign(builder *flatbuffers.Builder, hAlign TextHAlign) {
+	builder.PrependByteSlot(5, byte(hAlign), 0)
+}
+func Rect2DAddVAlign(builder *flatbuffers.Builder, vAlign TextVAlign) {
+	builder.PrependByteSlot(6, byte(vAlign), 0)
 }
 func Rect2DEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -7,30 +7,30 @@ import "strconv"
 type NormalGoalScoreMutator byte
 
 const (
-	NormalGoalScoreMutatorDefault NormalGoalScoreMutator = 0
-	NormalGoalScoreMutatorZero    NormalGoalScoreMutator = 1
-	NormalGoalScoreMutatorTwo     NormalGoalScoreMutator = 2
-	NormalGoalScoreMutatorThree   NormalGoalScoreMutator = 3
-	NormalGoalScoreMutatorFive    NormalGoalScoreMutator = 4
-	NormalGoalScoreMutatorTen     NormalGoalScoreMutator = 5
+	NormalGoalScoreMutatorOne   NormalGoalScoreMutator = 0
+	NormalGoalScoreMutatorZero  NormalGoalScoreMutator = 1
+	NormalGoalScoreMutatorTwo   NormalGoalScoreMutator = 2
+	NormalGoalScoreMutatorThree NormalGoalScoreMutator = 3
+	NormalGoalScoreMutatorFive  NormalGoalScoreMutator = 4
+	NormalGoalScoreMutatorTen   NormalGoalScoreMutator = 5
 )
 
 var EnumNamesNormalGoalScoreMutator = map[NormalGoalScoreMutator]string{
-	NormalGoalScoreMutatorDefault: "Default",
-	NormalGoalScoreMutatorZero:    "Zero",
-	NormalGoalScoreMutatorTwo:     "Two",
-	NormalGoalScoreMutatorThree:   "Three",
-	NormalGoalScoreMutatorFive:    "Five",
-	NormalGoalScoreMutatorTen:     "Ten",
+	NormalGoalScoreMutatorOne:   "One",
+	NormalGoalScoreMutatorZero:  "Zero",
+	NormalGoalScoreMutatorTwo:   "Two",
+	NormalGoalScoreMutatorThree: "Three",
+	NormalGoalScoreMutatorFive:  "Five",
+	NormalGoalScoreMutatorTen:   "Ten",
 }
 
 var EnumValuesNormalGoalScoreMutator = map[string]NormalGoalScoreMutator{
-	"Default": NormalGoalScoreMutatorDefault,
-	"Zero":    NormalGoalScoreMutatorZero,
-	"Two":     NormalGoalScoreMutatorTwo,
-	"Three":   NormalGoalScoreMutatorThree,
-	"Five":    NormalGoalScoreMutatorFive,
-	"Ten":     NormalGoalScoreMutatorTen,
+	"One":   NormalGoalScoreMutatorOne,
+	"Zero":  NormalGoalScoreMutatorZero,
+	"Two":   NormalGoalScoreMutatorTwo,
+	"Three": NormalGoalScoreMutatorThree,
+	"Five":  NormalGoalScoreMutatorFive,
+	"Ten":   NormalGoalScoreMutatorTen,
 }
 
 func (v NormalGoalScoreMutator) String() string {

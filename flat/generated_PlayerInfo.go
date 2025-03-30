@@ -20,7 +20,7 @@ type PlayerInfoT struct {
 	IsBot bool `json:"is_bot"`
 	Name string `json:"name"`
 	Team uint32 `json:"team"`
-	Boost uint32 `json:"boost"`
+	Boost float32 `json:"boost"`
 	SpawnId int32 `json:"spawn_id"`
 	Accolades []string `json:"accolades"`
 	LastInput *ControllerStateT `json:"last_input"`
@@ -341,18 +341,18 @@ func (rcv *PlayerInfo) MutateTeam(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
 }
 
-/// The current boost.
-func (rcv *PlayerInfo) Boost() uint32 {
+/// The current boost, from 0 to 100.
+func (rcv *PlayerInfo) Boost() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
-	return 0
+	return 0.0
 }
 
-/// The current boost.
-func (rcv *PlayerInfo) MutateBoost(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(28, n)
+/// The current boost, from 0 to 100.
+func (rcv *PlayerInfo) MutateBoost(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(28, n)
 }
 
 /// The spawn id of the player.
@@ -543,8 +543,8 @@ func PlayerInfoAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) 
 func PlayerInfoAddTeam(builder *flatbuffers.Builder, team uint32) {
 	builder.PrependUint32Slot(11, team, 0)
 }
-func PlayerInfoAddBoost(builder *flatbuffers.Builder, boost uint32) {
-	builder.PrependUint32Slot(12, boost, 0)
+func PlayerInfoAddBoost(builder *flatbuffers.Builder, boost float32) {
+	builder.PrependFloat32Slot(12, boost, 0.0)
 }
 func PlayerInfoAddSpawnId(builder *flatbuffers.Builder, spawnId int32) {
 	builder.PrependInt32Slot(13, spawnId, 0)
