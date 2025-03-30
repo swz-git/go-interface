@@ -7,24 +7,24 @@ import "strconv"
 type DodgeTimerMutator byte
 
 const (
-	DodgeTimerMutatorDefault      DodgeTimerMutator = 0
-	DodgeTimerMutatorTwoSeconds   DodgeTimerMutator = 1
-	DodgeTimerMutatorThreeSeconds DodgeTimerMutator = 2
-	DodgeTimerMutatorUnlimited    DodgeTimerMutator = 3
+	DodgeTimerMutatorOnePointTwentyFiveSeconds DodgeTimerMutator = 0
+	DodgeTimerMutatorTwoSeconds                DodgeTimerMutator = 1
+	DodgeTimerMutatorThreeSeconds              DodgeTimerMutator = 2
+	DodgeTimerMutatorUnlimited                 DodgeTimerMutator = 3
 )
 
 var EnumNamesDodgeTimerMutator = map[DodgeTimerMutator]string{
-	DodgeTimerMutatorDefault:      "Default",
-	DodgeTimerMutatorTwoSeconds:   "TwoSeconds",
-	DodgeTimerMutatorThreeSeconds: "ThreeSeconds",
-	DodgeTimerMutatorUnlimited:    "Unlimited",
+	DodgeTimerMutatorOnePointTwentyFiveSeconds: "OnePointTwentyFiveSeconds",
+	DodgeTimerMutatorTwoSeconds:                "TwoSeconds",
+	DodgeTimerMutatorThreeSeconds:              "ThreeSeconds",
+	DodgeTimerMutatorUnlimited:                 "Unlimited",
 }
 
 var EnumValuesDodgeTimerMutator = map[string]DodgeTimerMutator{
-	"Default":      DodgeTimerMutatorDefault,
-	"TwoSeconds":   DodgeTimerMutatorTwoSeconds,
-	"ThreeSeconds": DodgeTimerMutatorThreeSeconds,
-	"Unlimited":    DodgeTimerMutatorUnlimited,
+	"OnePointTwentyFiveSeconds": DodgeTimerMutatorOnePointTwentyFiveSeconds,
+	"TwoSeconds":                DodgeTimerMutatorTwoSeconds,
+	"ThreeSeconds":              DodgeTimerMutatorThreeSeconds,
+	"Unlimited":                 DodgeTimerMutatorUnlimited,
 }
 
 func (v DodgeTimerMutator) String() string {

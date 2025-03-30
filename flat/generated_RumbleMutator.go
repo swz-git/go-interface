@@ -8,7 +8,7 @@ import "strconv"
 type RumbleMutator byte
 
 const (
-	RumbleMutatorNoRumble         RumbleMutator = 0
+	RumbleMutatorOff              RumbleMutator = 0
 	RumbleMutatorDefaultRumble    RumbleMutator = 1
 	RumbleMutatorSlow             RumbleMutator = 2
 	RumbleMutatorCivilized        RumbleMutator = 3
@@ -24,7 +24,7 @@ const (
 )
 
 var EnumNamesRumbleMutator = map[RumbleMutator]string{
-	RumbleMutatorNoRumble:         "NoRumble",
+	RumbleMutatorOff:              "Off",
 	RumbleMutatorDefaultRumble:    "DefaultRumble",
 	RumbleMutatorSlow:             "Slow",
 	RumbleMutatorCivilized:        "Civilized",
@@ -40,7 +40,7 @@ var EnumNamesRumbleMutator = map[RumbleMutator]string{
 }
 
 var EnumValuesRumbleMutator = map[string]RumbleMutator{
-	"NoRumble":         RumbleMutatorNoRumble,
+	"Off":              RumbleMutatorOff,
 	"DefaultRumble":    RumbleMutatorDefaultRumble,
 	"Slow":             RumbleMutatorSlow,
 	"Civilized":        RumbleMutatorCivilized,

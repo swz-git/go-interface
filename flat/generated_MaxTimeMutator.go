@@ -8,17 +8,17 @@ import "strconv"
 type MaxTimeMutator byte
 
 const (
-	MaxTimeMutatorDefault       MaxTimeMutator = 0
+	MaxTimeMutatorUnlimited     MaxTimeMutator = 0
 	MaxTimeMutatorElevenMinutes MaxTimeMutator = 1
 )
 
 var EnumNamesMaxTimeMutator = map[MaxTimeMutator]string{
-	MaxTimeMutatorDefault:       "Default",
+	MaxTimeMutatorUnlimited:     "Unlimited",
 	MaxTimeMutatorElevenMinutes: "ElevenMinutes",
 }
 
 var EnumValuesMaxTimeMutator = map[string]MaxTimeMutator{
-	"Default":       MaxTimeMutatorDefault,
+	"Unlimited":     MaxTimeMutatorUnlimited,
 	"ElevenMinutes": MaxTimeMutatorElevenMinutes,
 }
 

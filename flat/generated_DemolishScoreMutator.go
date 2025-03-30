@@ -7,24 +7,24 @@ import "strconv"
 type DemolishScoreMutator byte
 
 const (
-	DemolishScoreMutatorDefault DemolishScoreMutator = 0
-	DemolishScoreMutatorOne     DemolishScoreMutator = 1
-	DemolishScoreMutatorTwo     DemolishScoreMutator = 2
-	DemolishScoreMutatorThree   DemolishScoreMutator = 3
+	DemolishScoreMutatorZero  DemolishScoreMutator = 0
+	DemolishScoreMutatorOne   DemolishScoreMutator = 1
+	DemolishScoreMutatorTwo   DemolishScoreMutator = 2
+	DemolishScoreMutatorThree DemolishScoreMutator = 3
 )
 
 var EnumNamesDemolishScoreMutator = map[DemolishScoreMutator]string{
-	DemolishScoreMutatorDefault: "Default",
-	DemolishScoreMutatorOne:     "One",
-	DemolishScoreMutatorTwo:     "Two",
-	DemolishScoreMutatorThree:   "Three",
+	DemolishScoreMutatorZero:  "Zero",
+	DemolishScoreMutatorOne:   "One",
+	DemolishScoreMutatorTwo:   "Two",
+	DemolishScoreMutatorThree: "Three",
 }
 
 var EnumValuesDemolishScoreMutator = map[string]DemolishScoreMutator{
-	"Default": DemolishScoreMutatorDefault,
-	"One":     DemolishScoreMutatorOne,
-	"Two":     DemolishScoreMutatorTwo,
-	"Three":   DemolishScoreMutatorThree,
+	"Zero":  DemolishScoreMutatorZero,
+	"One":   DemolishScoreMutatorOne,
+	"Two":   DemolishScoreMutatorTwo,
+	"Three": DemolishScoreMutatorThree,
 }
 
 func (v DemolishScoreMutator) String() string {

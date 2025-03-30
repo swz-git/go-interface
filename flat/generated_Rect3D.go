@@ -13,6 +13,8 @@ type Rect3DT struct {
 	Width float32 `json:"width"`
 	Height float32 `json:"height"`
 	Color *ColorT `json:"color"`
+	HAlign TextHAlign `json:"h_align"`
+	VAlign TextVAlign `json:"v_align"`
 }
 
 func (t *Rect3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -26,6 +28,8 @@ func (t *Rect3DT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	Rect3DAddHeight(builder, t.Height)
 	colorOffset := t.Color.Pack(builder)
 	Rect3DAddColor(builder, colorOffset)
+	Rect3DAddHAlign(builder, t.HAlign)
+	Rect3DAddVAlign(builder, t.VAlign)
 	return Rect3DEnd(builder)
 }
 
@@ -34,6 +38,8 @@ func (rcv *Rect3D) UnPackTo(t *Rect3DT) {
 	t.Width = rcv.Width()
 	t.Height = rcv.Height()
 	t.Color = rcv.Color(nil).UnPack()
+	t.HAlign = rcv.HAlign()
+	t.VAlign = rcv.VAlign()
 }
 
 func (rcv *Rect3D) UnPack() *Rect3DT {
@@ -138,8 +144,36 @@ func (rcv *Rect3D) Color(obj *Color) *Color {
 }
 
 /// The color of the rectangle.
+/// The horizontal alignment of the anchor in the rectangle.
+func (rcv *Rect3D) HAlign() TextHAlign {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return TextHAlign(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// The horizontal alignment of the anchor in the rectangle.
+func (rcv *Rect3D) MutateHAlign(n TextHAlign) bool {
+	return rcv._tab.MutateByteSlot(12, byte(n))
+}
+
+/// The vertical alignment of the anchor in the rectangle.
+func (rcv *Rect3D) VAlign() TextVAlign {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return TextVAlign(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// The vertical alignment of the anchor in the rectangle.
+func (rcv *Rect3D) MutateVAlign(n TextVAlign) bool {
+	return rcv._tab.MutateByteSlot(14, byte(n))
+}
+
 func Rect3DStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(6)
 }
 func Rect3DAddAnchor(builder *flatbuffers.Builder, anchor flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(anchor), 0)
@@ -152,6 +186,12 @@ func Rect3DAddHeight(builder *flatbuffers.Builder, height float32) {
 }
 func Rect3DAddColor(builder *flatbuffers.Builder, color flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(3, flatbuffers.UOffsetT(color), 0)
+}
+func Rect3DAddHAlign(builder *flatbuffers.Builder, hAlign TextHAlign) {
+	builder.PrependByteSlot(4, byte(hAlign), 0)
+}
+func Rect3DAddVAlign(builder *flatbuffers.Builder, vAlign TextVAlign) {
+	builder.PrependByteSlot(5, byte(vAlign), 0)
 }
 func Rect3DEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

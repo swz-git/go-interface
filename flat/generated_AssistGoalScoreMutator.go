@@ -7,24 +7,24 @@ import "strconv"
 type AssistGoalScoreMutator byte
 
 const (
-	AssistGoalScoreMutatorDefault AssistGoalScoreMutator = 0
-	AssistGoalScoreMutatorOne     AssistGoalScoreMutator = 1
-	AssistGoalScoreMutatorTwo     AssistGoalScoreMutator = 2
-	AssistGoalScoreMutatorThree   AssistGoalScoreMutator = 3
+	AssistGoalScoreMutatorZero  AssistGoalScoreMutator = 0
+	AssistGoalScoreMutatorOne   AssistGoalScoreMutator = 1
+	AssistGoalScoreMutatorTwo   AssistGoalScoreMutator = 2
+	AssistGoalScoreMutatorThree AssistGoalScoreMutator = 3
 )
 
 var EnumNamesAssistGoalScoreMutator = map[AssistGoalScoreMutator]string{
-	AssistGoalScoreMutatorDefault: "Default",
-	AssistGoalScoreMutatorOne:     "One",
-	AssistGoalScoreMutatorTwo:     "Two",
-	AssistGoalScoreMutatorThree:   "Three",
+	AssistGoalScoreMutatorZero:  "Zero",
+	AssistGoalScoreMutatorOne:   "One",
+	AssistGoalScoreMutatorTwo:   "Two",
+	AssistGoalScoreMutatorThree: "Three",
 }
 
 var EnumValuesAssistGoalScoreMutator = map[string]AssistGoalScoreMutator{
-	"Default": AssistGoalScoreMutatorDefault,
-	"One":     AssistGoalScoreMutatorOne,
-	"Two":     AssistGoalScoreMutatorTwo,
-	"Three":   AssistGoalScoreMutatorThree,
+	"Zero":  AssistGoalScoreMutatorZero,
+	"One":   AssistGoalScoreMutatorOne,
+	"Two":   AssistGoalScoreMutatorTwo,
+	"Three": AssistGoalScoreMutatorThree,
 }
 
 func (v AssistGoalScoreMutator) String() string {
